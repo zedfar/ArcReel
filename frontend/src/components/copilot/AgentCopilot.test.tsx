@@ -32,12 +32,12 @@ function makePendingQuestion() {
     question_id: "q-1",
     questions: [
       {
-        header: "输出",
-        question: "输出格式是什么？",
+        header: "Output",
+        question: "OutputFormat是什么？",
         multiSelect: false,
         options: [
-          { label: "摘要", description: "简洁输出" },
-          { label: "详细", description: "完整说明" },
+          { label: "Ringkasan", description: "Output ringkas" },
+          { label: "Detail", description: "Penjelasan lengkap" },
         ],
       },
     ],
@@ -77,10 +77,10 @@ describe("AgentCopilot", () => {
 
     render(<AgentCopilot />);
 
-    expect(screen.getByText("需要你的选择")).toBeInTheDocument();
-    expect(screen.getByLabelText("助手输入")).toBeDisabled();
-    expect(screen.getByLabelText("发送消息")).toBeDisabled();
-    expect(screen.getByPlaceholderText("请先回答上方问题")).toBeInTheDocument();
+    expect(screen.getByText("需要milik AndaPilih")).toBeInTheDocument();
+    expect(screen.getByLabelText("AsistenInput")).toBeDisabled();
+    expect(screen.getByLabelText("KirimPesan")).toBeDisabled();
+    expect(screen.getByPlaceholderText("请先Jawaban上方Pertanyaan")).toBeInTheDocument();
   });
 
   it("submits wizard answers through answerQuestion", () => {
@@ -90,11 +90,11 @@ describe("AgentCopilot", () => {
 
     render(<AgentCopilot />);
 
-    fireEvent.click(screen.getByLabelText("摘要"));
-    fireEvent.click(screen.getByRole("button", { name: "完成并提交" }));
+    fireEvent.click(screen.getByLabelText("Ringkasan"));
+    fireEvent.click(screen.getByRole("button", { name: "Selesai并Submit" }));
 
     expect(answerQuestion).toHaveBeenCalledWith("q-1", {
-      "输出格式是什么？": "摘要",
+      "OutputFormat是什么？": "Ringkasan",
     });
   });
 
@@ -104,7 +104,7 @@ describe("AgentCopilot", () => {
         {
           id: "session-1",
           project_name: "demo",
-          title: "当前会话",
+          title: "Sesi saat ini",
           status: "idle",
           created_at: "2026-02-01T00:00:00Z",
           updated_at: "2026-02-01T00:00:00Z",
@@ -117,7 +117,7 @@ describe("AgentCopilot", () => {
 
     expect(container.firstElementChild).toHaveClass("isolate");
 
-    fireEvent.click(screen.getByTitle("切换会话"));
+    fireEvent.click(screen.getByTitle("GantiSesi"));
     expect(document.querySelector(`.${UI_LAYERS.assistantLocalPopover}`)).toBeTruthy();
   });
 });

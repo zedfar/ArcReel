@@ -22,9 +22,9 @@ const API_FORMAT_OPTIONS: { value: ApiFormat; label: string }[] = [
 ];
 
 const MEDIA_TYPE_OPTIONS: { value: MediaType; label: string }[] = [
-  { value: "text", label: "文本" },
-  { value: "image", label: "图片" },
-  { value: "video", label: "视频" },
+  { value: "text", label: "Teks" },
+  { value: "image", label: "Gambar" },
+  { value: "video", label: "Video" },
 ];
 
 interface ModelRow {
@@ -99,9 +99,9 @@ function rowToInput(r: ModelRow): CustomProviderModelInput {
 // ---------------------------------------------------------------------------
 
 function priceLabel(mediaType: MediaType): { input: string; output: string } {
-  if (mediaType === "video") return { input: "/秒", output: "" };
+  if (mediaType === "video") return { input: "/detik", output: "" };
   if (mediaType === "image") return { input: "/张", output: "" };
-  return { input: "/M输入", output: "/M输出" };
+  return { input: "/MInput", output: "/MOutput" };
 }
 
 // ---------------------------------------------------------------------------
@@ -175,7 +175,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
       });
       setModelFilter("");
     } catch (e) {
-      showError(e instanceof Error ? e.message : "获取模型列表失败");
+      showError(e instanceof Error ? e.message : "Gagal mendapatkan daftar model");
     } finally {
       setDiscovering(false);
     }
@@ -193,7 +193,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
       const res = await API.testCustomConnection({ api_format: apiFormat, base_url: baseUrl, api_key: apiKey });
       setTestResult(res);
     } catch (e) {
-      setTestResult({ success: false, message: e instanceof Error ? e.message : "连接测试失败" });
+      setTestResult({ success: false, message: e instanceof Error ? e.message : "Uji koneksi gagal" });
     } finally {
       setTesting(false);
     }
@@ -203,31 +203,31 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
   const handleSave = useCallback(async () => {
     // Validation
     if (!displayName.trim()) {
-      showError("请填写供应商名称");
+      showError("Silakan isiNama Provider");
       return;
     }
     if (!baseUrl.trim()) {
-      showError("请填写 Base URL");
+      showError("Silakan isi Base URL");
       return;
     }
     if (!isEdit && !apiKey.trim()) {
-      showError("请填写 API Key");
+      showError("Silakan isi API Key");
       return;
     }
     const enabledModels = models.filter((m) => m.is_enabled);
     if (enabledModels.length === 0) {
-      showError("至少启用一个模型");
+      showError("至少Aktifkan一个Model");
       return;
     }
     const emptyId = enabledModels.find((m) => !m.model_id.trim());
     if (emptyId) {
-      showError("已启用的模型必须填写 model_id");
+      showError("Diaktifkan的Model必须填写 model_id");
       return;
     }
     setSaving(true);
     try {
       if (isEdit && existing) {
-        // 单个事务原子更新 provider + models
+        // 单个事务原子Perbarui provider + models
         await API.fullUpdateCustomProvider(existing.id, {
           display_name: displayName,
           base_url: baseUrl,
@@ -245,7 +245,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
       }
       onSaved();
     } catch (e) {
-      showError(e instanceof Error ? e.message : "保存失败");
+      showError(e instanceof Error ? e.message : "Gagal menyimpan");
     } finally {
       setSaving(false);
     }
@@ -290,11 +290,11 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
     const trimmed = baseUrl.trim().replace(/\/+$/, "");
     if (!trimmed) return null;
     if (apiFormat === "openai") {
-      // OpenAI SDK 需要 /v1 后缀，后端自动补全
+      // OpenAI SDK 需要 /v1 后缀，后端Otomatis补全
       const base = trimmed.match(/\/v\d+$/) ? trimmed : `${trimmed}/v1`;
       return `${base}/models`;
     }
-    // Google SDK 自动拼接 /v1beta，后端会剥离用户误填的版本路径
+    // Google SDK Otomatis拼接 /v1beta，后端会剥离用户误填的VersiPath
     const base = trimmed.replace(/\/v\d+\w*$/, "");
     return `${base}/v1beta/models`;
   })();
@@ -305,21 +305,21 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
       <div className="flex-1 overflow-y-auto p-6">
       <div className="max-w-2xl">
       <h3 className="mb-6 text-lg font-semibold text-gray-100">
-        {isEdit ? "编辑自定义供应商" : "添加自定义供应商"}
+        {isEdit ? "Edit Provider Kustom" : "Tambah Provider Kustom"}
       </h3>
 
       <div className="space-y-4">
         {/* Display name */}
         <div>
           <label htmlFor="cp-name" className="mb-1.5 block text-sm text-gray-400">
-            名称 <span className="text-red-400">*</span>
+            Nama <span className="text-red-400">*</span>
           </label>
           <input
             id="cp-name"
             type="text"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="例如：我的 NewAPI…"
+            placeholder="例如：milik saya NewAPI…"
             className={inputCls}
           />
         </div>
@@ -327,7 +327,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
         {/* API Format */}
         <div>
           <label htmlFor="cp-format" className="mb-1.5 block text-sm text-gray-400">
-            API 格式
+            Format API
           </label>
           <select
             id="cp-format"
@@ -359,7 +359,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
           />
           {urlPreview && (
             <div className="mt-1 truncate text-xs text-gray-500">
-              预览：{urlPreview}
+              Pratinjau：{urlPreview}
             </div>
           )}
         </div>
@@ -376,14 +376,14 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
               autoComplete="off"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder={isEdit ? existing?.api_key_masked ?? "留空则保留现有密钥" : "输入 API Key"}
+              placeholder={isEdit ? existing?.api_key_masked ?? "留空则保留现有Key" : "Input API Key"}
               className={`${inputCls} pr-9`}
             />
             <button
               type="button"
               onClick={() => setShowApiKey((v) => !v)}
               className="absolute right-2 top-1/2 -translate-y-1/2 rounded text-gray-500 hover:text-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60"
-              aria-label={showApiKey ? "隐藏" : "显示"}
+              aria-label={showApiKey ? "Sembunyikan" : "Tampilkan"}
             >
               {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
@@ -404,7 +404,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                 获取中…
               </>
             ) : (
-              "获取模型列表"
+              "Dapatkan Daftar Model"
             )}
           </button>
         </div>
@@ -413,7 +413,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
         {models.length > 0 && (
           <div>
             <div className="mb-2 flex items-center gap-3 text-sm text-gray-400">
-              <span>模型列表</span>
+              <span>Daftar Model</span>
               {models.length > 1 && (
                 <button
                   type="button"
@@ -426,7 +426,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                   }}
                   className="text-xs text-indigo-400 hover:text-indigo-300"
                 >
-                  {filteredModels.every((m) => m.is_enabled) ? "取消全选" : "全选"}
+                  {filteredModels.every((m) => m.is_enabled) ? "BatalPilih semua" : "Pilih semua"}
                 </button>
               )}
             </div>
@@ -437,7 +437,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                   type="text"
                   value={modelFilter}
                   onChange={(e) => setModelFilter(e.target.value)}
-                  placeholder="搜索模型…"
+                  placeholder="Cari model..."
                   className="w-full rounded-lg border border-gray-700 bg-gray-900 py-1.5 pl-8 pr-3 text-xs text-gray-100 placeholder-gray-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
@@ -458,7 +458,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                           checked={m.is_enabled}
                           onChange={(e) => updateModel(m.key, { is_enabled: e.target.checked })}
                           className="h-3.5 w-3.5 rounded border-gray-600 bg-gray-800 text-indigo-500 focus:ring-indigo-500"
-                          aria-label="启用模型"
+                          aria-label="Aktifkan Model"
                         />
                       </label>
 
@@ -468,7 +468,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                         value={m.model_id}
                         onChange={(e) => updateModel(m.key, { model_id: e.target.value })}
                         placeholder="model-id…"
-                        aria-label="模型 ID"
+                        aria-label="Model ID"
                         className="min-w-0 flex-1 rounded-lg border border-gray-700 bg-gray-900 px-2 py-1 text-sm text-gray-100 placeholder-gray-600 focus-visible:border-indigo-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500"
                       />
 
@@ -476,7 +476,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                       <select
                         value={m.media_type}
                         onChange={(e) => updateModel(m.key, { media_type: e.target.value as MediaType })}
-                        aria-label="媒体类型"
+                        aria-label="媒体Tipe"
                         className={selectCls}
                       >
                         {MEDIA_TYPE_OPTIONS.map((o) => (
@@ -496,7 +496,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                             : "border border-gray-700 text-gray-500 hover:border-gray-600 hover:text-gray-300"
                         }`}
                       >
-                        默认
+                        Default
                       </button>
 
                       {/* Remove */}
@@ -504,7 +504,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                         type="button"
                         onClick={() => removeModel(m.key)}
                         className="rounded p-1 text-gray-500 hover:text-red-400"
-                        aria-label="删除模型"
+                        aria-label="HapusModel"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -515,7 +515,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                       <select
                         value={m.currency}
                         onChange={(e) => updateModel(m.key, { currency: e.target.value })}
-                        aria-label="币种"
+                        aria-label="Mata uang"
                         className="rounded border border-gray-700 bg-gray-900 px-1 py-0.5 text-xs text-gray-300 focus-visible:border-indigo-500 focus-visible:outline-none"
                       >
                         <option value="USD">$</option>
@@ -527,7 +527,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                         value={m.price_input}
                         onChange={(e) => updateModel(m.key, { price_input: e.target.value })}
                         placeholder="0.00"
-                        aria-label="输入价格"
+                        aria-label="Harga Input"
                         className="w-16 rounded border border-gray-700 bg-gray-900 px-1.5 py-0.5 text-xs text-gray-300 placeholder-gray-600 focus-visible:border-indigo-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500"
                       />
                       <span>{pl.input}</span>
@@ -540,7 +540,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
                             value={m.price_output}
                             onChange={(e) => updateModel(m.key, { price_output: e.target.value })}
                             placeholder="0.00"
-                            aria-label="输出价格"
+                            aria-label="Harga Output"
                             className="w-16 rounded border border-gray-700 bg-gray-900 px-1.5 py-0.5 text-xs text-gray-300 placeholder-gray-600 focus-visible:border-indigo-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500"
                           />
                           <span>{pl.output}</span>
@@ -559,7 +559,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
               className="mt-2 flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-300"
             >
               <Plus className="h-3.5 w-3.5" />
-              手动添加模型
+              Tambah Model Manual
             </button>
           </div>
         )}
@@ -567,13 +567,13 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
         {/* Empty model hint */}
         {models.length === 0 && (
           <div className="rounded-xl border border-dashed border-gray-700 p-4 text-center text-sm text-gray-500">
-            点击「获取模型列表」自动发现，或
+            Klik「Dapatkan Daftar Model」OtomatisPenemuan，或
             <button
               type="button"
               onClick={addManualModel}
               className="ml-1 text-indigo-400 hover:text-indigo-300"
             >
-              手动添加模型
+              Tambah Model Manual
             </button>
           </div>
         )}
@@ -613,10 +613,10 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
             {saving ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                保存中…
+                Menyimpan...
               </>
             ) : (
-              "保存"
+              "Simpan"
             )}
           </button>
 
@@ -629,10 +629,10 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
             {testing ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                测试中…
+                Menguji...
               </>
             ) : (
-              "测试连接"
+              "Uji Koneksi"
             )}
           </button>
 
@@ -641,7 +641,7 @@ export function CustomProviderForm({ existing, onSaved, onCancel }: CustomProvid
             onClick={onCancel}
             className="rounded-lg px-3 py-1.5 text-sm text-gray-400 transition-colors hover:text-gray-200"
           >
-            取消
+            Batal
           </button>
         </div>
       </div>

@@ -38,7 +38,7 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
       await API.activateCredential(providerId, cred.id);
       onChanged();
     } catch {
-      // 网络错误静默处理，用户可重试
+      // JaringanKesalahan静默处理，用户可Coba lagi
     }
   }, [providerId, cred.id, onChanged]);
 
@@ -103,7 +103,7 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
           type="button"
           onClick={cred.is_active ? undefined : handleActivate}
           disabled={cred.is_active}
-          aria-label={cred.is_active ? "当前使用中" : `激活 ${cred.name}`}
+          aria-label={cred.is_active ? "当前使用中" : `Aktifkan ${cred.name}`}
           className={`h-2.5 w-2.5 flex-shrink-0 rounded-full transition-colors ${focusRing} ${
             cred.is_active
               ? "bg-[var(--neon-500)] shadow-[0_0_6px_var(--neon-500)]"
@@ -138,7 +138,7 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
             type="button"
             onClick={handleTest}
             disabled={testing}
-            aria-label={`测试 ${cred.name} 连接`}
+            aria-label={`Uji ${cred.name} Koneksi`}
             className={`rounded p-1.5 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300 ${focusRing}`}
           >
             {testing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Wifi className="h-3.5 w-3.5" />}
@@ -151,7 +151,7 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
                 setDraft({ name: cred.name, api_key: "", base_url: cred.base_url ?? "" });
                 setTestResult(null);
               }}
-              aria-label={`编辑 ${cred.name}`}
+              aria-label={`Edit ${cred.name}`}
               className={`rounded p-1.5 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300 ${focusRing}`}
             >
               <Edit2 className="h-3.5 w-3.5" />
@@ -162,7 +162,7 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
               type="button"
               onClick={handleDelete}
               disabled={deleting}
-              aria-label={`删除 ${cred.name}`}
+              aria-label={`Hapus ${cred.name}`}
               className={`rounded p-1.5 text-gray-500 transition-colors hover:bg-gray-800 hover:text-rose-400 ${focusRing}`}
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -175,14 +175,14 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
                 disabled={deleting}
                 className={`rounded px-2 py-1 text-xs text-rose-400 transition-colors hover:bg-rose-900/20 ${focusRing}`}
               >
-                {deleting ? <Loader2 className="h-3 w-3 animate-spin" /> : "确认"}
+                {deleting ? <Loader2 className="h-3 w-3 animate-spin" /> : "Konfirmasi"}
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmDelete(false)}
                 className={`rounded px-2 py-1 text-xs text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300 ${focusRing}`}
               >
-                取消
+                Batal
               </button>
             </div>
           )}
@@ -202,7 +202,7 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
           {testResult.message}
           {testResult.success && testResult.available_models.length > 0 && (
             <div className="mt-1 opacity-70">
-              可用模型: {testResult.available_models.join(", ")}
+              可用Model: {testResult.available_models.join(", ")}
             </div>
           )}
         </div>
@@ -212,7 +212,7 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
       {editing && (
         <div className="mt-2.5 ml-5.5 space-y-2.5 rounded-lg border border-gray-800 bg-gray-950/60 p-3">
           <div>
-            <label htmlFor={`${editPrefix}-name`} className="mb-1 block text-xs text-gray-500">名称</label>
+            <label htmlFor={`${editPrefix}-name`} className="mb-1 block text-xs text-gray-500">Nama</label>
             <input
               id={`${editPrefix}-name`}
               name="name"
@@ -237,14 +237,14 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
           </div>
           {providerId === "gemini-aistudio" && (
             <div>
-              <label htmlFor={`${editPrefix}-baseurl`} className="mb-1 block text-xs text-gray-500">Base URL（可选）</label>
+              <label htmlFor={`${editPrefix}-baseurl`} className="mb-1 block text-xs text-gray-500">Base URL（Opsional）</label>
               <input
                 id={`${editPrefix}-baseurl`}
                 name="base_url"
                 type="url"
                 value={draft.base_url}
                 onChange={(e) => setDraft((d) => ({ ...d, base_url: e.target.value }))}
-                placeholder="默认使用官方地址…"
+                placeholder="Default使用ResmiAlamat…"
                 className={inputClsPlaceholder}
               />
             </div>
@@ -257,14 +257,14 @@ const CredentialRow = memo(function CredentialRow({ cred, providerId, isVertex, 
               className={primaryBtnCls}
             >
               {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Check className="h-3 w-3" />}
-              保存
+              Simpan
             </button>
             <button
               type="button"
               onClick={() => setEditing(false)}
               className={`inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 ${focusRing}`}
             >
-              <X className="h-3 w-3" /> 取消
+              <X className="h-3 w-3" /> Batal
             </button>
           </div>
         </div>
@@ -299,14 +299,14 @@ function AddCredentialForm({ providerId, isVertex, onCreated, onCancel }: AddFor
       if (isVertex) {
         const file = fileRef.current?.files?.[0];
         if (!file) {
-          setError("请选择凭证文件");
+          setError("Silakan pilihKredensialFile");
           setSaving(false);
           return;
         }
         await API.uploadVertexCredential(name, file);
       } else {
         if (!apiKey.trim()) {
-          setError("请输入 API Key");
+          setError("Silakan masukkan API Key");
           setSaving(false);
           return;
         }
@@ -327,7 +327,7 @@ function AddCredentialForm({ providerId, isVertex, onCreated, onCancel }: AddFor
   return (
     <div className="rounded-lg border border-gray-700 bg-gray-950/60 p-3 space-y-2.5">
       <div>
-        <label htmlFor="cred-add-name" className="mb-1 block text-xs text-gray-500">名称 <span className="text-rose-400">*</span></label>
+        <label htmlFor="cred-add-name" className="mb-1 block text-xs text-gray-500">Nama <span className="text-rose-400">*</span></label>
         <input
           id="cred-add-name"
           name="name"
@@ -341,7 +341,7 @@ function AddCredentialForm({ providerId, isVertex, onCreated, onCancel }: AddFor
       </div>
       {isVertex ? (
         <div>
-          <label htmlFor="cred-add-file" className="mb-1 block text-xs text-gray-500">凭证文件 <span className="text-rose-400">*</span></label>
+          <label htmlFor="cred-add-file" className="mb-1 block text-xs text-gray-500">KredensialFile <span className="text-rose-400">*</span></label>
           <button
             id="cred-add-file"
             type="button"
@@ -349,7 +349,7 @@ function AddCredentialForm({ providerId, isVertex, onCreated, onCancel }: AddFor
             className={`inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-300 transition-colors hover:bg-gray-800 ${focusRing}`}
           >
             <Upload className="h-3 w-3" />
-            {fileRef.current?.files?.[0]?.name ?? "选择 JSON 文件…"}
+            {fileRef.current?.files?.[0]?.name ?? "Pilih JSON File…"}
           </button>
           <input ref={fileRef} type="file" accept=".json,application/json" className="hidden" onChange={() => setError(null)} />
         </div>
@@ -369,14 +369,14 @@ function AddCredentialForm({ providerId, isVertex, onCreated, onCancel }: AddFor
           </div>
           {providerId === "gemini-aistudio" && (
             <div>
-              <label htmlFor="cred-add-baseurl" className="mb-1 block text-xs text-gray-500">Base URL（可选）</label>
+              <label htmlFor="cred-add-baseurl" className="mb-1 block text-xs text-gray-500">Base URL（Opsional）</label>
               <input
                 id="cred-add-baseurl"
                 name="base_url"
                 type="url"
                 value={baseUrl}
                 onChange={(e) => setBaseUrl(e.target.value)}
-                placeholder="默认使用官方地址…"
+                placeholder="Default使用ResmiAlamat…"
                 className={inputClsPlaceholder}
               />
             </div>
@@ -392,14 +392,14 @@ function AddCredentialForm({ providerId, isVertex, onCreated, onCancel }: AddFor
           className={primaryBtnCls}
         >
           {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
-          添加
+          Tambah
         </button>
         <button
           type="button"
           onClick={onCancel}
           className={`rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 ${focusRing}`}
         >
-          取消
+          Batal
         </button>
       </div>
     </div>
@@ -420,7 +420,7 @@ export function CredentialList({ providerId, onChanged }: Props) {
   const [showAdd, setShowAdd] = useState(false);
   const isVertex = providerId === "gemini-vertex";
 
-  // 用 ref 存储 onChanged 以稳定 refresh 引用，避免父组件 re-render 导致无限循环
+  // 用 ref Penyimpanan onChanged 以Stabil refresh 引用，避免父组件 re-render 导致Tanpa batas循环
   const onChangedRef = useRef(onChanged);
   onChangedRef.current = onChanged;
 
@@ -433,7 +433,7 @@ export function CredentialList({ providerId, onChanged }: Props) {
     }
   }, [providerId]);
 
-  // 用户操作后：刷新列表 + 通知父组件
+  // 用户Aksi后：SegarkanDaftar + Notifikasi父组件
   const handleChanged = useCallback(async () => {
     await refresh();
     onChangedRef.current?.();
@@ -448,7 +448,7 @@ export function CredentialList({ providerId, onChanged }: Props) {
   if (loading) {
     return (
       <div className="flex items-center gap-2 py-4 text-sm text-gray-500">
-        <Loader2 className="h-4 w-4 animate-spin" /> 加载中…
+        <Loader2 className="h-4 w-4 animate-spin" /> Memuat...
       </div>
     );
   }
@@ -456,27 +456,27 @@ export function CredentialList({ providerId, onChanged }: Props) {
   return (
     <div>
       <div className="mb-2.5 flex items-center justify-between">
-        <h4 className="text-sm font-medium text-gray-300">密钥管理</h4>
+        <h4 className="text-sm font-medium text-gray-300">Manajemen Kunci</h4>
         {!showAdd && (
           <button
             type="button"
             onClick={() => setShowAdd(true)}
             className={`inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-[var(--neon-500)] transition-colors hover:bg-[var(--neon-500)]/10 ${focusRing}`}
           >
-            <Plus className="h-3 w-3" /> 添加密钥
+            <Plus className="h-3 w-3" /> TambahKey
           </button>
         )}
       </div>
 
       {credentials.length === 0 && !showAdd && (
         <div className="rounded-lg border border-dashed border-gray-700 px-4 py-6 text-center">
-          <p className="text-sm text-gray-500">暂无密钥</p>
+          <p className="text-sm text-gray-500">Belum ada kunci</p>
           <button
             type="button"
             onClick={() => setShowAdd(true)}
             className={`mt-2 inline-flex items-center gap-1 text-xs text-[var(--neon-500)] transition-colors hover:text-[var(--neon-400)] ${focusRing}`}
           >
-            <Plus className="h-3 w-3" /> 添加第一个密钥
+            <Plus className="h-3 w-3" /> Tambah第一个Key
           </button>
         </div>
       )}

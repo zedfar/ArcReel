@@ -20,7 +20,7 @@ function makeTodoWriteBlock(overrides: Partial<ContentBlock> = {}): ContentBlock
     id: "todo-write-1",
     name: "TodoWrite",
     input: {
-      todos: [makeTodo("准备任务"), makeTodo("完成任务", "completed")],
+      todos: [makeTodo("准备Tugas"), makeTodo("SelesaiTugas", "completed")],
     },
     ...overrides,
   };
@@ -30,8 +30,8 @@ describe("ToolCallWithResult", () => {
   it("keeps successful TodoWrite calls in the compact summary mode", () => {
     render(<ToolCallWithResult block={makeTodoWriteBlock({ result: "ok" })} />);
 
-    expect(screen.getByText("任务清单 1/2 完成")).toBeInTheDocument();
-    expect(screen.queryByText("执行失败")).not.toBeInTheDocument();
+    expect(screen.getByText("Daftar Tugas 1/2 Selesai")).toBeInTheDocument();
+    expect(screen.queryByText("Gagal dieksekusi")).not.toBeInTheDocument();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
@@ -47,8 +47,8 @@ describe("ToolCallWithResult", () => {
 
     fireEvent.click(screen.getByRole("button"));
 
-    expect(screen.getByText("执行失败")).toBeInTheDocument();
+    expect(screen.getByText("Gagal dieksekusi")).toBeInTheDocument();
     expect(screen.getByText("permission denied")).toBeInTheDocument();
-    expect(screen.queryByText("任务清单 1/2 完成")).not.toBeInTheDocument();
+    expect(screen.queryByText("Daftar Tugas 1/2 Selesai")).not.toBeInTheDocument();
   });
 });

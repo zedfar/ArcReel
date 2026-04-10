@@ -24,7 +24,7 @@ export function VideoPromptEditor({
       <AutoTextarea
         value={prompt.action}
         onChange={(v) => onUpdate({ action: v })}
-        placeholder="视频动作描述..."
+        placeholder="VideoAksiDeskripsi..."
       />
 
       {/* Collapsible metadata fields */}
@@ -36,22 +36,22 @@ export function VideoPromptEditor({
         <ChevronDown
           className={`h-3 w-3 transition-transform ${collapsed ? "-rotate-90" : ""}`}
         />
-        运镜 / 音效 / 对话
+        Gerakan kamera / Efek Suara / Dialog
       </button>
 
       {!collapsed && (
         <div className="flex flex-col gap-2 pl-1">
           <DropdownPill
-            label="镜头运动"
+            label="Gerakan Kamera"
             value={prompt.camera_motion}
             options={CAMERA_MOTIONS}
             onChange={(v: CameraMotion) => onUpdate({ camera_motion: v })}
           />
           <CompactInput
-            label="环境音效"
+            label="Efek Suara Lingkungan"
             value={prompt.ambiance_audio}
             onChange={(v) => onUpdate({ ambiance_audio: v })}
-            placeholder="环境音效描述..."
+            placeholder="Efek Suara LingkunganDeskripsi..."
           />
           <DialogueListEditor
             dialogue={prompt.dialogue ?? []}

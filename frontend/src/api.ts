@@ -163,8 +163,8 @@ function normalizeExportDiagnostics(value: unknown): ExportDiagnostics {
 const API_BASE = "/api/v1";
 
 /**
- * 检查 fetch 响应状态，抛出包含后端错误信息的 Error。
- * 用于不经过 API.request() 的自定义 fetch 调用。
+ * Periksa status respons fetch, lempar Error dengan informasi kesalahan backend.
+ * Digunakan untuk panggilan fetch kustom tanpa melalui API.request().
  */
 async function throwIfNotOk(response: Response, fallbackMsg: string): Promise<void> {
   if (!response.ok) {
@@ -181,10 +181,10 @@ function handleUnauthorized(response: Response): void {
 
   clearToken();
   globalThis.location.href = "/login";
-  throw new Error("认证已过期，请重新登录");
+  throw new Error("Sesi berakhir, silakan login kembali");
 }
 
-/** 为 fetch options 注入 Authorization header */
+/** Suntikkan header Authorization ke opsi fetch */
 function withAuth(options: RequestInit = {}): RequestInit {
   const token = getToken();
   if (!token) return options;
@@ -193,7 +193,7 @@ function withAuth(options: RequestInit = {}): RequestInit {
   return { ...options, headers };
 }
 
-/** 为 URL 追加 token query param（用于 EventSource） */
+/** Tambahkan parameter query token ke URL (untuk EventSource) */
 function withAuthQuery(url: string): string {
   const token = getToken();
   if (!token) return url;
@@ -203,7 +203,7 @@ function withAuthQuery(url: string): string {
 
 class API {
   /**
-   * 通用请求方法
+   * Metode permintaan umum
    */
   static async request<T = unknown>(
     endpoint: string,
@@ -223,7 +223,7 @@ class API {
       const error = await response
         .json()
         .catch(() => ({ detail: response.statusText }));
-      let message = "请求失败";
+      let message = "请求Gagal";
       if (typeof error.detail === "string") {
         message = error.detail;
       } else if (Array.isArray(error.detail) && error.detail.length > 0) {
@@ -238,7 +238,7 @@ class API {
     return response.json();
   }
 
-  // ==================== 系统配置 ====================
+  // ==================== Konfigurasi Sistem ====================
 
   static async getSystemConfig(): Promise<GetSystemConfigResponse> {
     return this.request("/system/config");
@@ -254,7 +254,7 @@ class API {
   }
 
 
-  // ==================== 项目管理 ====================
+  // ==================== Manajemen Proyek ====================
 
   static async listProjects(): Promise<{ projects: ProjectSummary[] }> {
     return this.request("/projects");
@@ -294,7 +294,7 @@ class API {
     updates: Partial<ProjectData>
   ): Promise<{ success: boolean; project: ProjectData }> {
     if ("content_mode" in updates) {
-      throw new Error("项目创建后不支持修改 content_mode");
+      throw new Error("Mode konten tidak dapat diubah setelah proyek dibuat");
     }
     return this.request(`/projects/${encodeURIComponent(name)}`, {
       method: "PATCH",
@@ -337,7 +337,7 @@ class API {
     return `${API_BASE}/projects/${encodeURIComponent(projectName)}/export?download_token=${encodeURIComponent(downloadToken)}&scope=${encodeURIComponent(scope)}`;
   }
 
-  /** 构造剪映草稿下载 URL */
+  /** Membangun URL unduhan draf Jianying */
   static getJianyingDraftDownloadUrl(
     projectName: string,
     episode: number,
@@ -371,7 +371,7 @@ class API {
         .json()
         .catch(() => ({ detail: response.statusText, errors: [], warnings: [] }));
       const error = new Error(
-        typeof payload.detail === "string" ? payload.detail : "导入失败"
+        typeof payload.detail === "string" ? payload.detail : "Gagal mengimpor"
       ) as Error & {
         status?: number;
         detail?: string;
@@ -381,7 +381,7 @@ class API {
         diagnostics?: ImportFailureDiagnostics;
       };
       error.status = response.status;
-      error.detail = typeof payload.detail === "string" ? payload.detail : "导入失败";
+      error.detail = typeof payload.detail === "string" ? payload.detail : "Gagal mengimpor";
       error.errors = Array.isArray(payload.errors) ? payload.errors : [];
       error.warnings = Array.isArray(payload.warnings) ? payload.warnings : [];
       if (typeof payload.conflict_project_name === "string") {
@@ -401,7 +401,7 @@ class API {
     };
   }
 
-  // ==================== 角色管理 ====================
+  // ==================== Manajemen Karakter ====================
 
   static async addCharacter(
     projectName: string,
@@ -448,7 +448,7 @@ class API {
     );
   }
 
-  // ==================== 线索管理 ====================
+  // ==================== Manajemen Petunjuk ====================
 
   static async addClue(
     projectName: string,
@@ -497,7 +497,7 @@ class API {
     );
   }
 
-  // ==================== 场景管理 ====================
+  // ==================== AdeganManajemen ====================
 
   static async getScript(
     projectName: string,
@@ -523,7 +523,7 @@ class API {
     );
   }
 
-  // ==================== 片段管理（说书模式） ====================
+  // ==================== SegmenManajemen（Mode Storytelling） ====================
 
   static async updateSegment(
     projectName: string,
@@ -539,7 +539,7 @@ class API {
     );
   }
 
-  // ==================== 文件管理 ====================
+  // ==================== Manajemen File ====================
 
   static async uploadFile(
     projectName: string,
@@ -560,7 +560,7 @@ class API {
       body: formData,
     }));
 
-    await throwIfNotOk(response, "上传失败");
+    await throwIfNotOk(response, "Gagal mengunggah");
 
     return response.json();
   }
@@ -586,10 +586,10 @@ class API {
     return `${base}?v=${encodeURIComponent(String(cacheBust))}`;
   }
 
-  // ==================== Source 文件管理 ====================
+  // ==================== Source Manajemen File ====================
 
   /**
-   * 获取 source 文件内容
+   * 获取 source FileKonten
    */
   static async getSourceContent(
     projectName: string,
@@ -599,12 +599,12 @@ class API {
       `${API_BASE}/projects/${encodeURIComponent(projectName)}/source/${encodeURIComponent(filename)}`,
       withAuth()
     );
-    await throwIfNotOk(response, "获取文件内容失败");
+    await throwIfNotOk(response, "Gagal mendapatkan isi file");
     return response.text();
   }
 
   /**
-   * 保存 source 文件（新建或更新）
+   * Simpan source File（Buat atau Perbarui）
    */
   static async saveSourceFile(
     projectName: string,
@@ -619,12 +619,12 @@ class API {
         body: content,
       })
     );
-    await throwIfNotOk(response, "保存文件失败");
+    await throwIfNotOk(response, "Gagal menyimpan file");
     return response.json();
   }
 
   /**
-   * 删除 source 文件
+   * Hapus source File
    */
   static async deleteSourceFile(
     projectName: string,
@@ -636,14 +636,14 @@ class API {
         method: "DELETE",
       })
     );
-    await throwIfNotOk(response, "删除文件失败");
+    await throwIfNotOk(response, "Gagal menghapus file");
     return response.json();
   }
 
-  // ==================== 草稿文件管理 ====================
+  // ==================== DrafManajemen File ====================
 
   /**
-   * 获取项目的所有草稿
+   * 获取Proyek的所有Draf
    */
   static async listDrafts(
     projectName: string
@@ -654,7 +654,7 @@ class API {
   }
 
   /**
-   * 获取草稿内容
+   * 获取DrafKonten
    */
   static async getDraftContent(
     projectName: string,
@@ -665,12 +665,12 @@ class API {
       `${API_BASE}/projects/${encodeURIComponent(projectName)}/drafts/${episode}/step${stepNum}`,
       withAuth()
     );
-    await throwIfNotOk(response, "获取草稿内容失败");
+    await throwIfNotOk(response, "获取DrafKontenGagal");
     return response.text();
   }
 
   /**
-   * 保存草稿内容
+   * SimpanDrafKonten
    */
   static async saveDraft(
     projectName: string,
@@ -686,12 +686,12 @@ class API {
         body: content,
       })
     );
-    await throwIfNotOk(response, "保存草稿失败");
+    await throwIfNotOk(response, "SimpanDrafGagal");
     return response.json();
   }
 
   /**
-   * 删除草稿
+   * HapusDraf
    */
   static async deleteDraft(
     projectName: string,
@@ -704,10 +704,10 @@ class API {
     );
   }
 
-  // ==================== 项目概述管理 ====================
+  // ==================== ProyekIkhtisarManajemen ====================
 
   /**
-   * 使用 AI 生成项目概述
+   * 使用 AI GenerateProyekIkhtisar
    */
   static async generateOverview(
     projectName: string
@@ -721,7 +721,7 @@ class API {
   }
 
   /**
-   * 更新项目概述（手动编辑）
+   * PerbaruiProyekIkhtisar（ManualEdit）
    */
   static async updateOverview(
     projectName: string,
@@ -736,14 +736,14 @@ class API {
     );
   }
 
-  // ==================== 生成 API ====================
+  // ==================== Generate API ====================
 
   /**
-   * 生成分镜图
-   * @param projectName - 项目名称
-   * @param segmentId - 片段/场景 ID
-   * @param prompt - 图片生成 prompt（支持字符串或结构化对象）
-   * @param scriptFile - 剧本文件名
+   * GenerateStoryboard
+   * @param projectName - ProyekNama
+   * @param segmentId - Segmen/Adegan ID
+   * @param prompt - Generasi Gambar prompt（支持字符串或结构化对象）
+   * @param scriptFile - Nama File Skenario
    */
   static async generateStoryboard(
     projectName: string,
@@ -761,12 +761,12 @@ class API {
   }
 
   /**
-   * 生成视频
-   * @param projectName - 项目名称
-   * @param segmentId - 片段/场景 ID
-   * @param prompt - 视频生成 prompt（支持字符串或结构化对象）
-   * @param scriptFile - 剧本文件名
-   * @param durationSeconds - 时长（秒）
+   * GenerateVideo
+   * @param projectName - ProyekNama
+   * @param segmentId - Segmen/Adegan ID
+   * @param prompt - Generasi Video prompt（支持字符串或结构化对象）
+   * @param scriptFile - Nama File Skenario
+   * @param durationSeconds - Durasi（detik）
    */
   static async generateVideo(
     projectName: string,
@@ -789,10 +789,10 @@ class API {
   }
 
   /**
-   * 生成角色设计图
-   * @param projectName - 项目名称
-   * @param charName - 角色名称
-   * @param prompt - 角色描述 prompt
+   * GenerateKarakterDesain
+   * @param projectName - ProyekNama
+   * @param charName - Nama Karakter
+   * @param prompt - Deskripsi Karakter prompt
    */
   static async generateCharacter(
     projectName: string,
@@ -813,10 +813,10 @@ class API {
   }
 
   /**
-   * 生成线索设计图
-   * @param projectName - 项目名称
-   * @param clueName - 线索名称
-   * @param prompt - 线索描述 prompt
+   * GeneratePetunjukDesain
+   * @param projectName - ProyekNama
+   * @param clueName - Nama Petunjuk
+   * @param prompt - Deskripsi Petunjuk prompt
    */
   static async generateClue(
     projectName: string,
@@ -836,7 +836,7 @@ class API {
     );
   }
 
-  // ==================== 任务队列 API ====================
+  // ==================== Antrean Tugas API ====================
 
   static async getTask(taskId: string): Promise<TaskItem> {
     return this.request(`/tasks/${encodeURIComponent(taskId)}`);
@@ -881,7 +881,7 @@ class API {
     return this.request(`/tasks/stats${query ? "?" + query : ""}`);
   }
 
-  // ==================== 任务取消 API ====================
+  // ==================== TugasBatal API ====================
 
   static async cancelPreview(
     taskId: string
@@ -931,7 +931,7 @@ class API {
       try {
         return JSON.parse(event.data || "{}");
       } catch (err) {
-        console.error("解析 SSE 数据失败:", err, event.data);
+        console.error("Urai SSE DataGagal:", err, event.data);
         return null;
       }
     };
@@ -975,7 +975,7 @@ class API {
       try {
         return JSON.parse(event.data || "{}");
       } catch (err) {
-        console.error("解析项目事件 SSE 数据失败:", err, event.data);
+        console.error("UraiProyek事件 SSE DataGagal:", err, event.data);
         return null;
       }
     };
@@ -1004,13 +1004,13 @@ class API {
     return source;
   }
 
-  // ==================== 版本管理 API ====================
+  // ==================== Manajemen Versi API ====================
 
   /**
-   * 获取资源版本列表
-   * @param projectName - 项目名称
-   * @param resourceType - 资源类型 (storyboards, videos, characters, clues)
-   * @param resourceId - 资源 ID
+   * 获取资SumberVersiDaftar
+   * @param projectName - ProyekNama
+   * @param resourceType - 资SumberTipe (storyboards, videos, characters, clues)
+   * @param resourceId - 资Sumber ID
    */
   static async getVersions(
     projectName: string,
@@ -1028,11 +1028,11 @@ class API {
   }
 
   /**
-   * 还原到指定版本
-   * @param projectName - 项目名称
-   * @param resourceType - 资源类型
-   * @param resourceId - 资源 ID
-   * @param version - 要还原的版本号
+   * Pulihkan ke versi tertentu
+   * @param projectName - ProyekNama
+   * @param resourceType - 资SumberTipe
+   * @param resourceId - 资Sumber ID
+   * @param version - 要Pulihkan的Versi号
    */
   static async restoreVersion(
     projectName: string,
@@ -1048,13 +1048,13 @@ class API {
     );
   }
 
-  // ==================== 风格参考图 API ====================
+  // ==================== GayaReferensi API ====================
 
   /**
-   * 上传风格参考图
-   * @param projectName - 项目名称
-   * @param file - 图片文件
-   * @returns 包含 style_image, style_description, url 的结果
+   * Unggah referensi gaya
+   * @param projectName - ProyekNama
+   * @param file - GambarFile
+   * @returns 包含 style_image, style_description, url 的Hasil
    */
   static async uploadStyleImage(
     projectName: string,
@@ -1076,14 +1076,14 @@ class API {
       })
     );
 
-    await throwIfNotOk(response, "上传失败");
+    await throwIfNotOk(response, "Gagal mengunggah");
 
     return response.json();
   }
 
   /**
-   * 删除风格参考图
-   * @param projectName - 项目名称
+   * HapusGayaReferensi
+   * @param projectName - ProyekNama
    */
   static async deleteStyleImage(
     projectName: string
@@ -1097,9 +1097,9 @@ class API {
   }
 
   /**
-   * 更新风格描述
-   * @param projectName - 项目名称
-   * @param styleDescription - 风格描述
+   * PerbaruiGayaDeskripsi
+   * @param projectName - ProyekNama
+   * @param styleDescription - GayaDeskripsi
    */
   static async updateStyleDescription(
     projectName: string,
@@ -1114,7 +1114,7 @@ class API {
     );
   }
 
-  // ==================== 助手会话 API ====================
+  // ==================== AsistenSesi API ====================
 
   /** Build the project-scoped assistant base path. */
   private static assistantBase(projectName: string): string {
@@ -1218,10 +1218,10 @@ class API {
     );
   }
 
-  // ==================== 费用统计 API ====================
+  // ==================== BiayaStatistik API ====================
 
   /**
-   * 获取统计摘要
+   * 获取StatistikRingkasan
    * @param filters - 筛选条件
    */
   static async getUsageStats(
@@ -1237,7 +1237,7 @@ class API {
   }
 
   /**
-   * 获取调用记录列表
+   * 获取调用RekamanDaftar
    * @param filters - 筛选条件
    */
   static async getUsageCalls(
@@ -1257,20 +1257,20 @@ class API {
   }
 
   /**
-   * 获取有调用记录的项目列表
+   * 获取有调用Rekaman的ProyekDaftar
    */
   static async getUsageProjects(): Promise<{ projects: string[] }> {
     return this.request("/usage/projects");
   }
 
-  // ==================== API Key 管理 API ====================
+  // ==================== API Key Manajemen API ====================
 
   /** 列出所有 API Key（不含完整 key）。 */
   static async listApiKeys(): Promise<ApiKeyInfo[]> {
     return this.request("/api-keys");
   }
 
-  /** 创建新 API Key，返回含完整 key 的响应（仅此一次）。 */
+  /** BuatBaru API Key，Kembali含完整 key 的Respons（仅此一次）。 */
   static async createApiKey(name: string, expiresDays?: number): Promise<CreateApiKeyResponse> {
     return this.request("/api-keys", {
       method: "POST",
@@ -1278,24 +1278,24 @@ class API {
     });
   }
 
-  /** 删除（吊销）指定 API Key。 */
+  /** Hapus（吊销）指定 API Key。 */
   static async deleteApiKey(keyId: number): Promise<void> {
     return this.request(`/api-keys/${keyId}`, { method: "DELETE" });
   }
 
-  // ==================== Provider 管理 API ====================
+  // ==================== Provider Manajemen API ====================
 
-  /** 获取所有 provider 列表及状态。 */
+  /** 获取所有 provider Daftar及Status。 */
   static async getProviders(): Promise<{ providers: ProviderInfo[] }> {
     return this.request("/providers");
   }
 
-  /** 获取指定 provider 的配置详情（含字段列表）。 */
+  /** 获取指定 provider 的KonfigurasiDetail（含FieldDaftar）。 */
   static async getProviderConfig(id: string): Promise<ProviderConfigDetail> {
     return this.request(`/providers/${encodeURIComponent(id)}/config`);
   }
 
-  /** 更新指定 provider 的配置字段。 */
+  /** Perbarui指定 provider 的KonfigurasiField。 */
   static async patchProviderConfig(
     id: string,
     patch: Record<string, string | null>
@@ -1306,7 +1306,7 @@ class API {
     });
   }
 
-  /** 测试指定 provider 的连接。 */
+  /** Uji指定 provider 的Koneksi。 */
   static async testProviderConnection(id: string, credentialId?: number): Promise<ProviderTestResult> {
     const params = credentialId != null ? `?credential_id=${credentialId}` : "";
     return this.request(`/providers/${encodeURIComponent(id)}/test${params}`, {
@@ -1314,7 +1314,7 @@ class API {
     });
   }
 
-  // ==================== Provider 凭证管理 API ====================
+  // ==================== Provider Manajemen Kredensial API ====================
 
   static async listCredentials(providerId: string): Promise<{ credentials: ProviderCredential[] }> {
     return this.request(`/providers/${encodeURIComponent(providerId)}/credentials`);
@@ -1362,11 +1362,11 @@ class API {
       `${API_BASE}/providers/gemini-vertex/credentials/upload?name=${encodeURIComponent(name)}`,
       withAuth({ method: "POST", body: formData }),
     );
-    await throwIfNotOk(response, "上传凭证失败");
+    await throwIfNotOk(response, "Gagal mengunggah kredensial");
     return response.json();
   }
 
-  // ==================== 自定义供应商 API ====================
+  // ==================== Provider Kustom API ====================
 
   static async listCustomProviders(): Promise<{ providers: CustomProviderInfo[] }> {
     return this.request("/custom-providers");
@@ -1408,11 +1408,11 @@ class API {
     return this.request(`/custom-providers/${id}/test`, { method: "POST" });
   }
 
-  // ==================== 用量统计（按 provider 分组）API ====================
+  // ==================== Statistik Penggunaan（按 provider 分组）API ====================
 
   /**
-   * 获取按 provider 分组的用量统计。
-   * @param params - 可选筛选：provider、start、end（ISO 日期字符串）
+   * Dapatkan statistik penggunaan yang dikelompokkan berdasarkan provider.
+   * @param params - Opsional筛选：provider、start、end（ISO 日期字符串）
    */
   static async getUsageStatsGrouped(
     params: { provider?: string; start?: string; end?: string } = {}
@@ -1425,11 +1425,11 @@ class API {
     return this.request(`/usage/stats?${searchParams.toString()}`);
   }
 
-  // ==================== 费用估算 API ====================
+  // ==================== BiayaEstimasi API ====================
 
   /**
-   * 获取项目费用估算。
-   * @param projectName - 项目名称
+   * Dapatkan estimasi biaya proyek.
+   * @param projectName - ProyekNama
    */
   static async getCostEstimate(projectName: string): Promise<CostEstimateResponse> {
     return this.request(`/projects/${encodeURIComponent(projectName)}/cost-estimate`);

@@ -13,8 +13,8 @@ export const PROVIDER_NAMES: Record<string, string> = {
 };
 
 /**
- * 根据 providerId 渲染对应的供应商图标。
- * 支持 gemini-aistudio、gemini-vertex、grok、ark，其余显示首字母。
+ * 根据 providerId Render对应的ProviderIkon。
+ * 支持 gemini-aistudio、gemini-vertex、grok、ark，其余Tampilkan首字母。
  */
 export function ProviderIcon({ providerId, className }: { providerId: string; className?: string }) {
   const cls = className ?? "h-6 w-6";

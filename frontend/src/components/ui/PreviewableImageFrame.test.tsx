@@ -10,27 +10,27 @@ describe("PreviewableImageFrame", () => {
       </PreviewableImageFrame>,
     );
 
-    const trigger = screen.getByRole("button", { name: "示例图 全屏预览" });
+    const trigger = screen.getByRole("button", { name: "示例图 Pratinjau layar penuh" });
 
     fireEvent.click(trigger);
     expect(
-      screen.getByRole("dialog", { name: "示例图 全屏预览" }),
+      screen.getByRole("dialog", { name: "示例图 Pratinjau layar penuh" }),
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "关闭全屏预览" }));
+    fireEvent.click(screen.getByRole("button", { name: "Tutup pratinjau layar penuh" }));
     expect(
-      screen.queryByRole("dialog", { name: "示例图 全屏预览" }),
+      screen.queryByRole("dialog", { name: "示例图 Pratinjau layar penuh" }),
     ).not.toBeInTheDocument();
 
     fireEvent.click(trigger);
-    const dialog = screen.getByRole("dialog", { name: "示例图 全屏预览" });
+    const dialog = screen.getByRole("dialog", { name: "示例图 Pratinjau layar penuh" });
     const backdrop = dialog.parentElement?.parentElement;
     expect(backdrop).not.toBeNull();
 
     fireEvent.click(backdrop as HTMLElement);
 
     expect(
-      screen.queryByRole("dialog", { name: "示例图 全屏预览" }),
+      screen.queryByRole("dialog", { name: "示例图 Pratinjau layar penuh" }),
     ).not.toBeInTheDocument();
   }, 10_000);
 });

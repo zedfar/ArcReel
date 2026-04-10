@@ -1,16 +1,16 @@
-/* 自定义样式 */
+/* KustomGaya */
 
-/* 滚动条样式 — 极窄 + 滚动时渐显、停止后渐隐 */
+/* Gaya scrollbar — 极窄 + Scroll时Fade in、Berhenti后Fade out */
 
-/* 注册可动画的自定义属性（::-webkit-scrollbar-thumb 不支持 transition，
-   但 @property 注册的自定义属性可在元素自身上过渡，伪元素读取插值后的值） */
+/* 注册可Animasi的KustomAtribut（::-webkit-scrollbar-thumb 不支持 transition，
+   但 @property 注册的KustomAtribut可在元素自身上Transisi，伪元素读取插值后的值） */
 @property --scrollbar-opacity {
     syntax: '<number>';
     inherits: true;
     initial-value: 0;
 }
 
-/* 放入 @layer base，避免 transition 简写覆盖 Tailwind utilities 层的过渡属性 */
+/* 放入 @layer base，避免 transition 简写覆盖 Tailwind utilities 层的TransisiAtribut */
 @layer base {
     * {
         --scrollbar-opacity: 0;
@@ -37,17 +37,17 @@
     border-radius: 9999px;
 }
 
-/* 悬停在滑块上：提亮 */
+/* Hover在Slider上：提亮 */
 [data-scrolling]::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
 }
 
-/* 卡片悬停效果 — 仅颜色过渡，禁止位移 */
+/* Efek hover kartu — 仅WarnaTransisi，禁止位移 */
 .project-card {
     transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
-/* 模态框动画 */
+/* Animasi modal */
 .modal-enter {
     opacity: 0;
     transform: scale(0.95);
@@ -59,13 +59,13 @@
     transition: opacity 0.2s ease-out, transform 0.2s ease-out;
 }
 
-/* Tab 激活状态 */
+/* Status aktif Tab */
 .tab-active {
     border-bottom: 2px solid #3b82f6;
     color: #3b82f6;
 }
 
-/* 文件拖拽区域 */
+/* Area tarik file */
 .drop-zone {
     border: 2px dashed #3a3a3a;
     transition: border-color 0.2s, background-color 0.2s;
@@ -76,7 +76,7 @@
     background-color: rgba(59, 130, 246, 0.1);
 }
 
-/* 图片预览 */
+/* Pratinjau gambar */
 .image-preview {
     position: relative;
     overflow: hidden;
@@ -90,14 +90,14 @@
     opacity: 0.85;
 }
 
-/* 场景网格 */
+/* Adegan网格 */
 .scene-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
 }
 
-/* 视频预览 */
+/* Pratinjau video */
 .video-preview {
     position: relative;
 }
@@ -118,7 +118,7 @@
     opacity: 1;
 }
 
-/* 进度环 */
+/* Cincin progres */
 .progress-ring {
     transform: rotate(-90deg);
 }
@@ -128,7 +128,7 @@
     transform-origin: 50% 50%;
 }
 
-/* 分析进度条动画 */
+/* 分析Progres条Animasi */
 @keyframes progress-indeterminate {
   0% { width: 0%; margin-left: 0%; }
   50% { width: 40%; margin-left: 30%; }
@@ -139,7 +139,7 @@
   animation: progress-indeterminate 2s ease-in-out infinite;
 }
 
-/* 响应式调整 */
+/* Penyesuaian responsif */
 @media (max-width: 640px) {
     .scene-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -149,26 +149,26 @@
     }
 }
 
-/* ==================== 说书模式样式 ==================== */
+/* ==================== Mode StorytellingGaya ==================== */
 
-/* 9:16 竖屏比例 */
+/* 9:16 Layar vertikalRasio */
 .aspect-portrait {
     aspect-ratio: 9 / 16;
 }
 
-/* 3:4 竖版比例（角色设计图） */
+/* 3:4 VertikalRasio（KarakterDesain） */
 .aspect-portrait-3-4 {
     aspect-ratio: 3 / 4;
 }
 
-/* 片段卡片网格 */
+/* Kartu segmen网格 */
 .segment-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 1rem;
 }
 
-/* 片段卡片 — 仅颜色过渡，禁止位移 */
+/* Kartu segmen — 仅WarnaTransisi，禁止位移 */
 .segment-card {
     transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
@@ -186,7 +186,7 @@
     background-color: #222222;
 }
 
-/* ==================== Markdown 渲染样式 ==================== */
+/* ==================== Markdown RenderGaya ==================== */
 
 .markdown-body h1 {
     font-size: 1.75rem;

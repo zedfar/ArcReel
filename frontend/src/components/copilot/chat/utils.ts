@@ -14,24 +14,24 @@ export function cn(...classes: (string | false | null | undefined)[]): string {
 export function getRoleLabel(role: string): string {
   switch (role) {
     case "assistant":
-      return "助手";
+      return "Asisten";
     case "user":
       return "你";
     case "tool":
-      return "工具";
+      return "Alat";
     case "tool_result":
-      return "工具结果";
+      return "AlatHasil";
     case "skill_content":
       return "Skill";
     case "result":
-      return "完成";
+      return "Selesai";
     case "system":
-      return "系统";
+      return "Sistem";
     case "stream_event":
-      return "流式更新";
+      return "流式Perbarui";
     case "unknown":
-      return "消息";
+      return "Pesan";
     default:
-      return role || "消息";
+      return role || "Pesan";
   }
 }

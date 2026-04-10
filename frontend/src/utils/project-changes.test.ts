@@ -11,7 +11,7 @@ function makeChange(overrides: Partial<ProjectChange> = {}): ProjectChange {
     entity_type: "character",
     action: "created",
     entity_id: "张三",
-    label: "角色「张三」",
+    label: "Karakter "Zhang San"",
     important: true,
     focus: null,
     ...overrides,
@@ -21,18 +21,18 @@ function makeChange(overrides: Partial<ProjectChange> = {}): ProjectChange {
 describe("project-changes utils", () => {
   it("groups changes by entity_type and action", () => {
     const groups = groupChangesByType([
-      makeChange({ entity_id: "张三", label: "角色「张三」" }),
-      makeChange({ entity_id: "李四", label: "角色「李四」" }),
+      makeChange({ entity_id: "张三", label: "Karakter "Zhang San"" }),
+      makeChange({ entity_id: "李四", label: "Karakter "Li Si"" }),
       makeChange({
         entity_type: "clue",
         entity_id: "玉佩",
-        label: "线索「玉佩」",
+        label: "Petunjuk "Jade Pendant"",
       }),
       makeChange({
         entity_type: "character",
         action: "updated",
         entity_id: "王五",
-        label: "角色「王五」",
+        label: "Karakter "Wang Wu"",
       }),
     ]);
 
@@ -47,24 +47,24 @@ describe("project-changes utils", () => {
 
   it("formats grouped notification text and truncates long lists", () => {
     const [singleGroup] = groupChangesByType([
-      makeChange({ entity_id: "张三", label: "角色「张三」" }),
+      makeChange({ entity_id: "张三", label: "Karakter "Zhang San"" }),
     ]);
-    expect(formatGroupedNotificationText(singleGroup)).toBe("角色「张三」已创建");
+    expect(formatGroupedNotificationText(singleGroup)).toBe("Karakter "Zhang San"Telah dibuat");
 
     const [grouped] = groupChangesByType([
-      makeChange({ entity_id: "张三", label: "角色「张三」" }),
-      makeChange({ entity_id: "李四", label: "角色「李四」" }),
-      makeChange({ entity_id: "王五", label: "角色「王五」" }),
-      makeChange({ entity_id: "赵六", label: "角色「赵六」" }),
-      makeChange({ entity_id: "钱七", label: "角色「钱七」" }),
-      makeChange({ entity_id: "孙八", label: "角色「孙八」" }),
+      makeChange({ entity_id: "张三", label: "Karakter "Zhang San"" }),
+      makeChange({ entity_id: "李四", label: "Karakter "Li Si"" }),
+      makeChange({ entity_id: "王五", label: "Karakter "Wang Wu"" }),
+      makeChange({ entity_id: "赵六", label: "Karakter "Zhao Liu"" }),
+      makeChange({ entity_id: "钱七", label: "Karakter "Qian Qi"" }),
+      makeChange({ entity_id: "孙八", label: "Karakter "Sun Ba"" }),
     ]);
 
     expect(formatGroupedNotificationText(grouped)).toBe(
-      "新增了 6 个角色：张三、李四、王五、赵六、钱七…等",
+      "Tambah了 6  karakter：张三、李四、王五、赵六、钱七…等",
     );
     expect(formatGroupedDeferredText(grouped)).toBe(
-      "AI 刚新增了 6 个角色：张三、李四、王五、赵六、钱七…等，点击查看",
+      "AI baru saja menambahkan 6  karakter：张三、李四、王五、赵六、钱七…等，Klik untuk melihat",
     );
   });
 });

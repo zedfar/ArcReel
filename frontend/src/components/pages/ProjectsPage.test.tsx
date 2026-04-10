@@ -36,7 +36,7 @@ describe("ProjectsPage", () => {
     );
 
     renderPage();
-    expect(screen.getByText("加载项目列表...")).toBeInTheDocument();
+    expect(screen.getByText("Memuat daftar proyek...")).toBeInTheDocument();
   });
 
   it("shows empty state when no projects exist", async () => {
@@ -44,9 +44,9 @@ describe("ProjectsPage", () => {
 
     renderPage();
 
-    expect(await screen.findByText("暂无项目")).toBeInTheDocument();
+    expect(await screen.findByText("Belum ada proyek")).toBeInTheDocument();
     expect(
-      screen.getByText("点击右上角「新建项目」或「导入 ZIP」开始创作"),
+      screen.getByText("Klik "Proyek Baru" atau "Impor ZIP" untuk mulai berkreasi"),
     ).toBeInTheDocument();
   });
 
@@ -80,9 +80,9 @@ describe("ProjectsPage", () => {
     vi.spyOn(API, "listProjects").mockResolvedValue({ projects: [] });
 
     renderPage();
-    await screen.findByText("暂无项目");
+    await screen.findByText("Belum ada proyek");
 
-    fireEvent.click(screen.getByRole("button", { name: "新建项目" }));
+    fireEvent.click(screen.getByRole("button", { name: "Proyek Baru" }));
 
     await waitFor(() => {
       expect(useProjectsStore.getState().showCreateModal).toBe(true);
@@ -121,16 +121,16 @@ describe("ProjectsPage", () => {
         characters: {},
         clues: {},
       },
-      warnings: ["发现未识别的附加文件/目录: extras"],
+      warnings: ["File/direktori tambahan tidak dikenal terdeteksi: extras"],
       conflict_resolution: "none",
       diagnostics: {
-        auto_fixed: [{ code: "missing_clues_field", message: "segments[0]: 补全缺失字段 clues_in_segment" }],
-        warnings: [{ code: "validation_warning", message: "发现未识别的附加文件/目录: extras" }],
+        auto_fixed: [{ code: "missing_clues_field", message: "segments[0]: Lengkapi field yang hilang clues_in_segment" }],
+        warnings: [{ code: "validation_warning", message: "File/direktori tambahan tidak dikenal terdeteksi: extras" }],
       },
     });
 
     const { container, location } = renderPage();
-    await screen.findByText("暂无项目");
+    await screen.findByText("Belum ada proyek");
 
     const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
     const file = new File(["zip"], "project.zip", { type: "application/zip" });
@@ -142,12 +142,12 @@ describe("ProjectsPage", () => {
     await waitFor(() => {
       expect(location.history?.at(-1)).toBe("/app/projects/imported-demo");
     });
-    expect(useAppStore.getState().toast?.text).toContain("导入警告");
+    expect(useAppStore.getState().toast?.text).toContain("Peringatan Impor");
   });
 
   it("shows a structured toast when import fails", async () => {
     vi.spyOn(API, "listProjects").mockResolvedValue({ projects: [] });
-    const error = new Error("导入包校验失败") as Error & {
+    const error = new Error("Validasi paket impor gagal") as Error & {
       detail?: string;
       errors?: string[];
       warnings?: string[];
@@ -157,25 +157,25 @@ describe("ProjectsPage", () => {
         warnings: { code: string; message: string }[];
       };
     };
-    error.detail = "导入包校验失败";
-    error.errors = ["缺少 project.json", "缺少 scripts/episode_1.json", "缺少角色图"];
-    error.warnings = ["发现未识别的附加文件/目录: extras"];
+    error.detail = "Validasi paket impor gagal";
+    error.errors = ["Kehilangan project.json", "缺少 scripts/episode_1.json", "缺少Karakter图"];
+    error.warnings = ["File/direktori tambahan tidak dikenal terdeteksi: extras"];
     error.diagnostics = {
       blocking: [
-        { code: "validation_error", message: "缺少 project.json" },
+        { code: "validation_error", message: "Kehilangan project.json" },
         { code: "validation_error", message: "缺少 scripts/episode_1.json" },
       ],
       auto_fixable: [
-        { code: "missing_clues_field", message: "segments[0]: 补全缺失字段 clues_in_segment" },
+        { code: "missing_clues_field", message: "segments[0]: Lengkapi field yang hilang clues_in_segment" },
       ],
       warnings: [
-        { code: "validation_warning", message: "发现未识别的附加文件/目录: extras" },
+        { code: "validation_warning", message: "File/direktori tambahan tidak dikenal terdeteksi: extras" },
       ],
     };
     vi.spyOn(API, "importProject").mockRejectedValue(error);
 
     const { container } = renderPage();
-    await screen.findByText("暂无项目");
+    await screen.findByText("Belum ada proyek");
 
     const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
     fireEvent.change(fileInput, {
@@ -183,12 +183,12 @@ describe("ProjectsPage", () => {
     });
 
     await waitFor(() => {
-      expect(useAppStore.getState().toast?.text).toContain("导入包校验失败");
+      expect(useAppStore.getState().toast?.text).toContain("Validasi paket impor gagal");
     });
-    expect(screen.getByText("导入诊断")).toBeInTheDocument();
-    expect(screen.getByText("缺少 project.json")).toBeInTheDocument();
+    expect(screen.getByText("Diagnostik impor")).toBeInTheDocument();
+    expect(screen.getByText("Kehilangan project.json")).toBeInTheDocument();
     expect(screen.getByText("缺少 scripts/episode_1.json")).toBeInTheDocument();
-    expect(screen.getByText("segments[0]: 补全缺失字段 clues_in_segment")).toBeInTheDocument();
+    expect(screen.getByText("segments[0]: Lengkapi field yang hilang clues_in_segment")).toBeInTheDocument();
   });
 
   it("opens a secondary confirmation when import hits a duplicate project id", async () => {
@@ -211,15 +211,15 @@ describe("ProjectsPage", () => {
           },
         ],
       });
-    const conflictError = new Error("检测到项目编号冲突") as Error & {
+    const conflictError = new Error("检测到Proyek编号Konflik") as Error & {
       status?: number;
       detail?: string;
       errors?: string[];
       conflict_project_name?: string;
     };
     conflictError.status = 409;
-    conflictError.detail = "检测到项目编号冲突";
-    conflictError.errors = ["项目编号 'demo' 已存在"];
+    conflictError.detail = "检测到Proyek编号Konflik";
+    conflictError.errors = ["Proyek编号 'demo' 已存在"];
     conflictError.conflict_project_name = "demo";
 
     vi.spyOn(API, "importProject")
@@ -244,14 +244,14 @@ describe("ProjectsPage", () => {
       });
 
     const { container, location } = renderPage();
-    await screen.findByText("暂无项目");
+    await screen.findByText("Belum ada proyek");
 
     const fileInput = container.querySelector('input[type="file"]') as HTMLInputElement;
     const file = new File(["zip"], "project.zip", { type: "application/zip" });
     fireEvent.change(fileInput, { target: { files: [file] } });
 
-    expect(await screen.findByText("检测到项目编号重复")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "自动重命名导入" }));
+    expect(await screen.findByText("ID Proyek duplikat terdeteksi")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Impor dengan nama baru otomatis" }));
 
     await waitFor(() => {
       expect(API.importProject).toHaveBeenNthCalledWith(1, file, "prompt");

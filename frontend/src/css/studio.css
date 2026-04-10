@@ -1,37 +1,37 @@
-/* studio.css — 工作台专用样式 */
+/* studio.css — Studio专用Gaya */
 @reference "../index.css";
 
-/* Prompt 编辑器 */
+/* Prompt Edit器 */
 .prompt-editor {
   @apply font-mono text-sm bg-gray-800 rounded-lg p-3 text-gray-200;
 }
 
-/* 统一焦点指示 — 键盘导航可见性 */
+/* Indikator fokus seragam — 键盘Navigasi可见性 */
 .focus-ring {
   @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40;
 }
 
-/* 强调色 — 低饱和度纯色 */
+/* Warna aksen — 低饱和度纯色 */
 .accent-gradient {
   @apply bg-indigo-600;
 }
 
-/* 强调色文字 */
+/* Warna aksenTeks */
 .accent-gradient-text {
   @apply text-indigo-400;
 }
 
-/* 片段卡片 */
+/* Kartu segmen */
 .segment-card {
   @apply bg-gray-900 border border-gray-800 rounded-xl;
 }
 
-/* 面板底色 */
+/* Panel底色 */
 .studio-panel {
   @apply bg-gray-900 border-gray-800;
 }
 
-/* 呼吸灯动画 — 用于任务雷达 */
+/* Animasi pernapasan — 用于Tugas雷达 */
 @keyframes breathe {
   0%, 100% { opacity: 0.4; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.15); }
@@ -41,7 +41,7 @@
   animation: breathe 2s ease-in-out infinite;
 }
 
-/* 脉冲进度条 */
+/* 脉冲Progres条 */
 @keyframes progress-pulse {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(200%); }

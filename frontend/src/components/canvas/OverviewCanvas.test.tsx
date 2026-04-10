@@ -77,7 +77,7 @@ describe("OverviewCanvas", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "删除参考图" }));
+    fireEvent.click(screen.getByRole("button", { name: "HapusReferensi" }));
 
     await waitFor(() => {
       expect(API.deleteStyleImage).toHaveBeenCalledWith("demo");
@@ -97,19 +97,19 @@ describe("OverviewCanvas", () => {
     );
 
     expect(
-      screen.queryByRole("button", { name: "保存风格描述" }),
+      screen.queryByRole("button", { name: "SimpanGayaDeskripsi" }),
     ).not.toBeInTheDocument();
 
     fireEvent.change(
       screen.getByPlaceholderText(
-        "上传风格参考图后，系统会自动分析并填充风格描述；也可以手动编辑。",
+        "Unggah referensi gaya后，Sistem会Otomatis分析并填充GayaDeskripsi；也可以ManualEdit。",
       ),
       {
         target: { value: "new description" },
       },
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "保存风格描述" }));
+    fireEvent.click(screen.getByRole("button", { name: "SimpanGayaDeskripsi" }));
 
     await waitFor(() => {
       expect(API.updateStyleDescription).toHaveBeenCalledWith(

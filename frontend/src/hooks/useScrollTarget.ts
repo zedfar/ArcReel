@@ -78,7 +78,7 @@ export function useScrollTarget(
         }
         if (Date.now() >= currentTarget.expires_at) {
           clearScrollTarget(requestId);
-          pushToast(`未找到可定位的内容：${currentTarget.id}`, "warning");
+          pushToast(`Konten tidak ditemukan：${currentTarget.id}`, "warning");
           return;
         }
         retryTimerRef.current = setTimeout(tryResolveTarget, 50);

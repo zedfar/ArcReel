@@ -3,13 +3,13 @@ import type { ProjectChange } from "@/types";
 const GROUP_NAME_LIMIT = 5;
 
 const ENTITY_LABELS: Record<ProjectChange["entity_type"], string> = {
-  project: "项目",
-  character: "角色",
-  clue: "线索",
-  segment: "分镜",
-  episode: "剧集",
-  overview: "项目概览",
-  draft: "预处理",
+  project: "Proyek",
+  character: "Karakter",
+  clue: "Petunjuk",
+  segment: "Storyboard",
+  episode: "Episode",
+  overview: "Ikhtisar Proyek",
+  draft: "Pra-pemrosesan",
 };
 
 export interface GroupedProjectChange {
@@ -64,12 +64,12 @@ export function groupChangesByType(
 
 function getEntityLabel(group: GroupedProjectChange): string {
   if (group.action === "storyboard_ready") {
-    return "分镜图";
+    return "Storyboard";
   }
   if (group.action === "video_ready") {
-    return "视频";
+    return "Video";
   }
-  return ENTITY_LABELS[group.entityType] ?? "内容";
+  return ENTITY_LABELS[group.entityType] ?? "Konten";
 }
 
 function getChangeListLabel(change: ProjectChange): string {
@@ -91,34 +91,34 @@ function summarizeGroupNames(group: GroupedProjectChange): string {
 
 function formatSingleNotificationText(change: ProjectChange): string {
   if (change.action === "storyboard_ready") {
-    return `${change.label}的分镜图已生成`;
+    return `${change.label} storyboard telah dihasilkan`;
   }
   if (change.action === "video_ready") {
-    return `${change.label}的视频已生成`;
+    return `${change.label} video telah dihasilkan`;
   }
   if (change.action === "created") {
-    return `${change.label}已创建`;
+    return `${change.label}Telah dibuat`;
   }
   if (change.action === "deleted") {
-    return `${change.label}已删除`;
+    return `${change.label}Telah dihapus`;
   }
-  return `${change.label}已更新`;
+  return `${change.label}Telah diperbarui`;
 }
 
 function formatSingleDeferredText(change: ProjectChange): string {
   if (change.action === "storyboard_ready") {
-    return `AI 刚生成了 ${change.label} 的分镜图，点击查看`;
+    return `AI baru saja menghasilkan ${change.label}  storyboard，Klik untuk melihat`;
   }
   if (change.action === "video_ready") {
-    return `AI 刚生成了 ${change.label} 的视频，点击查看`;
+    return `AI baru saja menghasilkan ${change.label}  video，Klik untuk melihat`;
   }
   if (change.action === "created") {
-    return `AI 刚新增了 ${change.label}，点击查看`;
+    return `AI baru saja menambahkan ${change.label}，Klik untuk melihat`;
   }
   if (change.action === "deleted") {
-    return `AI 刚删除了 ${change.label}，点击查看`;
+    return `AI baru saja menghapus ${change.label}，Klik untuk melihat`;
   }
-  return `AI 刚更新了 ${change.label}，点击查看`;
+  return `AI baru saja memperbarui ${change.label}，Klik untuk melihat`;
 }
 
 export function formatGroupedNotificationText(
@@ -133,15 +133,15 @@ export function formatGroupedNotificationText(
   const summary = summarizeGroupNames(group);
 
   if (group.action === "storyboard_ready" || group.action === "video_ready") {
-    return `已生成 ${count} 个${entityLabel}：${summary}`;
+    return `Telah dihasilkan ${count} ${entityLabel}：${summary}`;
   }
   if (group.action === "created") {
-    return `新增了 ${count} 个${entityLabel}：${summary}`;
+    return `Ditambahkan ${count} ${entityLabel}：${summary}`;
   }
   if (group.action === "deleted") {
-    return `删除了 ${count} 个${entityLabel}：${summary}`;
+    return `Dihapus ${count} ${entityLabel}：${summary}`;
   }
-  return `更新了 ${count} 个${entityLabel}：${summary}`;
+  return `Diperbarui ${count} ${entityLabel}：${summary}`;
 }
 
 export function formatGroupedDeferredText(
@@ -156,13 +156,13 @@ export function formatGroupedDeferredText(
   const summary = summarizeGroupNames(group);
 
   if (group.action === "storyboard_ready" || group.action === "video_ready") {
-    return `AI 刚生成了 ${count} 个${entityLabel}：${summary}，点击查看`;
+    return `AI baru saja menghasilkan ${count} 个${entityLabel}：${summary}，Klik untuk melihat`;
   }
   if (group.action === "created") {
-    return `AI 刚新增了 ${count} 个${entityLabel}：${summary}，点击查看`;
+    return `AI 刚Ditambahkan ${count} ${entityLabel}：${summary}，Klik untuk melihat`;
   }
   if (group.action === "deleted") {
-    return `AI 刚删除了 ${count} 个${entityLabel}：${summary}，点击查看`;
+    return `AI 刚Dihapus ${count} ${entityLabel}：${summary}，Klik untuk melihat`;
   }
-  return `AI 刚更新了 ${count} 个${entityLabel}：${summary}，点击查看`;
+  return `AI 刚Diperbarui ${count} ${entityLabel}：${summary}，Klik untuk melihat`;
 }
