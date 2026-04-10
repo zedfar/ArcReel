@@ -1,6 +1,6 @@
-// main.tsx — New entry point using wouter + StudioLayout
-// Replaces main.js as the application entry point.
-// The old main.js is kept as a reference during the migration.
+// main.tsx — Titik masuk baru menggunakan wouter + StudioLayout
+// Menggantikan main.js sebagai titik masuk aplikasi.
+// main.js lama dipertahankan sebagai referensi selama migrasi.
 
 import { createRoot } from "react-dom/client";
 import { AppRoutes } from "./router";
@@ -11,11 +11,11 @@ import "./css/styles.css";
 import "./css/app.css";
 import "./css/studio.css";
 
-// 从 localStorage 恢复登录状态
+// Memulihkan status login dari localStorage
 useAuthStore.getState().initialize();
 
 // ---------------------------------------------------------------------------
-// 全局滚动条 auto-hide：滚动时渐显、停止 1.2s 后渐隐
+// Auto-hide scrollbar global: muncul saat scroll, menghilang setelah berhenti 1.2 detik
 // ---------------------------------------------------------------------------
 {
   const timers = new WeakMap<Element, ReturnType<typeof setTimeout>>();
@@ -26,14 +26,14 @@ useAuthStore.getState().initialize();
       const el = e.target;
       if (!(el instanceof HTMLElement)) return;
 
-      // 显示滚动条
+      // Menampilkan scrollbar
       el.dataset.scrolling = "";
 
-      // 清除上一次的隐藏定时器
+      // Menghapus timer sembunyi sebelumnya
       const prev = timers.get(el);
       if (prev) clearTimeout(prev);
 
-      // 1.2s 无滚动后隐藏
+      // Sembunyikan setelah 1.2 detik tanpa scroll
       timers.set(
         el,
         setTimeout(() => {
@@ -42,7 +42,7 @@ useAuthStore.getState().initialize();
         }, 1200),
       );
     },
-    true, // capture phase — 捕获所有子元素的 scroll 事件
+    true, // capture phase — menangkap event scroll dari semua elemen anak
   );
 }
 

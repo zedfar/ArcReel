@@ -10,12 +10,12 @@
   <br>
 </h1>
 
-<h4 align="center">开源 AI 视频生成工作台 — 从小说到短视频，全程 AI Agent 驱动</h4>
+<h4 align="center">Workstation Pembuatan Video AI Open-Source — Dari Novel hingga Video Pendek, Sepenuhnya Digerakkan oleh AI Agent</h4>
 <h5 align="center">Open-source AI Video Generation Workspace — Novel to Short Video, Powered by AI Agents</h5>
 
 <p align="center">
-  <a href="#快速开始"><img src="https://img.shields.io/badge/Quick_Start-blue?style=for-the-badge" alt="Quick Start"></a>
-  <a href="https://github.com/ArcReel/ArcReel/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-green?style=for-the-badge" alt="License"></a>
+  <a href="#cepat-mulai"><img src="https://img.shields.io/badge/Cepat_Mulai-blue?style=for-the-badge" alt="Cepat Mulai"></a>
+  <a href="https://github.com/ArcReel/ArcReel/blob/main/LICENSE"><img src="https://img.shields.io/badge/Lisensi-AGPL--3.0-green?style=for-the-badge" alt="Lisensi"></a>
   <a href="https://github.com/ArcReel/ArcReel"><img src="https://img.shields.io/github/stars/ArcReel/ArcReel?style=for-the-badge" alt="Stars"></a>
   <a href="https://github.com/ArcReel/ArcReel/pkgs/container/arcreel"><img src="https://img.shields.io/badge/Docker-ghcr.io-blue?style=for-the-badge&logo=docker" alt="Docker"></a>
   <a href="https://github.com/ArcReel/ArcReel/actions/workflows/test.yml"><img src="https://img.shields.io/github/actions/workflow/status/ArcReel/ArcReel/test.yml?style=for-the-badge&label=Tests" alt="Tests"></a>
@@ -27,246 +27,246 @@
   <img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" alt="FastAPI">
   <img src="https://img.shields.io/badge/Claude_Agent_SDK-Anthropic-191919?logo=anthropic&logoColor=white" alt="Claude Agent SDK">
   <img src="https://img.shields.io/badge/Gemini-Image_&_Video_&_Text-886FBF?logo=googlegemini&logoColor=white" alt="Gemini">
-  <img src="https://img.shields.io/badge/火山方舟-Image_&_Video_&_Text-FF6A00?logo=bytedance&logoColor=white" alt="火山方舟">
+  <img src="https://img.shields.io/badge/Volcengine-Image_&_Video_&_Text-FF6A00?logo=bytedance&logoColor=white" alt="Volcengine">
   <img src="https://img.shields.io/badge/Grok-Image_&_Video_&_Text-000000?logo=x&logoColor=white" alt="Grok">
   <img src="https://img.shields.io/badge/OpenAI-Image_&_Video_&_Text-74AA9C?logo=openai&logoColor=white" alt="OpenAI">
 </p>
 
 <p align="center">
-  <img src="docs/assets/hero-screenshot.png" alt="ArcReel 工作台" width="800">
+  <img src="docs/assets/hero-screenshot.png" alt="ArcReel Workstation" width="800">
 </p>
 
 ---
 
-## 核心能力
+## Kemampuan Inti
 
 <table>
 <tr>
 <td width="20%" align="center">
-<h3>🤖 AI Agent 工作流</h3>
-基于 <strong>Claude Agent SDK</strong>，编排 Skill + 聚焦 Subagent 多智能体协作，自动完成从剧本创作到视频合成的完整流水线
+<h3>🤖 Alur Kerja AI Agent</h3>
+Berbasis <strong>Claude Agent SDK</strong>, orkestrasi Skill + kolaborasi multi-agent Subagent yang terfokus, mengotomatisasi seluruh lini produksi mulai dari penulisan skenario hingga sintesis video.
 </td>
 <td width="20%" align="center">
-<h3>🎨 多供应商图像生成</h3>
-<strong>Gemini</strong>、<strong>火山方舟</strong>、<strong>Grok</strong>、<strong>OpenAI</strong> 及自定义供应商，角色设计图确保角色一致性，线索追踪保证道具/场景跨镜连贯
+<h3>🎨 Pembuatan Gambar Multi-Provider</h3>
+Mendukung <strong>Gemini</strong>, <strong>Volcengine</strong>, <strong>Grok</strong>, <strong>OpenAI</strong>, dan penyedia kustom. Desain karakter memastikan konsistensi peran, pelacakan petunjuk menjamin kontinuitas properti/adegan antar adegan.
 </td>
 <td width="20%" align="center">
-<h3>🎬 多供应商视频生成</h3>
-<strong>Veo 3.1</strong>、<strong>Seedance</strong>、<strong>Grok</strong>、<strong>Sora 2</strong> 及自定义供应商，全局/项目级可切换
+<h3>🎬 Pembuatan Video Multi-Provider</h3>
+Mendukung <strong>Veo 3.1</strong>, <strong>Seedance</strong>, <strong>Grok</strong>, <strong>Sora 2</strong>, dan penyedia kustom, dapat dialihkan di tingkat global atau proyek.
 </td>
 <td width="20%" align="center">
-<h3>⚡ 异步任务队列</h3>
-RPM 速率限制 + Image/Video 独立并发通道，lease-based 调度，支持断点续传
+<h3>⚡ Antrean Tugas Asinkron</h3>
+Pembatasan tingkat RPM + saluran konkurensi independen untuk Gambar/Video, penjadwalan berbasis sewa (lease-based), mendukung kelanjutan tugas yang terhenti.
 </td>
 <td width="20%" align="center">
-<h3>🖥️ 可视化工作台</h3>
-Web UI 管理项目、预览素材、版本回滚、实时 SSE 任务追踪，内置 AI 助手
+<h3>🖥️ Workstation Visual</h3>
+Web UI untuk manajemen proyek, pratinjau materi, rollback versi, pelacakan tugas SSE real-time, dengan asisten AI bawaan.
 </td>
 </tr>
 </table>
 
-## 工作流程
+## Alur Kerja
 
 ```mermaid
 graph TD
-    A["📖 上传小说"] --> B["📝 AI Agent 生成分镜剧本"]
-    B --> C["👤 生成角色设计图"]
-    B --> D["🔑 生成线索设计图"]
-    C --> E["🖼️ 生成分镜图片"]
+    A["📖 Unggah Novel"] --> B["📝 AI Agent Menghasilkan Skenario Storyboard"]
+    B --> C["👤 Menghasilkan Desain Karakter"]
+    B --> D["🔑 Menghasilkan Desain Petunjuk (Clue)"]
+    C --> E["🖼️ Menghasilkan Gambar Storyboard"]
     D --> E
-    E --> F["🎬 生成视频片段"]
-    F --> G["🎞️ FFmpeg 合成最终视频"]
-    F --> H["📦 导出剪映草稿"]
+    E --> F["🎬 Menghasilkan Fragmen Video"]
+    F --> G["🎞️ FFmpeg Mensintesis Video Akhir"]
+    F --> H["📦 Ekspor Draf Jianying/CapCut"]
 ```
 
-## 快速开始
+## Cepat Mulai
 
-### 默认部署（SQLite）
+### Instalasi Default (SQLite)
 
 ```bash
 git clone https://github.com/ArcReel/ArcReel.git
 cd ArcReel/deploy
 cp .env.example .env
 docker compose up -d
-# 访问 http://localhost:1241
+# Akses http://localhost:1241
 ```
 
-### 生产部署（PostgreSQL）
+### Instalasi Produksi (PostgreSQL)
 
 ```bash
 cd ArcReel/deploy/production
-cp .env.example .env    # 需设置 POSTGRES_PASSWORD
+cp .env.example .env    # Perlu mengatur POSTGRES_PASSWORD
 docker compose up -d
 ```
 
-首次启动后，使用默认账号登录（用户名 `admin`，密码在 `.env` 中通过 `AUTH_PASSWORD` 设置；未设置则首次启动时自动生成并回写到 `.env`），前往 **设置页**（`/settings`）完成配置：
+Setelah dijalankan pertama kali, login menggunakan akun default (username `admin`, password diatur di `.env` melalui `AUTH_PASSWORD`; jika tidak diatur, password akan dibuat otomatis pada saat startup pertama dan ditulis kembali ke `.env`), lalu buka **Halaman Pengaturan** (`/settings`) untuk menyelesaikan konfigurasi:
 
-1. **ArcReel 智能体** — 配置 Anthropic API Key（驱动 AI 助手），支持自定义 Base URL 和模型
-2. **AI 生图/生视频** — 配置至少一个供应商的 API Key（Gemini / 火山方舟 / Grok / OpenAI），或添加自定义供应商
+1. **Agen ArcReel** — Konfigurasi API Key Anthropic (untuk menggerakkan asisten AI), mendukung kustomisasi Base URL dan model.
+2. **AI Gambar/Video** — Konfigurasi setidaknya satu API Key penyedia (Gemini / Volcengine / Grok / OpenAI), atau tambahkan penyedia kustom.
 
-> 📖 详细步骤请参考 [完整入门教程](docs/getting-started.md)
+> 📖 Langkah detail silakan merujuk ke [Tutorial Lengkap Memulai](docs/getting-started.md)
 
-## 功能特性
+## Fitur Utama
 
-- **完整生产流水线** — 小说 → 剧本 → 角色设计 → 分镜图片 → 视频片段 → 成片，一键编排
-- **多智能体架构** — 编排 Skill 检测项目状态并自动调度聚焦 Subagent，每个 Subagent 独立完成一项任务后返回摘要
-- **多供应商支持** — 图片/视频/文本生成均支持 Gemini、火山方舟、Grok、OpenAI 四大预置供应商，全局/项目级可切换
-- **自定义供应商** — 接入任何 OpenAI 兼容 / Google 兼容 API（如 Ollama、vLLM、第三方中转），自动发现可用模型并分配媒体类型，与预置供应商享有同等功能
-- **两种内容模式** — 说书模式（narration）按朗读节奏拆分片段，剧集动画模式（drama）按场景/对话结构组织
-- **渐进式分集规划** — 人机协作切分长篇小说：peek 探测 → Agent 建议断点 → 用户确认 → 物理切分，按需制作
-- **风格参考图** — 上传风格图，AI 自动分析并统一应用到所有图片生成，确保全项目视觉一致
-- **角色一致性** — AI 先生成角色设计图，后续所有分镜和视频均参考该设计
-- **线索追踪** — 关键道具、场景元素标记为"线索"，跨镜头保持视觉连贯
-- **版本历史** — 每次重新生成自动保存历史版本，支持一键回滚
-- **多供应商费用追踪** — 图片/视频/文本全部纳入费用计算，按供应商分策略计费，不同币种分别统计
-- **费用预估** — 生成前预估项目/单集/单镜头费用，三级下钻展示预估与实际费用对比
-- **剪映草稿导出** — 按集导出剪映草稿 ZIP，支持剪映 5.x / 6+（[操作指南](docs/jianying-export-guide.md)）
-- **项目导入/导出** — 整个项目打包归档，方便备份和迁移
+- **Lini Produksi Lengkap** — Novel → Skenario → Desain Karakter → Gambar Storyboard → Fragmen Video → Video Akhir, orkestrasi satu klik.
+- **Arsitektur Multi-Agent** — Skill orkestrasi mendeteksi status proyek dan menjadwalkan Subagent yang terfokus secara otomatis. Setiap Subagent menyelesaikan tugas independen dan mengembalikan ringkasan.
+- **Dukungan Multi-Provider** — Gambar/Video/Teks mendukung Gemini, Volcengine, Grok, dan OpenAI, dapat dialihkan di tingkat global atau proyek.
+- **Penyedia Kustom** — Terhubung ke API apa pun yang kompatibel dengan OpenAI / Google (seperti Ollama, vLLM, agen pihak ketiga), deteksi model otomatis, dan memiliki fungsi yang sama dengan penyedia bawaan.
+- **Dua Mode Konten** — Mode Narasi (narration) membagi fragmen berdasarkan ritme pembacaan, Mode Animasi Drama (drama) mengatur berdasarkan struktur adegan/dialog.
+- **Perencanaan Episode Progresif** — Kolaborasi manusia-mesin untuk memotong novel panjang: deteksi peek → saran titik potong Agent → konfirmasi pengguna → pemotongan fisik, produksi sesuai kebutuhan.
+- **Gambar Referensi Gaya** — Unggah gambar gaya, AI akan menganalisis dan menerapkannya secara otomatis ke semua pembuatan gambar untuk memastikan konsistensi visual seluruh proyek.
+- **Konsistensi Karakter** — AI menghasilkan desain karakter terlebih dahulu, semua storyboard dan video selanjutnya akan merujuk pada desain tersebut.
+- **Pelacakan Petunjuk (Clue)** — Properti kunci atau elemen adegan ditandai sebagai "Petunjuk" untuk menjaga kesinambungan visual antar adegan.
+- **Riwayat Versi** — Setiap pembuatan ulang menyimpan versi historis secara otomatis, mendukung rollback satu klik.
+- **Pelacakan Biaya Multi-Provider** — Gambar/Video/Teks semua dimasukkan dalam perhitungan biaya, ditagih berdasarkan strategi penyedia, dan statistik dipisahkan berdasarkan mata uang.
+- **Estimasi Biaya** — Estimasi biaya proyek/episode/shot sebelum pembuatan, dengan tampilan perbandingan antara estimasi dan biaya aktual.
+- **Ekspor Draf Jianying/CapCut** — Ekspor draf per episode dalam format ZIP, mendukung Jianying versi 5.x / 6+ ([Panduan Operasi](docs/jianying-export-guide.md)).
+- **Impor/Ekspor Proyek** — Seluruh proyek dikemas untuk memudahkan cadangan dan migrasi.
 
-## 供应商支持
+## Dukungan Penyedia
 
-ArcReel 通过统一的 `ImageBackend` / `VideoBackend` / `TextBackend` 协议，支持多个预置供应商和自定义供应商，可在全局或项目级别切换：
+ArcReel mendukung beberapa penyedia bawaan dan kustom melalui protokol `ImageBackend` / `VideoBackend` / `TextBackend` yang terpadu:
 
-### 图片供应商
+### Penyedia Gambar
 
-| 供应商 | 可用模型 | 能力 | 计费方式 |
-|--------|----------|------|----------|
-| **Gemini** (Google) | Nano Banana 2, Nano Banana Pro | 文生图、图生图（多参考图） | 按分辨率查表 (USD) |
-| **火山方舟** | Seedream 5.0, Seedream 5.0 Lite, Seedream 4.5, Seedream 4.0 | 文生图、图生图 | 按张计费 (CNY) |
-| **Grok** (xAI) | Grok Imagine Image, Grok Imagine Image Pro | 文生图、图生图 | 按张计费 (USD) |
-| **OpenAI** | GPT Image 1.5, GPT Image 1 Mini | 文生图、图生图（多参考图） | 按张计费 (USD) |
+| Penyedia | Model Tersedia | Kemampuan | Metode Penagihan |
+|----------|----------------|-----------|------------------|
+| **Gemini** (Google) | Nano Banana 2, Nano Banana Pro | Teks-ke-Gambar, Gambar-ke-Gambar | Berdasarkan resolusi (USD) |
+| **Volcengine** (ByteDance) | Seedream 5.0, Seedream 5.0 Lite, Seedream 4.5, Seedream 4.0 | Teks-ke-Gambar, Gambar-ke-Gambar | Per gambar (CNY) |
+| **Grok** (xAI) | Grok Imagine Image, Grok Imagine Image Pro | Teks-ke-Gambar, Gambar-ke-Gambar | Per gambar (USD) |
+| **OpenAI** | GPT Image 1.5, GPT Image 1 Mini | Teks-ke-Gambar, Gambar-ke-Gambar | Per gambar (USD) |
 
-### 视频供应商
+### Penyedia Video
 
-| 供应商 | 可用模型 | 能力 | 计费方式 |
-|--------|----------|------|----------|
-| **Gemini** (Google) | Veo 3.1, Veo 3.1 Fast, Veo 3.1 Lite | 文生视频、图生视频、视频延展、负面提示词 | 按分辨率 × 时长查表 (USD) |
-| **火山方舟** | Seedance 2.0, Seedance 2.0 Fast, Seedance 1.5 Pro | 文生视频、图生视频、视频延展、音频生成、种子控制、离线推理 | 按 token 用量 (CNY) |
-| **Grok** (xAI) | Grok Imagine Video | 文生视频、图生视频 | 按秒计费 (USD) |
-| **OpenAI** | Sora 2, Sora 2 Pro | 文生视频、图生视频 | 按秒计费 (USD) |
+| Penyedia | Model Tersedia | Kemampuan | Metode Penagihan |
+|----------|----------------|-----------|------------------|
+| **Gemini** (Google) | Veo 3.1, Veo 3.1 Fast, Veo 3.1 Lite | Teks-ke-Video, Gambar-ke-Video, Ekstensi Video | Berdasarkan resolusi × durasi (USD) |
+| **Volcengine** (ByteDance) | Seedance 2.0, Seedance 2.0 Fast, Seedance 1.5 Pro | Teks-ke-Video, Gambar-ke-Video, Audio, Kontrol Seed | Berdasarkan penggunaan token (CNY) |
+| **Grok** (xAI) | Grok Imagine Video | Teks-ke-Video, Gambar-ke-Video | Per detik (USD) |
+| **OpenAI** | Sora 2, Sora 2 Pro | Teks-ke-Video, Gambar-ke-Video | Per detik (USD) |
 
-### 文本供应商
+### Penyedia Teks
 
-| 供应商 | 可用模型 | 能力 | 计费方式 |
-|--------|----------|------|----------|
-| **Gemini** (Google) | Gemini 3.1 Flash, Gemini 3.1 Flash Lite, Gemini 3 Pro | 文本生成、结构化输出、视觉理解 | 按 token 用量 (USD) |
-| **火山方舟** | Doubao Seed 系列 | 文本生成、结构化输出、视觉理解 | 按 token 用量 (CNY) |
-| **Grok** (xAI) | Grok 4.20, Grok 4.1 Fast 系列 | 文本生成、结构化输出、视觉理解 | 按 token 用量 (USD) |
-| **OpenAI** | GPT-5.4, GPT-5.4 Mini, GPT-5.4 Nano | 文本生成、结构化输出、视觉理解 | 按 token 用量 (USD) |
+| Penyedia | Model Tersedia | Kemampuan | Metode Penagihan |
+|----------|----------------|-----------|------------------|
+| **Gemini** (Google) | Gemini 3.1 Flash, Gemini 3.1 Flash Lite, Gemini 3 Pro | Pembuatan Teks, Output Terstruktur, Visi | Berdasarkan penggunaan token (USD) |
+| **Volcengine** (ByteDance) | Seri Doubao Seed | Pembuatan Teks, Output Terstruktur, Visi | Berdasarkan penggunaan token (CNY) |
+| **Grok** (xAI) | Grok 4.20, Grok 4.1 Fast | Pembuatan Teks, Output Terstruktur, Visi | Berdasarkan penggunaan token (USD) |
+| **OpenAI** | GPT-5.4, GPT-5.4 Mini, GPT-5.4 Nano | Pembuatan Teks, Output Terstruktur, Visi | Berdasarkan penggunaan token (USD) |
 
-### 自定义供应商
+### Penyedia Kustom
 
-除预置供应商外，可接入任何 **OpenAI 兼容** 或 **Google 兼容** API：
+Selain penyedia bawaan, Anda dapat menghubungkan API apa pun yang **Kompatibel dengan OpenAI** atau **Kompatibel dengan Google**:
 
-- 在设置页添加自定义供应商，填入 Base URL 和 API Key
-- 自动调用 `/v1/models` 发现可用模型，按名称推断媒体类型（图片/视频/文本）
-- 与预置供应商享有同等功能：全局/项目级切换、费用追踪、版本管理
+- Tambahkan penyedia kustom di halaman pengaturan, masukkan Base URL dan API Key.
+- Otomatis memanggil `/v1/models` untuk menemukan model yang tersedia dan menentukan tipe media berdasarkan nama.
+- Memiliki fungsi yang sama dengan penyedia bawaan: pengalihan tingkat global/proyek, pelacakan biaya, manajemen versi.
 
-供应商选择优先级：项目级设置 > 全局默认。切换供应商时通用设置（分辨率、宽高比、音频等）直接沿用，供应商特有参数保留。
+Prioritas pemilihan penyedia: Pengaturan tingkat proyek > Default global.
 
-## 交流群
+## Komunitas
 
-扫码加入飞书交流群，获取帮助和最新动态：
+Pindai kode QR untuk bergabung dengan grup diskusi Feishu, dapatkan bantuan dan pembaruan terbaru:
 
 <p align="center">
-  <img src="docs/assets/feishu-qr.png" alt="飞书交流群二维码" width="280">
+  <img src="docs/assets/feishu-qr.png" alt="Kode QR Grup Feishu" width="280">
 </p>
 
-## AI 助手架构
+## Arsitektur AI Assistant
 
-ArcReel 的 AI 助手基于 Claude Agent SDK 构建，采用**编排 Skill + 聚焦 Subagent** 的多智能体架构：
+Asisten AI ArcReel dibangun di atas Claude Agent SDK, menggunakan arsitektur multi-agent **Orchestration Skill + Focused Subagent**:
 
 ```mermaid
 flowchart TD
-    User["用户对话"] --> Main["主 Agent"]
-    Main --> MW["manga-workflow<br/>编排 Skill"]
-    MW -->|"状态检测"| PJ["读取 project.json<br/>+ 文件系统"]
-    MW -->|"dispatch"| SA1["analyze-characters-clues<br/>全局角色/线索提取"]
-    MW -->|"dispatch"| SA2["split-narration-segments<br/>说书模式片段拆分"]
-    MW -->|"dispatch"| SA3["normalize-drama-script<br/>剧集动画规范化"]
-    MW -->|"dispatch"| SA4["create-episode-script<br/>JSON 剧本生成"]
-    MW -->|"dispatch"| SA5["资产生成 Subagent<br/>角色/线索/分镜/视频"]
-    SA1 -->|"摘要"| Main
-    SA4 -->|"摘要"| Main
-    Main -->|"展示结果<br/>等待确认"| User
+    User["Dialog Pengguna"] --> Main["Agent Utama"]
+    Main --> MW["manga-workflow<br/>Skill Orkestrasi"]
+    MW -->|"Deteksi Status"| PJ["Baca project.json<br/>+ File System"]
+    MW -->|"dispatch"| SA1["analyze-characters-clues<br/>Ekstraksi Karakter/Petunjuk Global"]
+    MW -->|"dispatch"| SA2["split-narration-segments<br/>Pemisahan Fragmen Mode Narasi"]
+    MW -->|"dispatch"| SA3["normalize-drama-script<br/>Normalisasi Skenario Drama"]
+    MW -->|"dispatch"| SA4["create-episode-script<br/>Pembuatan Skenario JSON"]
+    MW -->|"dispatch"| SA5["Subagent Pembuatan Aset<br/>Karakter/Petunjuk/Storyboard/Video"]
+    SA1 -->|"Ringkasan"| Main
+    SA4 -->|"Ringkasan"| Main
+    Main -->|"Tampilkan Hasil<br/>Tunggu Konfirmasi"| User
 ```
 
-**核心设计原则**：
+**Prinsip Desain Inti**:
 
-- **编排 Skill（manga-workflow）** — 具备状态检测能力，自动判断项目当前阶段（角色设计 / 分集规划 / 预处理 / 剧本生成 / 资产生成），dispatch 对应的 Subagent，支持从任意阶段进入和中断恢复
-- **聚焦 Subagent** — 每个 Subagent 只完成一项任务后返回，小说原文等大量上下文留在 Subagent 内部，主 Agent 只收到精炼摘要，保护上下文空间
-- **Skill vs Subagent 边界** — Skill 负责确定性脚本执行（API 调用、文件生成），Subagent 负责需要推理分析的任务（角色提取、剧本规范化）
-- **阶段间确认** — 每个 Subagent 返回后，主 Agent 向用户展示结果摘要并等待确认，确认后才进入下一阶段
+- **Skill Orkestrasi (manga-workflow)** — Memiliki kemampuan deteksi status, secara otomatis menentukan tahapan proyek saat ini dan menjadwalkan Subagent yang sesuai.
+- **Subagent Terfokus** — Setiap Subagent hanya menyelesaikan satu tugas. Konteks besar seperti teks novel tetap berada di dalam Subagent, Agent Utama hanya menerima ringkasan singkat untuk menghemat ruang konteks.
+- **Batas Skill vs Subagent** — Skill bertanggung jawab atas eksekusi skrip deterministik (panggilan API, pembuatan file), Subagent bertanggung jawab atas tugas yang memerlukan penalaran dan analisis.
+- **Konfirmasi Antar Tahap** — Setelah setiap Subagent kembali, Agent Utama menampilkan ringkasan hasil kepada pengguna dan menunggu konfirmasi sebelum masuk ke tahap berikutnya.
 
-## OpenClaw 集成
+## Integrasi OpenClaw
 
-ArcReel 支持通过 [OpenClaw](https://openclaw.ai) 等外部 AI Agent 平台调用，实现自然语言驱动的视频创作：
+ArcReel mendukung pemanggilan melalui platform AI Agent eksternal seperti [OpenClaw](https://openclaw.ai), memungkinkan pembuatan video melalui bahasa alami:
 
-1. 在 ArcReel 设置页生成 API Key（`arc-` 前缀）
-2. 在 OpenClaw 中加载 ArcReel 的 Skill 定义（访问 `http://your-domain/skill.md` 自动获取）
-3. 通过 OpenClaw 对话即可创建项目、生成剧本、制作视频
+1. Hasilkan API Key di pengaturan ArcReel (awalan `arc-`).
+2. Muat definisi Skill ArcReel di OpenClaw (akses `http://domain-anda/skill.md`).
+3. Anda dapat membuat proyek, menghasilkan skenario, dan membuat video melalui dialog di OpenClaw.
 
-技术实现：API Key 认证（Bearer Token）+ 同步 Agent 对话端点（`POST /api/v1/agent/chat`），内部对接 SSE 流式助手并收集完整响应返回。
+Implementasi teknis: Autentikasi API Key (Bearer Token) + Endpoint dialog Agent sinkron (`POST /api/v1/agent/chat`).
 
-## 技术架构
+## Arsitektur Teknis
 
 ```mermaid
 flowchart TB
     subgraph UI["Web UI — React 19"]
-        U1["项目管理"] ~~~ U2["素材预览"] ~~~ U3["AI 助手"] ~~~ U4["任务监控"]
+        U1["Manajemen Proyek"] ~~~ U2["Pratinjau Materi"] ~~~ U3["AI Assistant"] ~~~ U4["Monitoring Tugas"]
     end
 
     subgraph Server["FastAPI Server"]
-        S1["REST API<br/>路由分发"] ~~~ S2["Agent Runtime<br/>Claude Agent SDK"]
-        S3["SSE Stream<br/>实时状态推送"] ~~~ S4["Auth<br/>JWT + API Key"]
+        S1["REST API<br/>Distribusi Rute"] ~~~ S2["Agent Runtime<br/>Claude Agent SDK"]
+        S3["SSE Stream<br/>Push Status Real-time"] ~~~ S4["Auth<br/>JWT + API Key"]
     end
 
     subgraph Core["Core Library"]
-        C1["VideoBackend 抽象层<br/>Gemini · 火山方舟 · Grok · OpenAI · 自定义"] ~~~ C2["ImageBackend 抽象层<br/>Gemini · 火山方舟 · Grok · OpenAI · 自定义"]
-        C5["TextBackend 抽象层<br/>Gemini · 火山方舟 · Grok · OpenAI · 自定义"] ~~~ C3["GenerationQueue<br/>RPM 限速 · Image/Video 通道"]
-        C4["ProjectManager<br/>文件系统 + 版本管理"]
+        C1["Abstraksi VideoBackend<br/>Gemini · Volcengine · Grok · OpenAI · Kustom"] ~~~ C2["Abstraksi ImageBackend<br/>Gemini · Volcengine · Grok · OpenAI · Kustom"]
+        C5["Abstraksi TextBackend<br/>Gemini · Volcengine · Grok · OpenAI · Kustom"] ~~~ C3["GenerationQueue<br/>RPM Limit · Saluran Gambar/Video"]
+        C4["ProjectManager<br/>File System + Manajemen Versi"]
     end
 
-    subgraph Data["数据层"]
+    subgraph Data["Lapisan Data"]
         D1["SQLAlchemy 2.0 Async ORM"] ~~~ D2["SQLite / PostgreSQL"]
-        D3["Alembic 迁移"] ~~~ D4["UsageTracker<br/>多供应商费用追踪"]
+        D3["Migrasi Alembic"] ~~~ D4["UsageTracker<br/>Pelacakan Biaya Multi-Provider"]
     end
 
     UI --> Server --> Core --> Data
 ```
 
-## 技术栈
+## Stack Teknologi
 
-| 层级 | 技术 |
+| Lapisan | Teknologi |
 |------|------|
-| **前端** | React 19, TypeScript, Tailwind CSS 4, wouter, zustand, Framer Motion, Vite |
-| **后端** | FastAPI, Python 3.12+, uvicorn, Pydantic 2 |
-| **AI 智能体** | Claude Agent SDK (Skill + Subagent 多智能体架构) |
-| **图像生成** | Gemini (`google-genai`), 火山方舟 (`volcengine-python-sdk[ark]`), Grok (`xai-sdk`), OpenAI (`openai`) |
-| **视频生成** | Gemini Veo 3.1 (`google-genai`), 火山方舟 Seedance 2.0/1.5 (`volcengine-python-sdk[ark]`), Grok (`xai-sdk`), OpenAI Sora 2 (`openai`) |
-| **文本生成** | Gemini (`google-genai`), 火山方舟 (`volcengine-python-sdk[ark]`), Grok (`xai-sdk`), OpenAI (`openai`), Instructor (结构化输出降级) |
-| **媒体处理** | FFmpeg, Pillow |
-| **ORM & 数据库** | SQLAlchemy 2.0 (async), Alembic, aiosqlite, asyncpg — SQLite (默认) / PostgreSQL (生产) |
-| **认证** | JWT (`pyjwt`), API Key (SHA-256 哈希), Argon2 密码哈希 (`pwdlib`) |
-| **部署** | Docker, Docker Compose（`deploy/` 默认, `deploy/production/` 含 PostgreSQL） |
+| **Frontend** | React 19, TypeScript, Tailwind CSS 4, wouter, zustand, Framer Motion, Vite |
+| **Backend** | FastAPI, Python 3.12+, uvicorn, Pydantic 2 |
+| **AI Agent** | Claude Agent SDK (Arsitektur Orchestration Skill + Subagent) |
+| **Generasi Gambar** | Gemini (`google-genai`), Volcengine (`volcengine-python-sdk[ark]`), Grok (`xai-sdk`), OpenAI (`openai`) |
+| **Generasi Video** | Gemini Veo 3.1 (`google-genai`), Volcengine Seedance 2.0/1.5 (`volcengine-python-sdk[ark]`), Grok (`xai-sdk`), OpenAI Sora 2 (`openai`) |
+| **Generasi Teks** | Gemini (`google-genai`), Volcengine (`volcengine-python-sdk[ark]`), Grok (`xai-sdk`), OpenAI (`openai`), Instructor (Fallback output terstruktur) |
+| **Pemrosesan Media** | FFmpeg, Pillow |
+| **ORM & Database** | SQLAlchemy 2.0 (async), Alembic, aiosqlite, asyncpg — SQLite (Default) / PostgreSQL (Produksi) |
+| **Autentikasi** | JWT (`pyjwt`), API Key (Hash SHA-256), Hash Password Argon2 (`pwdlib`) |
+| **Deployment** | Docker, Docker Compose (`deploy/` default, `deploy/production/` dengan PostgreSQL) |
 
-## 文档
+## Dokumentasi
 
-- 📖 [完整入门教程](docs/getting-started.md) — 从零开始的手把手指南
-- 📦 [剪映草稿导出指南](docs/jianying-export-guide.md) — 将视频片段导入剪映桌面版进行二次编辑
-- 💰 [Google GenAI 费用说明](docs/google-genai-docs/Google视频&图片生成费用参考.md) — Gemini 图像 / Veo 视频生成费用参考
-- 💰 [火山方舟费用说明](docs/ark-docs/火山方舟费用参考.md) — 火山方舟视频 / 图片 / 文本模型费用参考
+- 📖 [Tutorial Lengkap Memulai](docs/getting-started.md) — Panduan langkah demi langkah dari nol.
+- 📦 [Panduan Ekspor Draf Jianying](docs/jianying-export-guide.md) — Mengimpor fragmen video ke Jianying/CapCut Desktop.
+- 💰 [Referensi Biaya Google GenAI](docs/google-genai-docs/Google视频&图片生成费用参考.md) — Referensi biaya gambar Gemini / video Veo.
+- 💰 [Referensi Biaya Volcengine](docs/ark-docs/火山方舟费用参考.md) — Referensi biaya model video / gambar / teks Volcengine.
 
-## 贡献
+## Kontribusi
 
-欢迎贡献代码、报告 Bug 或提出功能建议！请参阅 [贡献指南](CONTRIBUTING.md) 了解本地开发环境搭建、测试和代码规范。
+Kami menerima kontribusi kode, laporan Bug, atau saran fitur! Silakan merujuk ke [Panduan Kontribusi](CONTRIBUTING.md) untuk informasi tentang penyiapan lingkungan pengembangan lokal, pengujian, dan standar kode.
 
-## 许可证
+## Lisensi
 
 [AGPL-3.0](LICENSE)
 
 ---
 
 <p align="center">
-  如果觉得项目有用，请给个 ⭐ Star 支持一下！
+  Jika proyek ini bermanfaat bagi Anda, silakan berikan ⭐ Star untuk mendukung kami!
 </p>

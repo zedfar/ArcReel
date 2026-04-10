@@ -29,8 +29,8 @@ export function ProjectSettingsPage() {
     [options],
   );
 
-  // Project-level overrides (from project.json)
-  // "" means "follow global default"
+  // Project-level overrides (dari project.json)
+  // "" berarti "mengikuti default global"
   const [videoBackend, setVideoBackend] = useState<string>("");
   const [imageBackend, setImageBackend] = useState<string>("");
   const [audioOverride, setAudioOverride] = useState<boolean | null>(null);
@@ -110,8 +110,8 @@ export function ProjectSettingsPage() {
     [providers, effectiveVideoBackend, customProviders],
   );
 
-  // Derive effective default duration during render — if current value
-  // is not in the model's supported list, treat it as "auto" (null).
+  // Turunkan durasi default yang efektif selama render — jika nilai saat ini
+  // tidak ada dalam daftar yang didukung model, anggap sebagai "otomatis" (null).
   const effectiveDefaultDuration =
     supportedDurations && defaultDuration !== null && !supportedDurations.includes(defaultDuration)
       ? null
@@ -119,8 +119,8 @@ export function ProjectSettingsPage() {
 
   const handleVideoBackendChange = useCallback((value: string) => {
     setVideoBackend(value);
-    // When video model changes, reset default duration so the UI
-    // re-evaluates against the new model's supported durations.
+    // Saat model video berubah, atur ulang durasi default agar UI
+    // mengevaluasi kembali terhadap durasi yang didukung model baru.
     const effective = value || globalDefaults.video;
     const durations = lookupSupportedDurations(providers, effective, customProviders);
     if (durations && defaultDuration !== null && !durations.includes(defaultDuration)) {
@@ -146,7 +146,7 @@ export function ProjectSettingsPage() {
   }, [isDirty]);
 
   const guardedNavigate = useCallback((path: string) => {
-    if (isDirty && !window.confirm("有未保存的修改，确定要离开吗？")) return;
+    if (isDirty && !window.confirm("Ada perubahan yang belum disimpan, yakin ingin keluar?")) return;
     navigate(path);
   }, [isDirty, navigate]);
 
@@ -168,9 +168,9 @@ export function ProjectSettingsPage() {
         textScript, textOverview, textStyle,
         aspectRatio, defaultDuration,
       };
-      useAppStore.getState().pushToast("已保存", "success");
+      useAppStore.getState().pushToast("Berhasil disimpan", "success");
     } catch (e: unknown) {
-      useAppStore.getState().pushToast(e instanceof Error ? e.message : "保存失败", "error");
+      useAppStore.getState().pushToast(e instanceof Error ? e.message : "Gagal menyimpan", "error");
     } finally {
       setSaving(false);
     }
@@ -183,19 +183,19 @@ export function ProjectSettingsPage() {
         <button
           onClick={() => guardedNavigate(`/app/projects/${projectName}`)}
           className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-800 hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
-          aria-label="返回项目"
+          aria-label="Kembali ke proyek"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-lg font-semibold text-gray-100">项目设置</h1>
+        <h1 className="text-lg font-semibold text-gray-100">Pengaturan Proyek</h1>
       </div>
 
       {/* Content */}
       <div className="mx-auto max-w-2xl px-6 py-8 space-y-6">
         <div>
-          <h2 className="text-lg font-semibold text-gray-100">模型配置</h2>
+          <h2 className="text-lg font-semibold text-gray-100">Konfigurasi Model</h2>
           <p className="mt-1 text-sm text-gray-500">
-            为此项目单独选择生成模型，留空则跟随全局默认
+            Pilih model generatif khusus untuk proyek ini, biarkan kosong untuk mengikuti default global
           </p>
         </div>
 
@@ -203,7 +203,7 @@ export function ProjectSettingsPage() {
           <>
             {/* Video model override */}
             <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
-              <div className="mb-3 text-sm font-medium text-gray-100">视频模型</div>
+              <div className="mb-3 text-sm font-medium text-gray-100">Model Video</div>
               <ProviderModelSelect
                 value={videoBackend}
                 options={options.video_backends}
@@ -211,7 +211,7 @@ export function ProjectSettingsPage() {
                 onChange={handleVideoBackendChange}
                 allowDefault
                 defaultHint={
-                  globalDefaults.video ? `当前全局: ${globalDefaults.video}` : undefined
+                  globalDefaults.video ? `Global saat ini: ${globalDefaults.video}` : undefined
                 }
               />
             </div>
@@ -219,7 +219,7 @@ export function ProjectSettingsPage() {
             {/* Aspect ratio */}
             <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
               <fieldset>
-                <legend className="mb-3 text-sm font-medium text-gray-100">画面比例</legend>
+                <legend className="mb-3 text-sm font-medium text-gray-100">Rasio Aspek</legend>
                 <div className="flex gap-3">
                   {(["9:16", "16:9"] as const).map((ar) => (
                     <label
@@ -239,14 +239,14 @@ export function ProjectSettingsPage() {
                           setAspectRatio(ar);
                           if (initialRef.current.aspectRatio && ar !== initialRef.current.aspectRatio) {
                             useAppStore.getState().pushToast(
-                              "已生成的分镜图/视频仍为原比例，建议重新生成",
+                              "Storyboard/video yang sudah dibuat tetap menggunakan rasio lama, disarankan untuk buat ulang",
                               "warning",
                             );
                           }
                         }}
                         className="sr-only"
                       />
-                      {ar === "9:16" ? "竖屏 9:16" : "横屏 16:9"}
+                      {ar === "9:16" ? "Vertikal 9:16" : "Horizontal 16:9"}
                     </label>
                   ))}
                 </div>
@@ -255,11 +255,11 @@ export function ProjectSettingsPage() {
 
             {/* Default duration */}
             <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
-              <div className="mb-3 text-sm font-medium text-gray-100">默认时长</div>
+              <div className="mb-3 text-sm font-medium text-gray-100">Durasi Default</div>
               <p className="mb-2 text-xs text-gray-500">
-                新分镜的默认视频时长，「自动」表示由 AI 根据内容决定
+                Durasi video default untuk storyboard baru, "Otomatis" berarti ditentukan oleh AI berdasarkan konten
               </p>
-              <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="默认时长选择">
+              <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Pilihan durasi default">
                 <button
                   type="button"
                   role="radio"
@@ -271,7 +271,7 @@ export function ProjectSettingsPage() {
                       : "border-gray-700 bg-gray-800 text-gray-400 hover:border-gray-600"
                   }`}
                 >
-                  自动
+                  Otomatis
                 </button>
                 {(supportedDurations ?? DEFAULT_DURATIONS).map((d) => (
                   <button
@@ -294,7 +294,7 @@ export function ProjectSettingsPage() {
 
             {/* Image model override */}
             <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
-              <div className="mb-3 text-sm font-medium text-gray-100">图片模型</div>
+              <div className="mb-3 text-sm font-medium text-gray-100">Model Gambar</div>
               <ProviderModelSelect
                 value={imageBackend}
                 options={options.image_backends}
@@ -302,42 +302,42 @@ export function ProjectSettingsPage() {
                 onChange={setImageBackend}
                 allowDefault
                 defaultHint={
-                  globalDefaults.image ? `当前全局: ${globalDefaults.image}` : undefined
+                  globalDefaults.image ? `Global saat ini: ${globalDefaults.image}` : undefined
                 }
               />
             </div>
 
             {/* Audio override */}
             <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
-              <div className="mb-3 text-sm font-medium text-gray-100">生成音频</div>
+              <div className="mb-3 text-sm font-medium text-gray-100">Hasilkan Audio</div>
               <fieldset className="flex gap-4">
-                <legend className="sr-only">生成音频设置</legend>
+                <legend className="sr-only">Pengaturan hasilkan audio</legend>
                 <label className="flex items-center gap-2 text-sm text-gray-300">
                   <input type="radio" name="audio" value="" checked={audioOverride === null}
                     onChange={() => setAudioOverride(null)} />
-                  跟随全局默认
+                  Ikuti Default Global
                 </label>
                 <label className="flex items-center gap-2 text-sm text-gray-300">
                   <input type="radio" name="audio" value="true" checked={audioOverride === true}
                     onChange={() => setAudioOverride(true)} />
-                  开启
+                  Aktif
                 </label>
                 <label className="flex items-center gap-2 text-sm text-gray-300">
                   <input type="radio" name="audio" value="false" checked={audioOverride === false}
                     onChange={() => setAudioOverride(false)} />
-                  关闭
+                  Nonaktif
                 </label>
               </fieldset>
             </div>
             {/* Text model overrides */}
             <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
-              <div className="mb-3 text-sm font-medium text-gray-100">文本模型</div>
-              <p className="mb-2 text-xs text-gray-500">按任务类型覆盖，留空跟随全局默认</p>
+              <div className="mb-3 text-sm font-medium text-gray-100">Model Teks</div>
+              <p className="mb-2 text-xs text-gray-500">Timpa berdasarkan jenis tugas, biarkan kosong untuk mengikuti default global</p>
               <div className="space-y-3">
                 {([
-                  [textScript, setTextScript, "剧本生成"] as const,
-                  [textOverview, setTextOverview, "概述生成"] as const,
-                  [textStyle, setTextStyle, "风格分析"] as const,
+                  [textScript, setTextScript, "Pembuatan Skenario"] as const,
+                  [textOverview, setTextOverview, "Pembuatan Ringkasan"] as const,
+                  [textStyle, setTextStyle, "Analisis Gaya"] as const,
                 ]).map(([value, setter, label]) => (
                   <div key={label}>
                     <div className="mb-1 text-xs text-gray-400">{label}</div>
@@ -347,7 +347,7 @@ export function ProjectSettingsPage() {
                       providerNames={allProviderNames}
                       onChange={setter}
                       allowDefault
-                      defaultHint="跟随全局默认"
+                      defaultHint="Ikuti default global"
                       aria-label={label}
                     />
                   </div>
@@ -358,7 +358,7 @@ export function ProjectSettingsPage() {
         )}
 
         {!options && (
-          <div className="text-sm text-gray-500">加载配置中…</div>
+          <div className="text-sm text-gray-500">Memuat konfigurasi…</div>
         )}
 
         {/* Actions */}
@@ -368,13 +368,13 @@ export function ProjectSettingsPage() {
             disabled={saving}
             className="rounded-lg bg-indigo-600 px-6 py-2 text-sm text-white hover:bg-indigo-500 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
           >
-            {saving ? "保存中…" : "保存"}
+            {saving ? "Menyimpan…" : "Simpan"}
           </button>
           <button
             onClick={() => guardedNavigate(`/app/projects/${projectName}`)}
             className="rounded-lg border border-gray-700 px-6 py-2 text-sm text-gray-300 hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
           >
-            取消
+            Batal
           </button>
         </div>
       </div>
