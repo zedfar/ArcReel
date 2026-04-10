@@ -46,7 +46,7 @@ describe("ProjectsPage", () => {
 
     expect(await screen.findByText("Belum ada proyek")).toBeInTheDocument();
     expect(
-      screen.getByText("Klik "Proyek Baru" atau "Impor ZIP" untuk mulai berkreasi"),
+      screen.getByText("Klik \"Proyek Baru\" atau \"Impor ZIP\" untuk mulai berkreasi"),
     ).toBeInTheDocument();
   });
 

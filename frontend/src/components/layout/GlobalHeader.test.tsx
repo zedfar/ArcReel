@@ -110,7 +110,7 @@ describe("GlobalHeader", () => {
     });
 
     useAppStore.getState().pushWorkspaceNotification({
-      text: "AI baru saja memperbaruiPetunjuk "Jade Pendant"，Klik untuk melihat",
+      text: "AI baru saja memperbaruiPetunjuk \"Jade Pendant\"，Klik untuk melihat",
       target: {
         type: "clue",
         id: "玉佩",

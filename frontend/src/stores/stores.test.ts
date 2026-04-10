@@ -83,7 +83,7 @@ describe("stores", () => {
     expect(useAppStore.getState().toast).toBeNull();
 
     app.pushWorkspaceNotification({
-      text: "AI baru saja memperbaruiKarakter "hero"，Klik untuk melihat",
+      text: "AI baru saja memperbaruiKarakter \"hero\"，Klik untuk melihat",
       target: {
         type: "character",
         id: "hero",
