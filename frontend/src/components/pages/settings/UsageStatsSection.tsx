@@ -3,12 +3,12 @@ import { API } from "@/api";
 import type { UsageStat } from "@/types";
 
 const currencyFmt = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
-const percentFmt = new Intl.NumberFormat("zh-CN", { style: "percent", maximumFractionDigits: 0 });
+const percentFmt = new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 0 });
 
 const TIME_RANGES = [
-  { label: "最近 7 hari", days: 7 },
-  { label: "最近 30 hari", days: 30 },
-  { label: "Semua", days: 0 },
+  { label: "Last 7 days", days: 7 },
+  { label: "Last 30 days", days: 30 },
+  { label: "All", days: 0 },
 ];
 
 export function UsageStatsSection() {
@@ -49,8 +49,8 @@ export function UsageStatsSection() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h3 className="text-lg font-semibold text-gray-100">Statistik Penggunaan</h3>
-        <p className="mt-1 text-sm text-gray-500">查看各Provider的 API 调用Statistik</p>
+        <h3 className="text-lg font-semibold text-gray-100">Usage Statistics</h3>
+        <p className="mt-1 text-sm text-gray-500">View API call statistics for each provider</p>
       </div>
 
       {/* Filters */}
@@ -73,10 +73,10 @@ export function UsageStatsSection() {
           <select
             value={providerFilter}
             onChange={(e) => setProviderFilter(e.target.value)}
-            aria-label="按Provider筛选"
+            aria-label="Filter by provider"
             className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-sm text-gray-300 focus:border-indigo-500/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/60"
           >
-            <option value="">SemuaProvider</option>
+            <option value="">All Providers</option>
             {providers.map((p) => (
               <option key={p} value={p}>
                 {p}
@@ -88,9 +88,9 @@ export function UsageStatsSection() {
 
       {/* Stats */}
       {loading ? (
-        <div className="text-sm text-gray-500">Memuat...</div>
+        <div className="text-sm text-gray-500">Loading...</div>
       ) : stats.length === 0 ? (
-        <div className="text-sm text-gray-500">Belum ada data</div>
+        <div className="text-sm text-gray-500">No data yet</div>
       ) : (
         <div className="space-y-3">
           {stats.map((s) => (
@@ -105,18 +105,18 @@ export function UsageStatsSection() {
                 </span>
               </div>
               <div className="mt-2 flex flex-wrap gap-6 text-xs tabular-nums text-gray-400">
-                <span>调用: {s.total_calls}</span>
-                <span>Berhasil: {s.success_calls}</span>
+                <span>Calls: {s.total_calls}</span>
+                <span>Successful: {s.success_calls}</span>
                 <span>
-                  Tingkat Keberhasilan:{" "}
+                  Success Rate:{" "}
                   {s.total_calls > 0
                     ? percentFmt.format(s.success_calls / s.total_calls)
                     : "0%"}
                 </span>
                 {s.call_type === "text" ? (
-                  s.total_calls > 0 && <span>Tipe: Generasi Teks</span>
+                  s.total_calls > 0 && <span>Type: Text Generation</span>
                 ) : s.total_duration_seconds !== undefined && (
-                  <span>Durasi: {s.total_duration_seconds}s</span>
+                  <span>Duration: {s.total_duration_seconds}s</span>
                 )}
               </div>
             </div>

@@ -23,7 +23,7 @@ export function StudioLayout({ children }: StudioLayoutProps) {
   const assistantPanelOpen = useAppStore((s) => s.assistantPanelOpen);
   const toggleAssistantPanel = useAppStore((s) => s.toggleAssistantPanel);
 
-  // 进入Kerja区时KoneksiTugas SSE 流
+  // Connect Task SSE stream when entering work area
   useTasksSSE(currentProjectName);
   useProjectEventsSSE(currentProjectName);
 
@@ -44,7 +44,7 @@ export function StudioLayout({ children }: StudioLayoutProps) {
             minWidth: assistantPanelOpen ? "22.5rem" : "0",
           }}
         >
-          {/* 始终Render但在Tutup时Sembunyikan，保持Status */}
+          {/* Always render but hide when closed, maintain state */}
           <div
             className={`h-full transition-opacity duration-200 ${
               assistantPanelOpen ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -55,7 +55,7 @@ export function StudioLayout({ children }: StudioLayoutProps) {
         </div>
       </div>
 
-      {/* 悬浮Asisten球 — Tutup时固定在右上角 */}
+      {/* Floating Assistant button — fixed at top-right when closed */}
       <button
         type="button"
         onClick={toggleAssistantPanel}
@@ -65,8 +65,8 @@ export function StudioLayout({ children }: StudioLayoutProps) {
             : "scale-100 opacity-100 hover:bg-indigo-500 cursor-pointer"
         }`}
         style={{ transitionDelay: assistantPanelOpen ? "0ms" : "200ms" }}
-        title="BukaAsistenPanel"
-        aria-label="BukaAsistenPanel"
+        title="Open Assistant Panel"
+        aria-label="Open Assistant Panel"
       >
         <Bot className="h-5 w-5 text-white" />
       </button>

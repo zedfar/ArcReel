@@ -27,8 +27,8 @@ interface ClueCardProps {
 // ---------------------------------------------------------------------------
 
 const TYPE_LABELS: Record<string, string> = {
-  prop: "Properti",
-  location: "Lingkungan",
+  prop: "Prop",
+  location: "Environment",
 };
 
 // ---------------------------------------------------------------------------
@@ -107,11 +107,11 @@ export function ClueCard({
 
         {clue.importance === "major" ? (
           <span className="shrink-0 rounded-full bg-indigo-500/10 px-2 py-0.5 text-xs font-medium text-indigo-400 border border-indigo-500/20">
-            Penting
+            Major
           </span>
         ) : (
           <span className="shrink-0 rounded-full bg-gray-700 px-2 py-0.5 text-xs font-medium text-gray-400">
-            次要
+            Minor
           </span>
         )}
       </div>
@@ -120,7 +120,7 @@ export function ClueCard({
       <div className="mb-4">
         <div className="mb-1.5 flex items-center justify-between">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-            PetunjukDesain
+            Clue Design
           </span>
           <VersionTimeMachine
             projectName={projectName}
@@ -131,20 +131,20 @@ export function ClueCard({
         </div>
         <PreviewableImageFrame
           src={sheetUrl && !imgError ? sheetUrl : null}
-          alt={`${name} Desain`}
+          alt={`${name} Design`}
         >
           <AspectFrame ratio="16:9">
             {sheetUrl && !imgError ? (
               <img
                 src={sheetUrl}
-                alt={`${name} Desain`}
+                alt={`${name} Design`}
                 className="h-full w-full object-cover"
                 onError={() => setImgError(true)}
               />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-gray-500">
                 <Puzzle className="h-10 w-10" />
-                <span className="text-xs">KlikGenerate</span>
+                <span className="text-xs">Click Generate</span>
               </div>
             )}
           </AspectFrame>
@@ -159,7 +159,7 @@ export function ClueCard({
         onInput={autoResize}
         rows={2}
         className="mb-3 w-full resize-none overflow-hidden bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-500 focus:border-indigo-500 focus:outline-none"
-        placeholder="Masukkan deskripsi petunjuk..."
+        placeholder="Enter clue description..."
       />
 
       {isDirty && (
@@ -168,7 +168,7 @@ export function ClueCard({
           onClick={handleSave}
           className="mb-3 rounded-lg bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-500 transition-colors"
         >
-          Simpan
+          Save
         </button>
       )}
 
@@ -176,7 +176,7 @@ export function ClueCard({
         <GenerateButton
           onClick={() => onGenerate(name)}
           loading={generating}
-          label={clue.clue_sheet ? "Generate ulang desain" : "GenerateDesain"}
+          label={clue.clue_sheet ? "Regenerate design" : "Generate Design"}
           className="w-full justify-center"
         />
       )}

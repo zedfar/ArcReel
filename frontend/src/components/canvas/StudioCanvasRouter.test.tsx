@@ -201,7 +201,7 @@ describe("StudioCanvasRouter", () => {
 
   it("shows loading state when currentProjectName is missing", () => {
     renderAt("/");
-    expect(screen.getByText("Memuat...")).toBeInTheDocument();
+    expect(screen.getByText("Loading...")).toBeInTheDocument();
   });
 
   it("routes characters/clues/source/episodes views correctly", async () => {
@@ -231,7 +231,7 @@ describe("StudioCanvasRouter", () => {
     viewEpisodes.unmount();
 
     await waitFor(() => {
-      expect(screen.queryByText("Memuat...")).not.toBeInTheDocument();
+      expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
     });
   });
 
@@ -250,7 +250,7 @@ describe("StudioCanvasRouter", () => {
     const uploadFileSpy = vi
       .spyOn(API, "uploadFile")
       .mockResolvedValue({ success: true, path: "x", url: "y" });
-    vi.spyOn(API, "generateCharacter").mockResolvedValue({ success: true, task_id: "t-1", message: "已Submit" });
+    vi.spyOn(API, "generateCharacter").mockResolvedValue({ success: true, task_id: "t-1", message: "Submitted" });
     const addCharacterSpy = vi.spyOn(API, "addCharacter").mockResolvedValue({ success: true });
     vi.spyOn(API, "updateClue").mockRejectedValue(new Error("clue failed"));
     vi.spyOn(API, "generateClue").mockRejectedValue(new Error("generate failed"));
@@ -281,7 +281,7 @@ describe("StudioCanvasRouter", () => {
         "Hero",
         "hero description",
       );
-      expect(useAppStore.getState().toast?.text).toContain("GenerateTugas已Submit");
+      expect(useAppStore.getState().toast?.text).toContain("Generate Task Submitted");
       expect(useAppStore.getState().toast?.tone).toBe("success");
     });
 
@@ -312,14 +312,14 @@ describe("StudioCanvasRouter", () => {
       expect(API.updateClue).toHaveBeenCalledWith("demo", "Key", {
         description: "new clue",
       });
-      expect(useAppStore.getState().toast?.text).toContain("PerbaruiPetunjukGagal");
+      expect(useAppStore.getState().toast?.text).toContain("Update Clue Failed");
       expect(useAppStore.getState().toast?.tone).toBe("error");
     });
 
     fireEvent.click(screen.getByText("generate-clue"));
     await waitFor(() => {
       expect(API.generateClue).toHaveBeenCalledWith("demo", "Key", "key description");
-      expect(useAppStore.getState().toast?.text).toContain("SubmitGagal");
+      expect(useAppStore.getState().toast?.text).toContain("Submit Failed");
     });
 
     fireEvent.click(screen.getByText("add-clue"));
@@ -358,7 +358,7 @@ describe("StudioCanvasRouter", () => {
       expect(API.updateSegment).toHaveBeenCalledWith("demo", "SEG-1", {
         image_prompt: "new prompt",
       });
-      expect(useAppStore.getState().toast?.text).toContain("Perbarui Prompt Gagal");
+      expect(useAppStore.getState().toast?.text).toContain("Update Prompt Failed");
     });
 
     fireEvent.click(screen.getByText("generate-storyboard"));
@@ -369,7 +369,7 @@ describe("StudioCanvasRouter", () => {
         "image prompt",
         "episode_1.json",
       );
-      expect(useAppStore.getState().toast?.text).toContain("GenerateStoryboardGagal");
+      expect(useAppStore.getState().toast?.text).toContain("Generate Storyboard Failed");
     });
 
     fireEvent.click(screen.getByText("generate-video"));
@@ -381,7 +381,7 @@ describe("StudioCanvasRouter", () => {
         "episode_1.json",
         4,
       );
-      expect(useAppStore.getState().toast?.text).toContain("GenerateVideoGagal");
+      expect(useAppStore.getState().toast?.text).toContain("Generate Video Failed");
     });
   });
 });

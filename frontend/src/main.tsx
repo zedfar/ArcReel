@@ -1,6 +1,6 @@
-// main.tsx — Titik masuk baru menggunakan wouter + StudioLayout
-// Menggantikan main.js sebagai titik masuk aplikasi.
-// main.js lama dipertahankan sebagai referensi selama migrasi.
+// main.tsx — New entry point using wouter + StudioLayout
+// Replaces main.js as the application entry point.
+// Old main.js is kept as reference during migration.
 
 import { createRoot } from "react-dom/client";
 import { AppRoutes } from "./router";
@@ -11,11 +11,11 @@ import "./css/styles.css";
 import "./css/app.css";
 import "./css/studio.css";
 
-// Memulihkan status login dari localStorage
+// Restore login state from localStorage
 useAuthStore.getState().initialize();
 
 // ---------------------------------------------------------------------------
-// Auto-hide scrollbar global: muncul saat scroll, menghilang setelah berhenti 1.2 detik
+// Global auto-hide scrollbar: appears on scroll, disappears 1.2s after stopping
 // ---------------------------------------------------------------------------
 {
   const timers = new WeakMap<Element, ReturnType<typeof setTimeout>>();
@@ -26,14 +26,14 @@ useAuthStore.getState().initialize();
       const el = e.target;
       if (!(el instanceof HTMLElement)) return;
 
-      // Menampilkan scrollbar
+      // Show scrollbar
       el.dataset.scrolling = "";
 
-      // Menghapus timer sembunyi sebelumnya
+      // Clear previous hide timer
       const prev = timers.get(el);
       if (prev) clearTimeout(prev);
 
-      // Sembunyikan setelah 1.2 detik tanpa scroll
+      // Hide after 1.2s of no scrolling
       timers.set(
         el,
         setTimeout(() => {
@@ -42,7 +42,7 @@ useAuthStore.getState().initialize();
         }, 1200),
       );
     },
-    true, // capture phase — menangkap event scroll dari semua elemen anak
+    true, // capture phase — captures scroll events from all child elements
   );
 }
 

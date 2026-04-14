@@ -1,4 +1,4 @@
-"""视频生成服务层核心接口定义与共享工具。"""
+"""Video generation service layer core interface definitions and shared utilities."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ from lib.retry import BASE_RETRYABLE_ERRORS, _should_retry, with_retry_async
 
 logger = logging.getLogger(__name__)
 
-# 图片后缀 → MIME 类型映射（多个后端共用）
+# Image suffix → MIME type mapping (shared by multiple backends)
 IMAGE_MIME_TYPES: dict[str, str] = {
     ".png": "image/png",
     ".jpg": "image/jpeg",
@@ -38,17 +38,17 @@ async def poll_with_retry[T](
     label: str = "",
     on_progress: Callable[[T, float], None] | None = None,
 ) -> T:
-    """通用异步轮询辅助函数，带瞬态错误重试和超时控制。
+    """Generic async polling helper with transient error retry and timeout control.
 
     Args:
-        poll_fn: 每次轮询调用的异步函数，返回最新状态。
-        is_done: 判断轮询结果是否表示任务完成。
-        is_failed: 判断轮询结果是否表示任务失败，返回错误信息或 None。
-        poll_interval: 两次轮询之间的间隔（秒）。
-        max_wait: 最大等待时间（秒），超时抛出 TimeoutError。
-        retryable_errors: 可重试的异常类型元组。
-        label: 日志前缀（如 "Ark"、"Gemini"）。
-        on_progress: 可选的进度回调，每次非终态轮询后调用。
+        poll_fn: Async function called each poll, returns latest status.
+        is_done: Determines if poll result indicates task completion.
+        is_failed: Determines if poll result indicates task failure, returns error message or None.
+        poll_interval: Interval between polls (seconds).
+        max_wait: Maximum wait time (seconds), raises TimeoutError on timeout.
+        retryable_errors: Tuple of retryable exception types.
+        label: Log prefix (e.g. "Ark", "Gemini").
+        on_progress: Optional progress callback, called after each non-terminal poll.
     """
     start = time.monotonic()
     prefix = f"{label} " if label else ""
@@ -56,7 +56,7 @@ async def poll_with_retry[T](
     while True:
         elapsed = time.monotonic() - start
         if elapsed >= max_wait:
-            raise TimeoutError(f"{prefix}任务超时（{max_wait:.0f}秒）")
+            raise TimeoutError(f"{prefix}Task timeout ({max_wait:.0f} seconds)")
 
         await asyncio.sleep(poll_interval)
 
@@ -64,7 +64,7 @@ async def poll_with_retry[T](
             result = await poll_fn()
         except Exception as e:
             if _should_retry(e, retryable_errors):
-                logger.warning("%s轮询异常（将重试）: %s - %s", prefix, type(e).__name__, str(e)[:200])
+                logger.warning("%sPolling exception (will retry): %s - %s", prefix, type(e).__name__, str(e)[:200])
                 continue
             raise
 
@@ -81,12 +81,12 @@ async def poll_with_retry[T](
 
 @with_retry_async()
 async def download_video(url: str, output_path: Path, *, timeout: int = 120) -> None:
-    """从 URL 流式下载视频到本地文件（含瞬态错误重试）。"""
+    """Stream download video from URL to local file (with transient error retry)."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     async with httpx.AsyncClient() as http_client:
         async with http_client.stream("GET", url, timeout=timeout) as resp:
             if resp.status_code >= 400:
-                # 流式模式下需先读取响应体，否则 HTTPStatusError.response.text 不可用
+                # In streaming mode, must read response body first, otherwise HTTPStatusError.response.text is unavailable
                 await resp.aread()
             resp.raise_for_status()
             with open(output_path, "wb") as f:
@@ -95,7 +95,7 @@ async def download_video(url: str, output_path: Path, *, timeout: int = 120) -> 
 
 
 class VideoCapability(StrEnum):
-    """视频后端支持的能力枚举。"""
+    """Video backend capability enumeration."""
 
     TEXT_TO_VIDEO = "text_to_video"
     IMAGE_TO_VIDEO = "image_to_video"
@@ -108,7 +108,7 @@ class VideoCapability(StrEnum):
 
 @dataclass
 class VideoGenerationRequest:
-    """通用视频生成请求。各 Backend 忽略不支持的字段。"""
+    """Generic video generation request. Each Backend ignores unsupported fields."""
 
     prompt: str
     output_path: Path
@@ -118,20 +118,20 @@ class VideoGenerationRequest:
     start_image: Path | None = None
     generate_audio: bool = True
 
-    # Veo 特有
+    # Veo-specific
     negative_prompt: str | None = None
 
-    # 项目上下文（用于构建文件服务 URL 等）
+    # Project context (for constructing file service URLs, etc.)
     project_name: str | None = None
 
-    # Seedance 特有
+    # Seedance-specific
     service_tier: str = "default"
     seed: int | None = None
 
 
 @dataclass
 class VideoGenerationResult:
-    """通用视频生成结果。"""
+    """Generic video generation result."""
 
     video_path: Path
     provider: str
@@ -146,7 +146,7 @@ class VideoGenerationResult:
 
 
 class VideoBackend(Protocol):
-    """视频生成后端协议。"""
+    """Video generation backend protocol."""
 
     @property
     def name(self) -> str: ...

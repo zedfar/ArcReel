@@ -17,7 +17,7 @@ export interface AttachedImage {
 }
 
 // ---------------------------------------------------------------------------
-// Helpers — Diporting dari use-assistant-state.js lama
+// Helpers — Migrated from old use-assistant-state.js
 // ---------------------------------------------------------------------------
 
 function parseSsePayload(event: MessageEvent): Record<string, unknown> {
@@ -33,7 +33,7 @@ function applyTurnPatch(prev: Turn[], patch: Record<string, unknown>): Turn[] {
   if (op === "reset") return (patch.turns as Turn[]) ?? [];
   if (op === "append" && patch.turn) {
     const newTurn = patch.turn as Turn;
-    // Saat backend menambahkan (append) turn pengguna yang asli, hapus "optimistic turn" di akhir untuk menghindari duplikasi
+    // When backend appends the actual user turn, remove the "optimistic turn" at the end to avoid duplication
     if (
       newTurn.type === "user" &&
       prev.length > 0 &&
@@ -77,7 +77,7 @@ function findLatestUserTurn(turns: Turn[]): Turn | null {
 }
 
 // ---------------------------------------------------------------------------
-// Helpers localStorage — Mengingat sesi terakhir yang digunakan untuk setiap proyek
+// Helpers localStorage — Remember last used session for each project
 // ---------------------------------------------------------------------------
 
 const LAST_SESSION_KEY = "arcreel:lastSessionByProject";
@@ -97,7 +97,7 @@ function saveLastSessionId(projectName: string, sessionId: string): void {
     map[projectName] = sessionId;
     localStorage.setItem(LAST_SESSION_KEY, JSON.stringify(map));
   } catch {
-    // Gagal dalam senyap (silent fail)
+    // Silent fail
   }
 }
 
@@ -106,11 +106,11 @@ function saveLastSessionId(projectName: string, sessionId: string): void {
 // ---------------------------------------------------------------------------
 
 /**
- * Mengelola siklus hidup sesi AI Assistant:
- * - Memuat/Membuat sesi
- * - Mengirim pesan
- * - Menerima streaming SSE
- * - Menginterupsi sesi
+ * Manages the AI Assistant session lifecycle:
+ * - Load/Create sessions
+ * - Send messages
+ * - Receive SSE streams
+ * - Interrupt sessions
  */
 export function useAssistantSession(projectName: string | null) {
   const store = useAssistantStore;
@@ -187,7 +187,7 @@ export function useAssistantSession(projectName: string | null) {
     syncPendingQuestion(getPendingQuestionFromSnapshot(snapshot));
   }, [store, syncPendingQuestion]);
 
-  // Menutup aliran (stream)
+  // Close the stream
   const closeStream = useCallback(() => {
     if (reconnectRef.current) {
       clearTimeout(reconnectRef.current);
@@ -200,10 +200,10 @@ export function useAssistantSession(projectName: string | null) {
     streamSessionRef.current = null;
   }, []);
 
-  // Menghubungkan ke aliran SSE
+  // Connect to SSE stream
   const connectStream = useCallback(
     (sessionId: string) => {
-      // Jika sudah terhubung ke sesi yang sama dan koneksi sehat, lewati penyambungan ulang
+      // If already connected to the same session and connection is healthy, skip reconnecting
       if (
         streamRef.current &&
         streamSessionRef.current === sessionId &&
@@ -228,9 +228,9 @@ export function useAssistantSession(projectName: string | null) {
         const data = parseSsePayload(event as MessageEvent);
         const isSending = store.getState().sending;
 
-        // Saat sedang mengirim pesan, backend mungkin belum mengubah sesi menjadi "running",
-        // saat ini koneksi SSE ke sesi "completed" yang lama akan segera menerima snapshot + status lama lalu terputus.
-        // Abaikan snapshot usang (stale) ini untuk turn dan status, pertahankan status optimistic frontend.
+        // When sending a message, backend may not have changed the session to "running" yet,
+        // so the SSE connection to the old "completed" session will soon receive the old snapshot + status and disconnect.
+        // Ignore this stale snapshot for turns and status, preserve frontend optimistic state.
         if (isSending && typeof data.status === "string" && data.status !== "running") {
           return;
         }
@@ -240,9 +240,9 @@ export function useAssistantSession(projectName: string | null) {
         if (typeof data.status === "string") {
           store.getState().setSessionStatus(data.status as "idle");
           statusRef.current = data.status as string;
-          // Setiap status yang valid yang diterima akan membersihkan status 'sending' (yang usang sudah difilter di atas).
-          // Terutama "running" menandakan backend telah mengonfirmasi penerimaan pesan, status sending harus dibersihkan,
-          // jika tidak, status "completed" berikutnya akan difilter oleh isSending guard di status handler.
+          // Every valid status received will clean up the 'sending' status (stale ones are filtered above).
+          // Especially "running" indicates the backend has confirmed message receipt, sending status must be cleared,
+          // otherwise the next "completed" status will be filtered by the isSending guard in the status handler.
           store.getState().setSending(false);
         }
       });
@@ -312,9 +312,9 @@ export function useAssistantSession(projectName: string | null) {
 
       source.onerror = () => {
         if (!isActiveStream()) return;
-        // Syarat penyambungan ulang: sesi sedang berjalan, atau frontend sedang mengirim pesan.
-        // Yang terakhir menangani kasus di mana backend segera menutup SSE untuk sesi "completed" yang lama:
-        // Perlu menyambung kembali setelah koneksi terputus, saat ini backend telah mengatur sesi menjadi "running".
+        // Reconnection conditions: session is running, or frontend is sending a message.
+        // The latter handles the case where the backend immediately closes the SSE for an old "completed" session:
+        // Need to reconnect after the connection drops, at which point the backend has set the session to "running".
         if (statusRef.current === "running" || store.getState().sending) {
           reconnectRef.current = setTimeout(() => {
             connectStream(sessionId);
@@ -325,7 +325,7 @@ export function useAssistantSession(projectName: string | null) {
     [applySnapshot, clearPendingQuestion, projectName, closeStream, store, syncPendingQuestion],
   );
 
-  // Memuat sesi
+  // Load sessions
   useEffect(() => {
     if (!projectName) return;
     let cancelled = false;
@@ -333,12 +333,12 @@ export function useAssistantSession(projectName: string | null) {
     async function init() {
       store.getState().setMessagesLoading(true);
       try {
-        // Mendapatkan daftar sesi
+        // Get session list
         const res = await API.listAssistantSessions(projectName!);
         const sessions = res.sessions ?? [];
         store.getState().setSessions(sessions);
 
-        // Prioritaskan penggunaan sesi yang terakhir dipilih (jika masih ada dalam daftar)
+        // Prioritize using the last selected session (if still in the list)
         const lastId = getLastSessionId(projectName!);
         const sessionId = (lastId && sessions.some((s: SessionMeta) => s.id === lastId))
           ? lastId
@@ -353,7 +353,7 @@ export function useAssistantSession(projectName: string | null) {
 
         store.getState().setCurrentSessionId(sessionId);
 
-        // Memuat snapshot sesi
+        // Load session snapshot
         const session = await API.getAssistantSession(projectName!, sessionId);
         const raw = session as Record<string, unknown>;
         const sessionObj = (raw.session ?? raw) as Record<string, unknown>;
@@ -369,13 +369,13 @@ export function useAssistantSession(projectName: string | null) {
           applySnapshot(snapshot);
         }
       } catch {
-        // Gagal dalam senyap
+        // Silent fail
       } finally {
         if (!cancelled) store.getState().setMessagesLoading(false);
       }
     }
 
-    // Memuat daftar keahlian (skills)
+    // Load skills list
     API.listAssistantSkills(projectName)
       .then((res) => {
         if (!cancelled) store.getState().setSkills(res.skills ?? []);
@@ -399,7 +399,7 @@ export function useAssistantSession(projectName: string | null) {
     store,
   ]);
 
-  // Mengirim pesan
+  // Send message
   const sendMessage = useCallback(
     async (content: string, images?: AttachedImage[]) => {
       if ((!content.trim() && (!images || images.length === 0)) || store.getState().sending) return;
@@ -413,13 +413,13 @@ export function useAssistantSession(projectName: string | null) {
       store.getState().setError(null);
 
       try {
-        // Mengekstrak data base64
+        // Extract base64 data
         const imagePayload = images?.map((img) => ({
           data: img.dataUrl.split(",")[1] ?? "",
           media_type: img.mimeType,
         }));
 
-        // Pembaruan Optimistic: segera tampilkan pesan pengguna di UI
+        // Optimistic update: immediately show user message in UI
         const optimisticContent: import("@/types").ContentBlock[] = [
           ...(imagePayload ?? []).map((img) => ({
             type: "image" as const,
@@ -442,7 +442,7 @@ export function useAssistantSession(projectName: string | null) {
         statusRef.current = "running";
         store.getState().setSessionStatus("running");
 
-        // Pengiriman terpadu (sesi baru atau yang sudah ada)
+        // Unified sending (new session or existing session)
         const result = await API.sendAssistantMessage(
           projectName!,
           content,
@@ -504,7 +504,7 @@ export function useAssistantSession(projectName: string | null) {
         await API.answerAssistantQuestion(projectName, sessionId, questionId, answers);
         store.getState().setPendingQuestion(null);
       } catch (err) {
-        store.getState().setError((err as Error).message ?? "Gagal menjawab");
+        store.getState().setError((err as Error).message ?? "Failed to answer");
       } finally {
         store.getState().setAnsweringQuestion(false);
       }
@@ -512,7 +512,7 @@ export function useAssistantSession(projectName: string | null) {
     [projectName, store],
   );
 
-  // Menginterupsi sesi
+  // Interrupt session
   const interrupt = useCallback(async () => {
     const sessionId = store.getState().currentSessionId;
     if (!projectName || !sessionId || statusRef.current !== "running") return;
@@ -521,12 +521,12 @@ export function useAssistantSession(projectName: string | null) {
     try {
       await API.interruptAssistantSession(projectName, sessionId);
     } catch (err) {
-      store.getState().setError((err as Error).message ?? "Gagal menginterupsi");
+      store.getState().setError((err as Error).message ?? "Failed to interrupt");
       store.getState().setInterrupting(false);
     }
   }, [projectName, store]);
 
-  // Membuat sesi baru (lazy creation: hanya mengosongkan status, pembuatan aktual ditunda hingga pesan pertama dikirim)
+  // Create new session (lazy creation: just clear state, actual creation is deferred until first message is sent)
   const createNewSession = useCallback(async () => {
     if (!projectName) return;
 
@@ -541,7 +541,7 @@ export function useAssistantSession(projectName: string | null) {
     statusRef.current = "idle";
   }, [projectName, clearPendingQuestion, closeStream, invalidatePendingSend, store]);
 
-  // Beralih ke sesi tertentu
+  // Switch to a specific session
   const switchSession = useCallback(async (sessionId: string) => {
     if (store.getState().currentSessionId === sessionId) return;
 
@@ -554,7 +554,7 @@ export function useAssistantSession(projectName: string | null) {
     clearPendingQuestion();
     store.getState().setMessagesLoading(true);
 
-    // Mengingat pilihan
+    // Remember selection
     if (projectName) saveLastSessionId(projectName, sessionId);
 
     try {

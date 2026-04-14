@@ -39,10 +39,10 @@ vi.mock("./ExportScopeDialog", () => ({
     open ? (
       <div data-testid="export-scope-dialog">
         <button data-testid="scope-current" onClick={() => onSelect("current")}>
-          仅当前Versi
+          Current version only
         </button>
         <button data-testid="scope-full" onClick={() => onSelect("full")}>
-          SemuaData
+          All data
         </button>
       </div>
     ) : null,
@@ -79,7 +79,7 @@ describe("GlobalHeader", () => {
     useProjectsStore.setState({
       currentProjectName: "halou-92d19a04",
       currentProjectData: {
-        title: "哈喽Proyek",
+        title: "Hello Project",
         content_mode: "narration",
         style: "Anime",
         episodes: [],
@@ -90,7 +90,7 @@ describe("GlobalHeader", () => {
 
     renderHeader();
 
-    expect(screen.getByText("哈喽Proyek")).toBeInTheDocument();
+    expect(screen.getByText("Hello Project")).toBeInTheDocument();
     expect(screen.queryByText("halou-92d19a04")).not.toBeInTheDocument();
 
     await waitFor(() => {
@@ -110,18 +110,18 @@ describe("GlobalHeader", () => {
     });
 
     useAppStore.getState().pushWorkspaceNotification({
-      text: "AI baru saja memperbaruiPetunjuk \"Jade Pendant\"，Klik untuk melihat",
+      text: "AI just updated Clue \"Jade Pendant\". Click to view",
       target: {
         type: "clue",
-        id: "玉佩",
+        id: "jade-pendant",
         route: "/clues",
       },
     });
 
     renderHeader();
 
-    expect(screen.getByTitle("SesiNotifikasi: 1 条")).toBeInTheDocument();
-    screen.getByRole("button", { name: "BukaNotifikasiPusat" }).click();
+    expect(screen.getByTitle("Session notifications: 1")).toBeInTheDocument();
+    screen.getByRole("button", { name: "Open notification center" }).click();
     expect(await screen.findByTestId("notifications-drawer")).toBeInTheDocument();
   });
 
@@ -138,7 +138,7 @@ describe("GlobalHeader", () => {
       expires_in: 300,
       diagnostics: {
         blocking: [],
-        auto_fixed: [{ code: "current_asset_restored_from_version", message: "修复Video引用" }],
+        auto_fixed: [{ code: "current_asset_restored_from_version", message: "Fixed video reference" }],
         warnings: [],
       },
     });
@@ -147,7 +147,7 @@ describe("GlobalHeader", () => {
     useProjectsStore.setState({
       currentProjectName: "demo",
       currentProjectData: {
-        title: "EksporProyek",
+        title: "Export project",
         content_mode: "narration",
         style: "Anime",
         episodes: [],
@@ -158,9 +158,9 @@ describe("GlobalHeader", () => {
 
     renderHeader();
     // Click export button to open dialog
-    screen.getByRole("button", { name: "Ekspor Proyek Saat Ini ZIP" }).click();
+    screen.getByRole("button", { name: "Export current project as ZIP" }).click();
 
-    // Wait for dialog to appear then click "仅当前Versi"
+    // Wait for dialog to appear then click "Current version only"
     const scopeBtn = await screen.findByTestId("scope-current");
     scopeBtn.click();
 
@@ -168,7 +168,7 @@ describe("GlobalHeader", () => {
       expect(API.requestExportToken).toHaveBeenCalledWith("demo", "current");
     });
     expect(anchorClick).toHaveBeenCalled();
-    expect(useAppStore.getState().toast?.text).toContain("包含 1 条Diagnostik");
+    expect(useAppStore.getState().toast?.text).toContain("Contains 1 diagnostic");
   });
 
   it("shows an error toast when exporting fails", async () => {
@@ -184,7 +184,7 @@ describe("GlobalHeader", () => {
     useProjectsStore.setState({
       currentProjectName: "demo",
       currentProjectData: {
-        title: "EksporProyek",
+        title: "Export project",
         content_mode: "narration",
         style: "Anime",
         episodes: [],
@@ -194,13 +194,13 @@ describe("GlobalHeader", () => {
     });
 
     renderHeader();
-    screen.getByRole("button", { name: "Ekspor Proyek Saat Ini ZIP" }).click();
+    screen.getByRole("button", { name: "Export current project as ZIP" }).click();
 
     const scopeBtn = await screen.findByTestId("scope-full");
     scopeBtn.click();
 
     await waitFor(() => {
-      expect(useAppStore.getState().toast?.text).toContain("Ekspor Gagal");
+      expect(useAppStore.getState().toast?.text).toContain("Export failed");
     });
   });
 });

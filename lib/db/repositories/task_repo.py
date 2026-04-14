@@ -18,7 +18,7 @@ from lib.db.repositories.base import BaseRepository
 
 logger = logging.getLogger(__name__)
 
-ACTIVE_TASK_STATUSES = ("queued", "running")
+ACTIVE_TASK_STATUSES = ("queued", "running")  # Task statuses that are still active
 
 
 def _json_dumps(value: Any) -> str:
@@ -357,13 +357,13 @@ class TaskRepository(BaseRepository):
         return cascaded
 
     async def get_cancel_preview(self, task_id: str) -> dict[str, Any]:
-        """预览取消某个任务的影响范围。"""
+        """Preview the impact range of canceling a task."""
         result = await self.session.execute(select(Task).where(Task.task_id == task_id))
         task = result.scalar_one_or_none()
         if not task:
-            raise ValueError(f"任务 '{task_id}' 不存在")
+            raise ValueError(f"task '{task_id}' does not exist")
         if task.status != "queued":
-            raise ValueError("只有排队中的任务可以取消")
+            raise ValueError("Only queued tasks can be cancelled")
 
         task_summary = {
             "task_id": task.task_id,
@@ -375,7 +375,7 @@ class TaskRepository(BaseRepository):
         return {"task": task_summary, "cascaded": cascaded}
 
     async def _collect_queued_dependents(self, task_id: str) -> list[dict[str, Any]]:
-        """递归收集依赖于 task_id 的所有 queued 任务摘要。"""
+        """Recursively collect all queued task summaries that depend on task_id."""
         result = await self.session.execute(
             select(Task.task_id, Task.task_type, Task.resource_id)
             .where(
@@ -392,13 +392,13 @@ class TaskRepository(BaseRepository):
         return dependents
 
     async def cancel_task(self, task_id: str) -> dict[str, Any]:
-        """取消一个 queued 任务，级联取消其所有 queued 依赖任务。"""
+        """Cancel a queued task, cascading cancel all its queued dependent tasks."""
         result = await self.session.execute(select(Task).where(Task.task_id == task_id))
         task = result.scalar_one_or_none()
         if not task:
-            raise ValueError(f"任务 '{task_id}' 不存在")
+            raise ValueError(f"task '{task_id}' does not exist")
         if task.status != "queued":
-            raise ValueError("只有排队中的任务可以取消")
+            raise ValueError("Only queued tasks can be cancelled")
 
         cancelled = []
         skipped_running = []
@@ -418,7 +418,7 @@ class TaskRepository(BaseRepository):
         return {"cancelled": cancelled, "skipped_running": skipped_running}
 
     async def _mark_cancelled(self, task_id: str, *, cancelled_by: str) -> dict[str, Any] | None:
-        """将一个 queued 任务标记为 cancelled。"""
+        """Mark a queued task as cancelled."""
         now = utc_now()
         stmt = (
             update(Task)
@@ -453,7 +453,7 @@ class TaskRepository(BaseRepository):
         cancelled: list[dict[str, Any]],
         skipped_running: list[dict[str, Any]],
     ) -> None:
-        """递归取消依赖于 task_id 的所有 queued 任务。"""
+        """Recursively cancel all queued tasks that depend on task_id."""
         result = await self.session.execute(
             select(Task).where(Task.dependency_task_id == task_id).order_by(Task.queued_at.asc())
         )
@@ -464,7 +464,7 @@ class TaskRepository(BaseRepository):
                     cancelled.append(task_data)
                     await self._cascade_cancel_dependents(dep_task.task_id, cancelled, skipped_running)
                 else:
-                    # 竞态：初始查询时为 queued 但 UPDATE 失败，刷新检查实际状态
+                    # Race condition: was queued at initial query but UPDATE failed, refresh and check actual status
                     await self.session.refresh(dep_task)
                     if dep_task.status == "running":
                         skipped_running.append(_task_to_dict(dep_task))
@@ -472,14 +472,14 @@ class TaskRepository(BaseRepository):
                 skipped_running.append(_task_to_dict(dep_task))
 
     async def get_cancel_all_preview(self, project_name: str) -> int:
-        """返回项目中当前 queued 状态的任务数量。"""
+        """Returns the count of tasks with current queued status in the project."""
         result = await self.session.execute(
             select(func.count()).select_from(Task).where(Task.project_name == project_name, Task.status == "queued")
         )
         return result.scalar_one()
 
     async def cancel_all_queued(self, project_name: str) -> dict[str, Any]:
-        """取消项目中所有 queued 任务。"""
+        """Cancel all queued tasks in the project."""
         queued_result = await self.session.execute(
             select(Task).where(Task.project_name == project_name, Task.status == "queued")
         )
@@ -516,7 +516,7 @@ class TaskRepository(BaseRepository):
                 )
 
         await self.session.commit()
-        # 竞态时部分任务可能在 UPDATE 前被 worker 领走，skipped = 预期取消数 - 实际取消数
+        # In case of race condition, some tasks may be taken by worker before UPDATE, skipped = expected cancel count - actual cancel count
         skipped = len(queued_tasks) - cancelled_count
         return {
             "cancelled_count": cancelled_count,

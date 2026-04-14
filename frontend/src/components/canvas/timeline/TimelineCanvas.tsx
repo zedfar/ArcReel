@@ -145,7 +145,7 @@ export function TimelineCanvas({
   if (!projectData || (!episodeScript && !hasDraft)) {
     return (
       <div className="flex h-full items-center justify-center text-gray-500">
-        Silakan pilih episode di sisi kiri
+        Please select an episode from the left sidebar
       </div>
     );
   }
@@ -156,7 +156,7 @@ export function TimelineCanvas({
     segments.reduce((sum, s) => sum + s.duration_seconds, 0);
 
   // Label depends on content mode
-  const segmentLabel = contentMode === "narration" ? " segmen" : " adegan";
+  const segmentLabel = contentMode === "narration" ? " segment" : " scene";
   const virtualItems = virtualizer.getVirtualItems();
 
   return (
@@ -171,18 +171,18 @@ export function TimelineCanvas({
           </h2>
           {episodeScript && (
             <p className="text-xs text-gray-500">
-              {segments.length} {segmentLabel} · Sekitar {totalDuration}s
+              {segments.length} {segmentLabel} · Around {totalDuration}s
             </p>
           )}
           {episodeCost && (
             <div className="mt-2 flex items-center gap-4 rounded-lg bg-gray-900 border border-gray-800 px-3 py-2 text-xs tabular-nums">
-              <span className="text-gray-600">Estimasi</span>
-              <span className="text-gray-500">Papan Cerita <span className="text-gray-300">{formatCost(episodeCost.totals.estimate.image)}</span></span>
+              <span className="text-gray-600">Estimated</span>
+              <span className="text-gray-500">Storyboard <span className="text-gray-300">{formatCost(episodeCost.totals.estimate.image)}</span></span>
               <span className="text-gray-500">Video <span className="text-gray-300">{formatCost(episodeCost.totals.estimate.video)}</span></span>
               <span className="text-gray-500">Total <span className="font-medium text-amber-400">{formatCost(totalBreakdown(episodeCost.totals.estimate))}</span></span>
               <span className="text-gray-700">|</span>
-              <span className="text-gray-600">Aktual</span>
-              <span className="text-gray-500">Papan Cerita <span className="text-gray-300">{formatCost(episodeCost.totals.actual.image)}</span></span>
+              <span className="text-gray-600">Actual</span>
+              <span className="text-gray-500">Storyboard <span className="text-gray-300">{formatCost(episodeCost.totals.actual.image)}</span></span>
               <span className="text-gray-500">Video <span className="text-gray-300">{formatCost(episodeCost.totals.actual.video)}</span></span>
               <span className="text-gray-500">Total <span className="font-medium text-emerald-400">{formatCost(totalBreakdown(episodeCost.totals.actual))}</span></span>
             </div>
@@ -201,7 +201,7 @@ export function TimelineCanvas({
                   : "border-transparent text-gray-500 hover:text-gray-300"
               }`}
             >
-              Pra-pemrosesan
+              Preprocessing
             </button>
             <button
               type="button"
@@ -215,7 +215,7 @@ export function TimelineCanvas({
                     : "border-transparent text-gray-500 hover:text-gray-300"
               }`}
             >
-              Garis Waktu Skenario
+              Scenario Timeline
             </button>
           </div>
         )}

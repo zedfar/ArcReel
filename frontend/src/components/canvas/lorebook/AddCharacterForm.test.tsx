@@ -21,16 +21,16 @@ describe("AddCharacterForm", () => {
       <AddCharacterForm onSubmit={onSubmit} onCancel={vi.fn()} />,
     );
 
-    fireEvent.change(screen.getByPlaceholderText("Nama Karakter"), {
+    fireEvent.change(screen.getByPlaceholderText("Character Name"), {
       target: { value: "Hero" },
     });
     fireEvent.change(
-      screen.getByPlaceholderText("KarakterPenampilan、Kepribadian、Latar belakang等Deskripsi..."),
+      screen.getByPlaceholderText("Character Appearance、Personality、Background etc. Description..."),
       {
         target: { value: "hero desc" },
       },
     );
-    fireEvent.change(screen.getByPlaceholderText("Opsional，例如：温柔但有威严"), {
+    fireEvent.change(screen.getByPlaceholderText("Optional, for example: gentle but authoritative"), {
       target: { value: "warm" },
     });
 
@@ -39,7 +39,7 @@ describe("AddCharacterForm", () => {
     expect(fileInput).not.toBeNull();
     fireEvent.change(fileInput as HTMLInputElement, { target: { files: [file] } });
 
-    fireEvent.click(screen.getByRole("button", { name: "Tambah" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add" }));
 
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith("Hero", "hero desc", "warm", file);

@@ -208,7 +208,7 @@ function DurationSelector({
         align="start"
         sideOffset={6}
       >
-        <div className="flex gap-1" role="radiogroup" aria-label="DurasiPilih">
+        <div className="flex gap-1" role="radiogroup" aria-label="Select Duration">
           {durationOptions.map((d) => (
             <button
               key={d}
@@ -288,13 +288,13 @@ function TextColumn({
   const noteSection = (
     <div className="mt-auto pt-3 border-t border-gray-800">
       <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2 block">
-        Catatan
+        Notes
       </span>
       <textarea
         className="w-full resize-none rounded-lg border border-gray-700 bg-gray-800/50 px-3 py-2 text-sm text-gray-300 placeholder-gray-600 focus:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
         rows={4}
-        placeholder="TambahCatatan..."
-        aria-label="Catatan"
+        placeholder="Add notes..."
+        aria-label="Notes"
         value={noteDraft}
         onChange={(e) => setNoteDraft(e.target.value)}
         onBlur={handleNoteBlur}
@@ -307,10 +307,10 @@ function TextColumn({
     return (
       <div className="flex h-full flex-col gap-1.5 p-3">
         <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
-          原文
+          Original Text
         </span>
         <pre className="whitespace-pre-wrap text-sm leading-relaxed text-gray-300 font-sans">
-          {s.novel_text || "（Belum ada 原文）"}
+          {s.novel_text || "(No original text)"}
         </pre>
         {noteSection}
       </div>
@@ -326,10 +326,10 @@ function TextColumn({
   return (
     <div className="flex h-full flex-col gap-1.5 p-3">
       <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
-        Dialog
+        Dialogue
       </span>
       {dialogue.length === 0 ? (
-        <p className="text-sm text-gray-500 italic">（Belum ada percakapan）</p>
+        <p className="text-sm text-gray-500 italic">(No dialogue)</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {dialogue.map((d: { speaker: string; line: string }, i: number) => (
@@ -480,7 +480,7 @@ function PromptColumn({
               setImgText(v);
               fireString("image_prompt", v);
             }}
-            placeholder="StoryboardDeskripsi..."
+            placeholder="Storyboard description..."
           />
         )}
       </div>
@@ -506,7 +506,7 @@ function PromptColumn({
               setVidText(v);
               fireString("video_prompt", v);
             }}
-            placeholder="VideoAksiDeskripsi..."
+            placeholder="Video action description..."
           />
         )}
       </div>
@@ -606,7 +606,7 @@ function MediaColumn({
               fallback={
                 <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-gray-600">
                   <ImageIcon className="h-8 w-8" />
-                  <span className="text-xs">Belum ada storyboard</span>
+                  <span className="text-xs">No storyboard yet</span>
                 </div>
               }
             />
@@ -616,7 +616,7 @@ function MediaColumn({
           <GenerateButton
             onClick={() => onGenerateStoryboard?.(segmentId)}
             loading={generatingStoryboard}
-            label="GenerateStoryboard"
+            label="Generate Storyboard"
             className="w-full justify-center"
           />
         </div>
@@ -643,7 +643,7 @@ function MediaColumn({
         ) : (
           <div className="flex items-center justify-center rounded-lg border border-dashed border-gray-700 bg-gray-800/30 py-4">
             <span className="text-xs text-gray-600">
-              {assets?.storyboard_image ? "可GenerateVideo" : "需先GenerateStoryboard"}
+              {assets?.storyboard_image ? "Ready to generate video" : "Generate storyboard first"}
             </span>
           </div>
         )}
@@ -651,7 +651,7 @@ function MediaColumn({
           <GenerateButton
             onClick={() => onGenerateVideo?.(segmentId)}
             loading={generatingVideo}
-            label="GenerateVideo"
+            label="Generate Video"
             className="w-full justify-center"
             disabled={!assets?.storyboard_image}
           />
@@ -709,11 +709,11 @@ export function SegmentCard({
             {segCost && (
               <span className="tabular-nums contents">
                 <span className="text-gray-700">|</span>
-                <span className="text-[11px] text-gray-600">预估</span>
+                <span className="text-[11px] text-gray-600">Estimated</span>
                 <span className="text-[11px] text-gray-500">Storyboard <span className="text-gray-400">{formatCost(segCost.estimate.image)}</span></span>
                 <span className="text-[11px] text-gray-500">Video <span className="text-gray-400">{formatCost(segCost.estimate.video)}</span></span>
                 <span className="text-gray-700">|</span>
-                <span className="text-[11px] text-gray-600">实际</span>
+                <span className="text-[11px] text-gray-600">Actual</span>
                 <span className="text-[11px] text-gray-500">Storyboard <span className="text-gray-400">{formatCost(segCost.actual.image)}</span></span>
                 <span className="text-[11px] text-gray-500">Video <span className="text-gray-400">{formatCost(segCost.actual.video)}</span></span>
               </span>

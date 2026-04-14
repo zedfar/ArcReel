@@ -57,18 +57,18 @@ export function WorkspaceNotificationsDrawer({
               <BellRing className="h-4 w-4" />
             </span>
             <span className="rounded-full border border-white/8 bg-white/4 px-2.5 py-1 text-[11px] text-slate-300">
-              {workspaceNotifications.length} Notifikasi
+              {workspaceNotifications.length} Notifications
             </span>
             <span className="flex items-center gap-1.5 text-[11px] text-amber-100/85">
               <Sparkles className="h-3.5 w-3.5" />
-              Belum dibaca {unreadCount}
+              Unread {unreadCount}
             </span>
           </div>
           <button
             type="button"
             onClick={onClose}
             className="rounded-xl p-1.5 text-slate-500 transition-colors hover:bg-white/6 hover:text-slate-200"
-            aria-label="Tutup Panel Notifikasi"
+            aria-label="Close Notifications Panel"
           >
             <X className="h-4 w-4" />
           </button>
@@ -80,9 +80,9 @@ export function WorkspaceNotificationsDrawer({
           <div className="flex flex-col items-center justify-center gap-3 rounded-[1.1rem] border border-dashed border-white/10 bg-white/[0.03] px-6 py-12 text-center">
             <BellRing className="h-5 w-5 text-slate-500" />
             <div>
-              <p className="text-sm text-slate-200">Saat ini tidak ada notifikasi</p>
+              <p className="text-sm text-slate-200">No notifications at the moment</p>
               <p className="mt-1 text-xs text-slate-500">
-                Pembaruan proyek, penyelesaian generasi, dan perubahan yang dapat dilacak akan muncul di sini
+                Project updates, generation completions, and trackable changes will appear here
               </p>
             </div>
           </div>
@@ -105,7 +105,7 @@ export function WorkspaceNotificationsDrawer({
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <span className="text-[11px] uppercase tracking-[0.18em] text-slate-400">
-                          {item.read ? "Sudah dibaca" : "Notifikasi Baru"}
+                          {item.read ? "Read" : "New Notification"}
                         </span>
                         <span className="text-[11px] text-slate-500">
                           {formatNotificationTime(item.created_at)}
@@ -121,18 +121,18 @@ export function WorkspaceNotificationsDrawer({
                             onClick={() => onNavigate(item)}
                             className="inline-flex items-center gap-1 rounded-full border border-sky-300/18 bg-sky-300/10 px-3 py-1 text-xs font-medium text-sky-100 transition-all hover:-translate-y-0.5 hover:border-sky-200/35 hover:bg-sky-300/14"
                           >
-                            Lihat Lokasi
+                            View Location
                             <ArrowUpRight className="h-3.5 w-3.5" />
                           </button>
                         ) : (
-                          <span className="text-[11px] text-slate-500">Hanya Notifikasi</span>
+                          <span className="text-[11px] text-slate-500">Notification Only</span>
                         )}
                         <button
                           type="button"
                           onClick={() => removeWorkspaceNotification(item.id)}
                           className="rounded-full px-2 py-1 text-[11px] text-slate-500 transition-colors hover:bg-white/6 hover:text-slate-200"
                         >
-                          Hapus
+                          Delete
                         </button>
                       </div>
                     </div>
@@ -147,10 +147,10 @@ export function WorkspaceNotificationsDrawer({
       {workspaceNotifications.length > 0 && (
         <div className="border-t border-white/8 px-4 py-2.5">
           <div className="flex items-center justify-between text-[11px] text-slate-500">
-            <span>Membuka panel akan secara otomatis menandai sebagai sudah dibaca</span>
+            <span>Opening the panel will automatically mark as read</span>
             <span className="inline-flex items-center gap-1">
               <CheckCheck className="h-3.5 w-3.5" />
-              Rekaman Sesi Sementara
+              Temporary Session Record
             </span>
           </div>
         </div>

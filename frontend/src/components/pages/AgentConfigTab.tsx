@@ -13,9 +13,9 @@ import { TabSaveFooter } from "./TabSaveFooter";
 // ---------------------------------------------------------------------------
 
 interface AgentDraft {
-  anthropicKey: string;        // input API key baru (kosong = tidak diubah)
-  anthropicBaseUrl: string;    // pengeditan di tempat; kosong = hapus
-  anthropicModel: string;      // pengeditan di tempat; kosong = hapus
+  anthropicKey: string;        // new API key input (empty = unchanged)
+  anthropicBaseUrl: string;    // inline edit; empty = delete
+  anthropicModel: string;      // inline edit; empty = delete
   haikuModel: string;
   opusModel: string;
   sonnetModel: string;
@@ -85,39 +85,39 @@ const inputClassName =
 const smallBtnClassName =
   "rounded p-1 text-gray-500 hover:text-gray-300 focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:outline-none";
 
-// Model routing config — static, diangkat ke tingkat modul untuk menghindari pembuatan ulang pada setiap render
+// Model routing config — static, hoisted to module level to avoid recreation on every render
 const MODEL_ROUTING_FIELDS = [
   {
     key: "haikuModel" as const,
-    label: "Model Haiku",
+    label: "Haiku Model",
     envVar: "ANTHROPIC_DEFAULT_HAIKU_MODEL",
-    hint: "Tugas ringan (klasifikasi, ekstraksi, tanya jawab sederhana)",
+    hint: "Lightweight tasks (classification, extraction, simple Q&A)",
     patchKey: "anthropic_default_haiku_model" as const,
   },
   {
     key: "sonnetModel" as const,
-    label: "Model Sonnet",
+    label: "Sonnet Model",
     envVar: "ANTHROPIC_DEFAULT_SONNET_MODEL",
-    hint: "Tugas seimbang (menulis, orkestrasi, penalaran multi-langkah)",
+    hint: "Balanced tasks (writing, orchestration, multi-step reasoning)",
     patchKey: "anthropic_default_sonnet_model" as const,
   },
   {
     key: "opusModel" as const,
-    label: "Model Opus",
+    label: "Opus Model",
     envVar: "ANTHROPIC_DEFAULT_OPUS_MODEL",
-    hint: "Tugas kompleks (pembuatan teks panjang, analisis mendalam)",
+    hint: "Complex tasks (long text generation, deep analysis)",
     patchKey: "anthropic_default_opus_model" as const,
   },
   {
     key: "subagentModel" as const,
-    label: "Model Sub-Agent",
+    label: "Sub-Agent Model",
     envVar: "CLAUDE_CODE_SUBAGENT_MODEL",
-    hint: "Model yang digunakan saat Sub-Agent berjalan secara paralel",
+    hint: "Model used when Sub-Agents run in parallel",
     patchKey: "claude_code_subagent_model" as const,
   },
 ] as const;
 
-// Tombol hapus inline kecil yang ditampilkan di sebelah "Saat ini：" ketika nilai telah ditetapkan
+// Small inline clear button shown next to "Current:" when a value has been set
 const inlineClearClassName =
   "ml-1.5 inline-flex items-center rounded p-0.5 text-gray-600 transition-colors hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-50";
 
@@ -173,7 +173,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
   const [showKey, setShowKey] = useState(false);
   const [modelRoutingExpanded, setModelRoutingExpanded] = useState(false);
 
-  // Muat konfigurasi saat pemasangan (mount)
+  // Load configuration on mount
   const load = useCallback(async () => {
     setLoadError(null);
     try {
@@ -212,7 +212,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
       savedRef.current = newDraft;
       setDraft(newDraft);
       useConfigStatusStore.getState().refresh();
-      useAppStore.getState().pushToast("Konfigurasi Agen ArcReel berhasil disimpan", "success");
+      useAppStore.getState().pushToast("ArcReel Agent configuration saved successfully", "success");
     } catch (err) {
       setSaveError((err as Error).message);
     } finally {
@@ -225,7 +225,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
     setSaveError(null);
   }, []);
 
-  // Hapus satu kolom segera melalui PATCH
+  // Clear a single field immediately via PATCH
   const handleClearField = useCallback(
     async (fieldId: string, patch: SystemConfigPatch, label: string) => {
       setClearingField(fieldId);
@@ -236,9 +236,9 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
         savedRef.current = nextSavedDraft;
         setDraft(nextSavedDraft);
         useConfigStatusStore.getState().refresh();
-        useAppStore.getState().pushToast(`${label} berhasil dihapus`, "success");
+        useAppStore.getState().pushToast(`${label} cleared successfully`, "success");
       } catch (err) {
-        useAppStore.getState().pushToast(`Gagal menghapus: ${(err as Error).message}`, "error");
+        useAppStore.getState().pushToast(`Failed to clear: ${(err as Error).message}`, "error");
       } finally {
         setClearingField(null);
       }
@@ -252,14 +252,14 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
   if (loadError) {
     return (
       <div className={visible ? "px-6 py-8" : "hidden"}>
-        <div className="text-sm text-rose-400">Gagal memuat: {loadError}</div>
+        <div className="text-sm text-rose-400">Failed to load: {loadError}</div>
         <button
           type="button"
           onClick={() => void load()}
           className="mt-3 inline-flex items-center gap-2 rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-300 hover:border-gray-600 hover:bg-gray-800/50"
         >
           <Loader2 className="h-4 w-4" />
-          Coba Lagi
+          Try Again
         </button>
       </div>
     );
@@ -269,7 +269,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
     return (
       <div className={visible ? "flex items-center gap-2 px-6 py-8 text-gray-400" : "hidden"}>
         <Loader2 className="h-4 w-4 animate-spin text-indigo-400" />
-        Memuat…
+        Loading…
       </div>
     );
   }
@@ -286,16 +286,16 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
               <ClaudeColor size={24} />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-100">Agen ArcReel</h2>
+              <h2 className="text-lg font-semibold text-gray-100">ArcReel Agent</h2>
               <p className="text-sm text-gray-500">
-                Berbasis Claude Agent SDK, menggerakkan asisten AI percakapan dan alur kerja otomatis
+                Built on Claude Agent SDK, powering conversational AI assistants and automated workflows
               </p>
             </div>
           </div>
           <div className="mt-3 flex items-start gap-2 rounded-lg border border-gray-800/60 bg-gray-900/30 px-3 py-2">
             <Terminal className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-500" />
             <p className="text-xs text-gray-500">
-              Konfigurasi kompatibel dengan penamaan variabel lingkungan Claude Code, mendukung Coding Plan API yang kompatibel dengan Claude Code.
+              Configuration is compatible with Claude Code environment variable naming, supporting the Claude Code-compatible Coding Plan API.
             </p>
           </div>
         </div>
@@ -305,8 +305,8 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
         {/* ----------------------------------------------------------------- */}
         <div>
           <SectionHeading
-            title="Kredensial API"
-            description="API Key Anthropic diperlukan agar agen dapat berjalan"
+            title="API Credentials"
+            description="An Anthropic API Key is required for the agent to run"
           />
 
           {/* API Key card */}
@@ -319,7 +319,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                 {settings.anthropic_api_key.is_set && (
                   <div className="flex items-center text-xs text-gray-500">
                     <span className="truncate">
-                      Saat ini: {settings.anthropic_api_key.masked ?? "Telah diatur"}
+                      Current: {settings.anthropic_api_key.masked ?? "Set"}
                     </span>
                     <button
                       type="button"
@@ -332,7 +332,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                       }
                       disabled={isBusy}
                       className={inlineClearClassName}
-                      aria-label="Hapus API Key Anthropic yang disimpan"
+                      aria-label="Clear saved Anthropic API Key"
                     >
                       {clearingField === "anthropic_api_key" ? (
                         <Loader2 className="h-3 w-3 animate-spin" />
@@ -344,7 +344,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                 )}
               </div>
               <p className="mt-0.5 text-xs text-gray-500">
-                Sesuai dengan variabel lingkungan ANTHROPIC_API_KEY
+                Corresponds to the ANTHROPIC_API_KEY environment variable
               </p>
               <div className="relative mt-2">
                 <input
@@ -364,7 +364,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                     type="button"
                     onClick={() => updateDraft("anthropicKey", "")}
                     className={`absolute right-8 top-1/2 -translate-y-1/2 ${smallBtnClassName}`}
-                    aria-label="Bersihkan input"
+                    aria-label="Clear input"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -373,7 +373,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                   type="button"
                   onClick={() => setShowKey((v) => !v)}
                   className={`absolute right-2 top-1/2 -translate-y-1/2 ${smallBtnClassName}`}
-                  aria-label={showKey ? "Sembunyikan kunci" : "Tampilkan kunci"}
+                  aria-label={showKey ? "Hide key" : "Show key"}
                 >
                   {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -398,19 +398,19 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                     }
                     disabled={isBusy}
                     className="inline-flex items-center gap-1 rounded text-xs text-gray-600 transition-colors hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:outline-none"
-                    aria-label="Hapus Base URL Anthropic yang disimpan"
+                    aria-label="Clear saved Anthropic Base URL"
                   >
                     {clearingField === "anthropic_base_url" ? (
                       <Loader2 className="h-3 w-3 animate-spin" />
                     ) : (
                       <X className="h-3 w-3" />
                     )}
-                    Hapus yang disimpan
+                    Clear saved
                   </button>
                 )}
               </div>
               <p className="mt-0.5 text-xs text-gray-500">
-                Sesuai dengan ANTHROPIC_BASE_URL, biarkan kosong untuk menggunakan alamat resmi default
+                Corresponds to ANTHROPIC_BASE_URL; leave empty to use the default official address
               </p>
               <div className="relative mt-2">
                 <input
@@ -429,7 +429,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                     type="button"
                     onClick={() => updateDraft("anthropicBaseUrl", "")}
                     className={`absolute right-2 top-1/2 -translate-y-1/2 ${smallBtnClassName}`}
-                    aria-label="Bersihkan input Base URL"
+                    aria-label="Clear Base URL input"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>
@@ -444,14 +444,14 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
         {/* ----------------------------------------------------------------- */}
         <div>
           <SectionHeading
-            title="Konfigurasi Model"
-            description="Tentukan model Claude yang digunakan oleh agen. Biarkan kosong untuk menggunakan nilai default Claude Agent SDK."
+            title="Model Configuration"
+            description="Specify the Claude model used by the agent. Leave empty to use the Claude Agent SDK default."
           />
 
           <div className={cardClassName}>
             <div className="flex items-center justify-between">
               <label htmlFor="agent-model" className="text-sm font-medium text-gray-100">
-                Model Default
+                Default Model
               </label>
               {settings.anthropic_model && (
                 <button
@@ -465,19 +465,19 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                   }
                   disabled={isBusy}
                   className="inline-flex items-center gap-1 rounded text-xs text-gray-600 transition-colors hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:outline-none"
-                  aria-label="Hapus konfigurasi model yang disimpan"
+                  aria-label="Clear saved model configuration"
                 >
                   {clearingField === "anthropic_model" ? (
                     <Loader2 className="h-3 w-3 animate-spin" />
                   ) : (
                     <X className="h-3 w-3" />
                   )}
-                  Hapus yang disimpan
+                  Clear saved
                 </button>
               )}
             </div>
             <p className="mt-0.5 text-xs text-gray-500">
-              Sesuai dengan ANTHROPIC_MODEL, menimpa model default
+              Corresponds to ANTHROPIC_MODEL, overrides the default model
             </p>
             <div className="relative mt-2">
               <input
@@ -496,7 +496,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                   type="button"
                   onClick={() => updateDraft("anthropicModel", "")}
                   className={`absolute right-2 top-1/2 -translate-y-1/2 ${smallBtnClassName}`}
-                  aria-label="Bersihkan input konfigurasi model"
+                  aria-label="Clear model configuration input"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -512,7 +512,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
               <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-gray-100">
                 <span className="inline-flex items-center gap-2">
                   <SlidersHorizontal className="h-4 w-4 text-gray-400" />
-                  Routing Model Lanjutan
+                  Advanced Model Routing
                 </span>
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-800 bg-gray-900 text-gray-500">
                   <ChevronDown
@@ -523,7 +523,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                 </span>
               </summary>
               <p className="mt-2 text-xs text-gray-500">
-                Claude Agent SDK mendukung routing ke berbagai model berdasarkan tingkat kemampuan. Biarkan kosong untuk menggunakan model default di atas secara seragam.
+                Claude Agent SDK supports routing to different models based on capability level. Leave empty to use the default model above uniformly.
               </p>
               <div className="mt-4 grid gap-4">
                 {MODEL_ROUTING_FIELDS.map(({ key, label, envVar, hint, patchKey }) => {
@@ -547,14 +547,14 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                             }
                             disabled={isBusy}
                             className="inline-flex items-center gap-1 text-xs text-gray-600 transition-colors hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:outline-none rounded"
-                            aria-label={`Hapus ${label} yang disimpan`}
+                            aria-label={`Clear saved ${label}`}
                           >
                             {clearingField === patchKey ? (
                               <Loader2 className="h-3 w-3 animate-spin" />
                             ) : (
                               <X className="h-3 w-3" />
                             )}
-                            Hapus
+                            Clear
                           </button>
                         )}
                       </div>
@@ -573,7 +573,7 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
                             type="button"
                             onClick={() => updateDraft(key, "")}
                             className={`absolute right-2 top-1/2 -translate-y-1/2 ${smallBtnClassName}`}
-                            aria-label={`Bersihkan input ${label}`}
+                            aria-label={`Clear ${label} input`}
                           >
                             <X className="h-3.5 w-3.5" />
                           </button>
@@ -587,20 +587,20 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
           </div>
         </div>
 
-        {/* Pengaturan Lanjutan */}
+        {/* Advanced Settings */}
         <div className={cardClassName}>
           <details>
             <summary className="flex cursor-pointer select-none items-center gap-2 text-sm font-medium text-gray-400 transition-colors hover:text-gray-200">
               <SlidersHorizontal className="h-4 w-4" />
-              Pengaturan Lanjutan
+              Advanced Settings
             </summary>
             <div className="mt-4 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-200">
-                  Penundaan Pembersihan Sesi (detik)
+                  Session Cleanup Delay (seconds)
                 </label>
                 <p className="mt-0.5 text-xs text-gray-500">
-                  Waktu tunggu setelah sesi berakhir sebelum melepaskan sumber daya, akan otomatis pulih saat berdialog kembali
+                  Wait time after a session ends before releasing resources; automatically recovers when dialogue resumes
                 </p>
                 <input
                   type="number"
@@ -614,10 +614,10 @@ export function AgentConfigTab({ visible }: AgentConfigTabProps) {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-200">
-                  Jumlah Maksimal Sesi Konkuren
+                  Maximum Concurrent Sessions
                 </label>
                 <p className="mt-0.5 text-xs text-gray-500">
-                  Batas atas sesi agen yang aktif secara bersamaan, sesi yang paling lama tidak digunakan akan dilepaskan otomatis saat melebihi batas (sesi yang dibersihkan akan dipersistenkan dan dipulihkan pada dialog berikutnya)
+                  Upper limit on simultaneously active agent sessions; the least recently used session is automatically released when the limit is exceeded (cleaned-up sessions are persisted and restored on next dialogue)
                 </p>
                 <input
                   type="number"

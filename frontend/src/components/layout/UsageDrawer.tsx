@@ -6,7 +6,7 @@ import { Popover } from "@/components/ui/Popover";
 import type { CallType } from "@/types/provider";
 
 // ---------------------------------------------------------------------------
-// UsageDrawer — Panel Drawer Detail Biaya
+// UsageDrawer — Cost Details Panel Drawer
 // ---------------------------------------------------------------------------
 
 interface UsageDrawerProps {
@@ -18,8 +18,8 @@ interface UsageDrawerProps {
 
 const CALL_TYPE_CONFIG: Record<CallType, { icon: typeof Image; color: string; label: string }> = {
   video: { icon: Video, color: "text-purple-400", label: "Video" },
-  text: { icon: FileText, color: "text-green-400", label: "Teks" },
-  image: { icon: Image, color: "text-blue-400", label: "Gambar" },
+  text: { icon: FileText, color: "text-green-400", label: "Text" },
+  image: { icon: Image, color: "text-blue-400", label: "Image" },
 };
 
 
@@ -27,7 +27,7 @@ export function UsageDrawer({ open, onClose, projectName, anchorRef }: UsageDraw
   const { stats, calls, total, page, pageSize, setStats, setCalls, setPage, setLoading } = useUsageStore();
   const [callsLoading, setCallsLoading] = useState(false);
 
-  // Muat Statistik Biaya
+  // Load cost statistics
   useEffect(() => {
     if (!open) return;
     setLoading(true);
@@ -39,7 +39,7 @@ export function UsageDrawer({ open, onClose, projectName, anchorRef }: UsageDraw
       .finally(() => setLoading(false));
   }, [open, projectName, setStats, setLoading]);
 
-  // Muat Rekaman Panggilan
+  // Load call records
   const loadCalls = useCallback(() => {
     setCallsLoading(true);
     API.getUsageCalls({
@@ -78,7 +78,7 @@ export function UsageDrawer({ open, onClose, projectName, anchorRef }: UsageDraw
       <div className="flex items-center justify-between border-b border-gray-800 px-4 py-3">
         <div className="flex items-center gap-2">
           <DollarSign className="h-4 w-4 text-indigo-400" />
-          <h3 className="text-sm font-medium text-gray-200">Detail Biaya</h3>
+          <h3 className="text-sm font-medium text-gray-200">Cost Details</h3>
         </div>
         <button
           type="button"
@@ -92,7 +92,7 @@ export function UsageDrawer({ open, onClose, projectName, anchorRef }: UsageDraw
       {/* Stats summary */}
       <div className="grid grid-cols-5 gap-2 border-b border-gray-800 px-4 py-3">
         <StatBlock
-          label="Total Biaya"
+          label="Total Cost"
           value={
             costSummary.length === 1
               ? costSummary[0]
@@ -100,18 +100,18 @@ export function UsageDrawer({ open, onClose, projectName, anchorRef }: UsageDraw
           }
           accent
         />
-        <StatBlock label="Gambar" value={String(stats?.image_count ?? 0)} icon={<Image className="h-3 w-3 text-blue-400" />} />
-        <StatBlock label="Video" value={String(stats?.video_count ?? 0)} icon={<Video className="h-3 w-3 text-purple-400" />} />
-        <StatBlock label="Teks" value={String(stats?.text_count ?? 0)} icon={<FileText className="h-3 w-3 text-green-400" />} />
-        <StatBlock label="Gagal" value={String(stats?.failed_count ?? 0)} icon={<AlertCircle className="h-3 w-3 text-red-400" />} />
+        <StatBlock label="Images" value={String(stats?.image_count ?? 0)} icon={<Image className="h-3 w-3 text-blue-400" />} />
+        <StatBlock label="Videos" value={String(stats?.video_count ?? 0)} icon={<Video className="h-3 w-3 text-purple-400" />} />
+        <StatBlock label="Text" value={String(stats?.text_count ?? 0)} icon={<FileText className="h-3 w-3 text-green-400" />} />
+        <StatBlock label="Failed" value={String(stats?.failed_count ?? 0)} icon={<AlertCircle className="h-3 w-3 text-red-400" />} />
       </div>
 
       {/* Call records */}
       <div className="max-h-72 overflow-y-auto">
         {callsLoading ? (
-          <div className="flex items-center justify-center py-8 text-xs text-gray-500">Memuat...</div>
+          <div className="flex items-center justify-center py-8 text-xs text-gray-500">Loading...</div>
         ) : calls.length === 0 ? (
-          <div className="flex items-center justify-center py-8 text-xs text-gray-500">Belum ada riwayat panggilan</div>
+          <div className="flex items-center justify-center py-8 text-xs text-gray-500">No call history yet</div>
         ) : (
           <ul className="divide-y divide-gray-800">
             {calls.map((call) => {
@@ -169,7 +169,7 @@ export function UsageDrawer({ open, onClose, projectName, anchorRef }: UsageDraw
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-t border-gray-800 px-4 py-2">
-          <span className="text-[10px] text-gray-500">{total} Rekaman</span>
+          <span className="text-[10px] text-gray-500">{total} Records</span>
           <div className="flex items-center gap-1">
             <button
               type="button"
@@ -243,7 +243,7 @@ function formatDateTime(isoStr: string): string {
 
 function extractFilename(outputPath: string | null | undefined): string {
   if (!outputPath) return "";
-  // misal: "storyboards/scene_E1S01.png" → "scene_E1S01.png"
+  // example: "storyboards/scene_E1S01.png" → "scene_E1S01.png"
   const parts = outputPath.split("/");
   return parts.at(-1) ?? "";
 }

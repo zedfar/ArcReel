@@ -98,11 +98,11 @@ export function VersionTimeMachine({
       await onRestore?.(version);
       await loadVersions();
       setSelectedVersion(version);
-      useAppStore.getState().pushToast(`已Ganti到 v${version}`, "success");
+      useAppStore.getState().pushToast(`Restored to v${version}`, "success");
     } catch (err) {
       useAppStore
         .getState()
-        .pushToast(`GantiVersiGagal: ${(err as Error).message}`, "error");
+        .pushToast(`Restore version failed: ${(err as Error).message}`, "error");
     } finally {
       setRestoringVersion(null);
     }
@@ -187,7 +187,7 @@ export function VersionTimeMachine({
         className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
       >
         <History className="h-3 w-3" />
-        <span>Manajemen Versi</span>
+        <span>Version Management</span>
         {open ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
       </button>
 
@@ -205,12 +205,12 @@ export function VersionTimeMachine({
             className="z-[9999] w-64 rounded-xl border border-gray-700 bg-gray-900/95 p-3 shadow-2xl shadow-black/40 backdrop-blur"
           >
             {loading ? (
-              <span className="text-xs text-gray-500">Memuat...</span>
+              <span className="text-xs text-gray-500">Loading...</span>
             ) : versions.length === 0 ? (
               <div className="space-y-1">
-                <p className="text-[11px] font-medium text-gray-300">Belum ada riwayat versi</p>
+                <p className="text-[11px] font-medium text-gray-300">No version history yet</p>
                 <p className="text-[11px] leading-5 text-gray-500">
-                  Generate或Pulihkan后，Riwayat Versi会出现在这里。
+                  Version history will appear here after generation or restoration.
                 </p>
               </div>
             ) : (
@@ -218,11 +218,11 @@ export function VersionTimeMachine({
                 {/* Header */}
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
-                    Riwayat Versi
+                    Version History
                   </span>
                   {currentVersion > 0 && (
                     <span className="rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-[10px] font-medium text-indigo-200">
-                      当前 v{currentVersion}
+                      Current v{currentVersion}
                     </span>
                   )}
                 </div>
@@ -258,7 +258,7 @@ export function VersionTimeMachine({
 
                 {!selectedInfo && (
                   <p className="text-[10px] leading-4 text-gray-400">
-                    KlikVersi号Pratinjau，非当前Versi可Ganti。
+                    Click a version number to preview. Non-current versions can be restored.
                   </p>
                 )}
 
@@ -274,7 +274,7 @@ export function VersionTimeMachine({
                       </span>
                       {selectedInfo.is_current ? (
                         <span className="shrink-0 rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-medium text-indigo-300">
-                          当前
+                          Current
                         </span>
                       ) : (
                         <button
@@ -283,7 +283,7 @@ export function VersionTimeMachine({
                           onClick={() => void handleRestore(selectedInfo.version)}
                           className="shrink-0 rounded-full bg-indigo-600 px-2.5 py-0.5 text-[10px] font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-50"
                         >
-                          {restoringVersion === selectedInfo.version ? "Ganti中..." : "Ganti到此Versi"}
+                          {restoringVersion === selectedInfo.version ? "Restoring..." : "Restore to this version"}
                         </button>
                       )}
                     </div>
@@ -304,7 +304,7 @@ export function VersionTimeMachine({
                         >
                           <img
                             src={selectedInfo.file_url}
-                            alt={`Versi v${selectedInfo.version} Pratinjau`}
+                            alt={`Version v${selectedInfo.version} Preview`}
                             className="max-h-full w-full object-contain"
                           />
                         </div>
@@ -312,7 +312,7 @@ export function VersionTimeMachine({
 
                     {/* Prompt text */}
                     <p className="line-clamp-4 text-[11px] leading-5 text-gray-400">
-                      {selectedInfo.prompt || "该Versi没有Rekaman额外Penjelasan。"}
+                      {selectedInfo.prompt || "This version has no additional notes recorded."}
                     </p>
 
 

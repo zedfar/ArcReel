@@ -6,9 +6,9 @@ import { SlashCommandMenu } from "./SlashCommandMenu";
 import type { SlashCommandMenuHandle } from "./SlashCommandMenu";
 
 const SKILLS = [
-  { name: "manga-workflow", description: "完整Kerja流", scope: "project" as const, path: "/tmp/a" },
-  { name: "generate-script", description: "用 Gemini Generate JSON Skenario", scope: "project" as const, path: "/tmp/b" },
-  { name: "generate-video", description: "用 Veo GenerateVideoSegmen", scope: "project" as const, path: "/tmp/c" },
+  { name: "manga-workflow", description: "Complete workflow", scope: "project" as const, path: "/tmp/a" },
+  { name: "generate-script", description: "Generate JSON scenario using Gemini", scope: "project" as const, path: "/tmp/b" },
+  { name: "generate-video", description: "Generate video segments using Veo", scope: "project" as const, path: "/tmp/c" },
 ];
 
 describe("SlashCommandMenu", () => {
@@ -32,8 +32,8 @@ describe("SlashCommandMenu", () => {
     expect(screen.queryByText(/manga-workflow/)).not.toBeInTheDocument();
   });
 
-  it("filters skills by Chinese label", () => {
-    render(<SlashCommandMenu filter="Skenario" onSelect={onSelect} />);
+  it("filters skills by label text", () => {
+    render(<SlashCommandMenu filter="scenario" onSelect={onSelect} />);
     expect(screen.getByText(/generate-script/)).toBeInTheDocument();
     expect(screen.queryByText(/manga-workflow/)).not.toBeInTheDocument();
   });
@@ -49,11 +49,11 @@ describe("SlashCommandMenu", () => {
     expect(onSelect).toHaveBeenCalledWith("/manga-workflow");
   });
 
-  it("displays Chinese labels for known skills", () => {
+  it("displays labels for known skills", () => {
     render(<SlashCommandMenu filter="" onSelect={onSelect} />);
-    expect(screen.getByText("VideoKerja流")).toBeInTheDocument();
-    expect(screen.getByText("GenerateSkenario")).toBeInTheDocument();
-    expect(screen.getByText("GenerateVideo")).toBeInTheDocument();
+    expect(screen.getByText("Complete workflow")).toBeInTheDocument();
+    expect(screen.getByText("Generate JSON scenario using Gemini")).toBeInTheDocument();
+    expect(screen.getByText("Generate video segments using Veo")).toBeInTheDocument();
   });
 
   it("shows distinct icons per skill", () => {

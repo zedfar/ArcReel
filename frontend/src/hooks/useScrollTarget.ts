@@ -9,9 +9,9 @@ interface UseScrollTargetOptions {
 /**
  * Hook that watches for scroll target events and scrolls to the matching element.
  * Each element that should be scrollable must have an id matching the pattern:
- * - Segments: id="segment-E1S01"
- * - Characters: id="character-林克"
- * - Clues: id="clue-玉佩"
+ * - Segments: id="segment-{id}"
+ * - Characters: id="character-{name}"
+ * - Clues: id="clue-{name}"
  *
  * When a scroll target is triggered via `useAppStore.triggerScrollTo()`,
  * this hook retries until the target element is mounted, then scrolls it into
@@ -78,7 +78,7 @@ export function useScrollTarget(
         }
         if (Date.now() >= currentTarget.expires_at) {
           clearScrollTarget(requestId);
-          pushToast(`Konten tidak ditemukan：${currentTarget.id}`, "warning");
+          pushToast(`Content not found: ${currentTarget.id}`, "warning");
           return;
         }
         retryTimerRef.current = setTimeout(tryResolveTarget, 50);

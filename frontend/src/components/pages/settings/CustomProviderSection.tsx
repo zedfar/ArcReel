@@ -27,7 +27,7 @@ export function CustomProviderSection({ providers, selectedId, onSelect, onAdd }
   return (
     <div className="mt-3 border-t border-gray-800 pt-3">
       <div className="px-4 pb-2 text-xs uppercase tracking-wide text-gray-500">
-        Provider Kustom
+        Custom Providers
       </div>
       {providers.map((p) => (
         <button
@@ -53,7 +53,7 @@ export function CustomProviderSection({ providers, selectedId, onSelect, onAdd }
         className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-gray-500 transition-colors hover:bg-gray-800/30 hover:text-gray-300"
       >
         <Plus className="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span>Tambah Provider Kustom</span>
+        <span>Add Custom Provider</span>
       </button>
     </div>
   );

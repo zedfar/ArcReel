@@ -48,11 +48,11 @@ function makePendingQuestion(questionId: string = "q-1"): PendingQuestion {
     questions: [
       {
         header: "Output",
-        question: "OutputFormat是什么？",
+        question: "What is the output format?",
         multiSelect: false,
         options: [
-          { label: "Ringkasan", description: "Output ringkas" },
-          { label: "Detail", description: "Penjelasan lengkap" },
+          { label: "Summary", description: "Brief output" },
+          { label: "Details", description: "Detailed explanation" },
         ],
       },
     ],
@@ -148,11 +148,11 @@ describe("useAssistantSession", () => {
     });
 
     await act(async () => {
-      await result.current.answerQuestion("q-1", { "OutputFormat是什么？": "Ringkasan" });
+      await result.current.answerQuestion("q-1", { "What is the output format?": "Summary" });
     });
 
     expect(answerSpy).toHaveBeenCalledWith("demo", "session-1", "q-1", {
-      "OutputFormat是什么？": "Ringkasan",
+      "What is the output format?": "Summary",
     });
     expect(useAssistantStore.getState().pendingQuestion).toBeNull();
     expect(useAssistantStore.getState().answeringQuestion).toBe(false);
@@ -164,7 +164,7 @@ describe("useAssistantSession", () => {
     });
     vi.spyOn(API, "getAssistantSession").mockResolvedValue({ session: makeSession("session-1", "idle") });
     vi.spyOn(API, "getAssistantSnapshot").mockResolvedValue(makeSnapshot());
-    vi.spyOn(API, "answerAssistantQuestion").mockRejectedValue(new Error("Gagal menjawab"));
+    vi.spyOn(API, "answerAssistantQuestion").mockRejectedValue(new Error("Failed to answer"));
 
     const { result } = renderHook(() => useAssistantSession("demo"));
 
@@ -177,12 +177,12 @@ describe("useAssistantSession", () => {
     });
 
     await act(async () => {
-      await result.current.answerQuestion("q-1", { "OutputFormat是什么？": "Ringkasan" });
+      await result.current.answerQuestion("q-1", { "What is the output format?": "Summary" });
     });
 
     expect(useAssistantStore.getState().pendingQuestion?.question_id).toBe("q-1");
     expect(useAssistantStore.getState().answeringQuestion).toBe(false);
-    expect(useAssistantStore.getState().error).toBe("Gagal menjawab");
+    expect(useAssistantStore.getState().error).toBe("Failed to answer");
   });
 
   it("clears pendingQuestion when creating or switching sessions", async () => {
@@ -235,7 +235,7 @@ describe("useAssistantSession", () => {
     });
     vi.spyOn(API, "getAssistantSession").mockResolvedValue({ session: makeSession("session-1", "idle") });
     vi.spyOn(API, "getAssistantSnapshot").mockResolvedValue(makeSnapshot());
-    vi.spyOn(API, "sendAssistantMessage").mockRejectedValue(new Error("Gagal mengirim"));
+    vi.spyOn(API, "sendAssistantMessage").mockRejectedValue(new Error("Failed to send"));
 
     const { result } = renderHook(() => useAssistantSession("demo"));
 
@@ -250,7 +250,7 @@ describe("useAssistantSession", () => {
     expect(useAssistantStore.getState().sending).toBe(false);
     expect(useAssistantStore.getState().sessionStatus).toBe("idle");
     expect(useAssistantStore.getState().turns).toEqual([]);
-    expect(useAssistantStore.getState().error).toBe("Gagal mengirim");
+    expect(useAssistantStore.getState().error).toBe("Failed to send");
     expect(MockEventSource.instances).toHaveLength(0);
   });
 

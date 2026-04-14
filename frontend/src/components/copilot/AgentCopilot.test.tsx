@@ -33,11 +33,11 @@ function makePendingQuestion() {
     questions: [
       {
         header: "Output",
-        question: "OutputFormat是什么？",
+        question: "What is the output format?",
         multiSelect: false,
         options: [
-          { label: "Ringkasan", description: "Output ringkas" },
-          { label: "Detail", description: "Penjelasan lengkap" },
+          { label: "Summary", description: "Brief output" },
+          { label: "Details", description: "Detailed explanation" },
         ],
       },
     ],
@@ -77,10 +77,10 @@ describe("AgentCopilot", () => {
 
     render(<AgentCopilot />);
 
-    expect(screen.getByText("需要milik AndaPilih")).toBeInTheDocument();
-    expect(screen.getByLabelText("AsistenInput")).toBeDisabled();
-    expect(screen.getByLabelText("KirimPesan")).toBeDisabled();
-    expect(screen.getByPlaceholderText("请先Jawaban上方Pertanyaan")).toBeInTheDocument();
+    expect(screen.getByText("Please answer the question above first")).toBeInTheDocument();
+    expect(screen.getByLabelText("Assistant input")).toBeDisabled();
+    expect(screen.getByLabelText("Send message")).toBeDisabled();
+    expect(screen.getByPlaceholderText("Please answer the question above first")).toBeInTheDocument();
   });
 
   it("submits wizard answers through answerQuestion", () => {
@@ -90,11 +90,11 @@ describe("AgentCopilot", () => {
 
     render(<AgentCopilot />);
 
-    fireEvent.click(screen.getByLabelText("Ringkasan"));
-    fireEvent.click(screen.getByRole("button", { name: "Selesai并Submit" }));
+    fireEvent.click(screen.getByLabelText("Summary"));
+    fireEvent.click(screen.getByRole("button", { name: "Done and Submit" }));
 
     expect(answerQuestion).toHaveBeenCalledWith("q-1", {
-      "OutputFormat是什么？": "Ringkasan",
+      "What is the output format?": "Summary",
     });
   });
 
@@ -104,7 +104,7 @@ describe("AgentCopilot", () => {
         {
           id: "session-1",
           project_name: "demo",
-          title: "Sesi saat ini",
+          title: "Current session",
           status: "idle",
           created_at: "2026-02-01T00:00:00Z",
           updated_at: "2026-02-01T00:00:00Z",
@@ -117,7 +117,7 @@ describe("AgentCopilot", () => {
 
     expect(container.firstElementChild).toHaveClass("isolate");
 
-    fireEvent.click(screen.getByTitle("GantiSesi"));
+    fireEvent.click(screen.getByTitle("Switch session"));
     expect(document.querySelector(`.${UI_LAYERS.assistantLocalPopover}`)).toBeTruthy();
   });
 });

@@ -59,7 +59,7 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
   const handleUpload = useCallback(
     async (file: File) => {
       await API.uploadFile(projectName, "source", file);
-      useAppStore.getState().pushToast(`File Sumber "${file.name}" berhasil diunggah`, "success");
+      useAppStore.getState().pushToast(`Source file "${file.name}" uploaded successfully`, "success");
     },
     [projectName],
   );
@@ -74,11 +74,11 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
     try {
       await API.generateOverview(projectName);
       await refreshProject();
-      useAppStore.getState().pushToast("Ringkasan proyek telah dihasilkan ulang", "success");
+      useAppStore.getState().pushToast("Project overview regenerated", "success");
     } catch (err) {
       useAppStore
         .getState()
-        .pushToast(`Gagal menghasilkan ulang: ${(err as Error).message}`, "error");
+        .pushToast(`Failed to regenerate: ${(err as Error).message}`, "error");
     } finally {
       setRegenerating(false);
     }
@@ -94,11 +94,11 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
       try {
         await API.uploadStyleImage(projectName, file);
         await refreshProject();
-        useAppStore.getState().pushToast("Referensi gaya telah diperbarui", "success");
+        useAppStore.getState().pushToast("Style reference updated", "success");
       } catch (err) {
         useAppStore
           .getState()
-          .pushToast(`Gagal mengunggah: ${(err as Error).message}`, "error");
+          .pushToast(`Upload failed: ${(err as Error).message}`, "error");
       } finally {
         setUploadingStyleImage(false);
       }
@@ -108,17 +108,17 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
 
   const handleDeleteStyleImage = useCallback(async () => {
     if (deletingStyleImage || !projectData?.style_image) return;
-    if (!confirm("Yakin ingin menghapus referensi gaya saat ini?")) return;
+    if (!confirm("Are you sure you want to delete the current style reference?")) return;
 
     setDeletingStyleImage(true);
     try {
       await API.deleteStyleImage(projectName);
       await refreshProject();
-      useAppStore.getState().pushToast("Referensi gaya telah dihapus", "success");
+      useAppStore.getState().pushToast("Style reference deleted", "success");
     } catch (err) {
       useAppStore
         .getState()
-        .pushToast(`Gagal menghapus: ${(err as Error).message}`, "error");
+        .pushToast(`Failed to delete: ${(err as Error).message}`, "error");
     } finally {
       setDeletingStyleImage(false);
     }
@@ -130,11 +130,11 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
     try {
       await API.updateStyleDescription(projectName, styleDescriptionDraft.trim());
       await refreshProject();
-      useAppStore.getState().pushToast("Deskripsi gaya disimpan", "success");
+      useAppStore.getState().pushToast("Style description saved", "success");
     } catch (err) {
       useAppStore
         .getState()
-        .pushToast(`Gagal menyimpan: ${(err as Error).message}`, "error");
+        .pushToast(`Failed to save: ${(err as Error).message}`, "error");
     } finally {
       setSavingStyleDescription(false);
     }
@@ -143,7 +143,7 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
   if (!projectData) {
     return (
       <div className="flex h-full items-center justify-center text-gray-500">
-        Memuat data proyek...
+        Loading project data...
       </div>
     );
   }
@@ -161,24 +161,24 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
     <section className="rounded-2xl border border-gray-800 bg-gray-900/90 p-4 sm:p-5">
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <h3 className="text-sm font-semibold text-gray-200">Gaya Proyek</h3>
+          <h3 className="text-sm font-semibold text-gray-200">Project Style</h3>
           <p className="max-w-2xl text-xs leading-5 text-gray-500">
-            Gambar referensi akan digunakan untuk generasi berikutnya; deskripsi gaya digunakan untuk aturan visual, mengalibrasi nada keseluruhan, material, dan karakteristik kamera.
+            The reference image will be used for subsequent generation; the style description is used for visual rules, calibrating overall tone, materials, and camera characteristics.
           </p>
         </div>
         <div className="inline-flex items-center rounded-full border border-gray-700 bg-gray-800 px-3 py-1 text-xs text-gray-300">
-          {projectData.style || "Belum ada tag gaya"}
+          {projectData.style || "No style tag"}
         </div>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[280px_minmax(0,1fr)]">
         <div className="space-y-3">
           {styleImageUrl ? (
-            <PreviewableImageFrame src={styleImageUrl} alt="Referensi Gaya Proyek">
+            <PreviewableImageFrame src={styleImageUrl} alt="Project Style Reference">
               <div className="overflow-hidden rounded-xl border border-gray-700 bg-gray-950/70">
                 <img
                   src={styleImageUrl}
-                  alt="Referensi Gaya Proyek"
+                  alt="Project Style Reference"
                   className="aspect-[4/3] w-full object-cover"
                 />
               </div>
@@ -191,17 +191,17 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
               className={`flex aspect-[4/3] w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-gray-700 bg-gray-950/40 px-4 text-sm text-gray-500 transition-colors hover:border-gray-500 hover:text-gray-300 disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
             >
               <Upload className="h-4 w-4" />
-              <span>{uploadingStyleImage ? "Mengunggah..." : "Unggah referensi gaya"}</span>
-              <span className="text-xs text-gray-600">Mendukung PNG / JPG / WEBP</span>
+              <span>{uploadingStyleImage ? "Uploading..." : "Upload style reference"}</span>
+              <span className="text-xs text-gray-600">Supports PNG / JPG / WEBP</span>
             </button>
           )}
 
           <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-3">
-            <p className="text-xs font-medium text-gray-400">Petunjuk Penggunaan</p>
+            <p className="text-xs font-medium text-gray-400">Usage Tips</p>
             <p className="mt-1 text-sm leading-6 text-gray-300">
               {styleImageUrl
-                ? "Referensi saat ini akan digunakan sebagai garis dasar visual terpadu untuk karakter, papan cerita, dan generasi video."
-                : "Belum ada referensi tingkat proyek yang tertaut, Anda dapat mengunggah satu contoh gaya target sebagai garis dasar terpadu."}
+                ? "The current reference will be used as a unified visual baseline for characters, storyboards, and video generation."
+                : "No project-level reference is linked yet. You can upload a target style sample as a unified baseline."}
             </p>
 
             <div className="mt-3 flex flex-wrap gap-2">
@@ -212,7 +212,7 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
                 className={`inline-flex items-center gap-1.5 rounded-lg border border-gray-700 px-3 py-2 text-sm text-gray-300 transition-colors hover:border-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
               >
                 <ImagePlus className="h-4 w-4" />
-                {styleImageUrl ? "Ganti Referensi" : "Unggah Referensi"}
+                {styleImageUrl ? "Change Reference" : "Upload Reference"}
               </button>
               {styleImageUrl && (
                 <button
@@ -222,7 +222,7 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
                   className={`inline-flex items-center gap-1.5 rounded-lg border border-red-500/30 px-3 py-2 text-sm text-red-300 transition-colors hover:border-red-400/50 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
                 >
                   <Trash2 className="h-4 w-4" />
-                  {deletingStyleImage ? "Menghapus..." : "Hapus Referensi"}
+                  {deletingStyleImage ? "Deleting..." : "Delete Reference"}
                 </button>
               )}
             </div>
@@ -234,19 +234,19 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
             accept=".png,.jpg,.jpeg,.webp"
             onChange={handleStyleImageChange}
             className="hidden"
-            aria-label="Unggah referensi gaya"
+            aria-label="Upload style reference"
           />
         </div>
 
         <div className="rounded-xl border border-gray-800 bg-gray-950/35 p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <label htmlFor="style-description-textarea" className="text-xs font-medium text-gray-400">Deskripsi Gaya</label>
+            <label htmlFor="style-description-textarea" className="text-xs font-medium text-gray-400">Style Description</label>
             <span className="text-[11px] text-gray-600">
-              {styleDescriptionDraft.trim().length} karakter
+              {styleDescriptionDraft.trim().length} characters
             </span>
           </div>
           <p className="mt-1 text-xs leading-5 text-gray-500">
-            Setelah mengunggah referensi, sistem akan secara otomatis menganalisis dan mengisi deskripsi gaya; Anda juga dapat melanjutkan penyesuaian secara manual.
+            After uploading a reference, the system will automatically analyze and fill in the style description; you can also continue to adjust it manually.
           </p>
 
           <textarea
@@ -255,14 +255,14 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
             onChange={(e) => setStyleDescriptionDraft(e.target.value)}
             rows={8}
             className={`mt-3 min-h-44 w-full rounded-xl border border-gray-700 bg-gray-800/80 px-4 py-3 text-sm leading-relaxed text-gray-200 placeholder-gray-500 focus:border-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500`}
-            placeholder="Setelah mengunggah referensi, sistem akan secara otomatis menganalisis dan mengisi deskripsi gaya; Anda juga dapat mengeditnya secara manual."
+            placeholder="After uploading a reference, the system will automatically analyze and fill in the style description; you can also edit it manually."
           />
 
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
             <p className="text-xs leading-5 text-gray-500">
               {styleImageUrl
-                ? "Disarankan menggunakan deskripsi gaya untuk melengkapi pencahayaan, warna, material & bahasa kamera."
-                : "Jika tidak ada referensi, Anda juga dapat menggunakan teks untuk memperjelas gaya gambar dan batasan estetika."}
+                ? "Recommended: use the style description to supplement lighting, color, materials & camera language."
+                : "Without a reference, you can also use text to clarify the image style and aesthetic constraints."}
             </p>
             {styleDescriptionDirty && (
               <button
@@ -271,7 +271,7 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
                 disabled={savingStyleDescription}
                 className={`rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
               >
-                {savingStyleDescription ? "Menyimpan..." : "Simpan Deskripsi Gaya"}
+                {savingStyleDescription ? "Saving..." : "Save Style Description"}
               </button>
             )}
           </div>
@@ -287,9 +287,9 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
           <h1 className="text-2xl font-bold text-gray-100">{projectData.title}</h1>
           <p className="mt-1 text-sm text-gray-400">
             {projectData.content_mode === "narration"
-              ? "Mode Narasi 9:16"
-              : "Mode Animasi 16:9"}{" "}
-            · {projectData.style || "Gaya belum diatur"}
+              ? "Narration Mode 9:16"
+              : "Animation Mode 16:9"}{" "}
+            · {projectData.style || "Style not set"}
           </p>
         </div>
 
@@ -305,18 +305,18 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
             {overview && (
               <div className="space-y-3 rounded-xl border border-gray-800 bg-gray-900 p-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-gray-300">Ikhtisar Proyek</h3>
+                  <h3 className="text-sm font-semibold text-gray-300">Project Overview</h3>
                   <button
                     type="button"
                     onClick={() => void handleRegenerate()}
                     disabled={regenerating}
                     className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
-                    title="Hasilkan Ulang Ikhtisar"
+                    title="Regenerate Overview"
                   >
                     <RefreshCw
                       className={`h-3 w-3 ${regenerating ? "animate-spin" : ""}`}
                     />
-                    <span>{regenerating ? "Menghasilkan..." : "Hasilkan Ulang"}</span>
+                    <span>{regenerating ? "Generating..." : "Regenerate"}</span>
                   </button>
                 </div>
                 <p className="text-sm text-gray-400">{overview.synopsis}</p>
@@ -340,8 +340,8 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
                         ? Math.round((cat.completed / cat.total) * 100)
                         : 0;
                     const labels: Record<string, string> = {
-                      characters: "Karakter",
-                      clues: "Petunjuk",
+                      characters: "Characters",
+                      clues: "Clues",
                     };
                     return (
                       <div
@@ -375,23 +375,23 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
 
             {costLoading && (
               <div className="rounded-xl border border-gray-800 bg-gray-900 p-4">
-                <p className="text-sm text-gray-500 animate-pulse">Sedang menghitung biaya...</p>
+                <p className="text-sm text-gray-500 animate-pulse">Calculating costs...</p>
               </div>
             )}
             {costError && (
               <div className="rounded-xl border border-red-900/50 bg-red-950/30 p-4">
-                <p className="text-sm text-red-400">Estimasi biaya gagal: {costError}</p>
+                <p className="text-sm text-red-400">Cost estimation failed: {costError}</p>
               </div>
             )}
 
             {projectTotals && (
               <div className="rounded-xl border border-gray-800 bg-gray-900 p-4 tabular-nums">
-                <p className="mb-3 text-sm font-semibold text-gray-300">Total Biaya Proyek</p>
+                <p className="mb-3 text-sm font-semibold text-gray-300">Project Total Cost</p>
                 <dl className="flex flex-wrap items-start justify-between gap-6">
                   <div className="min-w-0">
-                    <dt className="mb-1 text-[11px] text-gray-600">Estimasi</dt>
+                    <dt className="mb-1 text-[11px] text-gray-600">Estimate</dt>
                     <dd className="text-sm text-gray-400">
-                      <span className="text-gray-500">Papan Cerita </span>
+                      <span className="text-gray-500">Storyboard </span>
                       <span className="text-gray-200">{formatCost(projectTotals.estimate.image)}</span>
                       <span className="ml-3 text-gray-500">Video </span>
                       <span className="text-gray-200">{formatCost(projectTotals.estimate.video)}</span>
@@ -401,15 +401,15 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
                   </div>
                   <div role="separator" className="h-8 w-px bg-gray-800" />
                   <div className="min-w-0">
-                    <dt className="mb-1 text-[11px] text-gray-600">Aktual</dt>
+                    <dt className="mb-1 text-[11px] text-gray-600">Actual</dt>
                     <dd className="text-sm text-gray-400">
-                      <span className="text-gray-500">Papan Cerita </span>
+                      <span className="text-gray-500">Storyboard </span>
                       <span className="text-gray-200">{formatCost(projectTotals.actual.image)}</span>
                       <span className="ml-3 text-gray-500">Video </span>
                       <span className="text-gray-200">{formatCost(projectTotals.actual.video)}</span>
                       {projectTotals.actual.character_and_clue && (
                         <>
-                          <span className="ml-3 text-gray-500">Karakter/Petunjuk </span>
+                          <span className="ml-3 text-gray-500">Characters/Clues </span>
                           <span className="text-gray-200">{formatCost(projectTotals.actual.character_and_clue)}</span>
                         </>
                       )}
@@ -425,7 +425,7 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
               <h3 className="text-sm font-semibold text-gray-300">Episode</h3>
               {(projectData.episodes?.length ?? 0) === 0 ? (
                 <p className="text-sm text-gray-500">
-                  Belum ada episode. Gunakan Asisten AI untuk menghasilkan skenario.
+                  No episodes yet. Use the AI Assistant to generate a script.
                 </p>
               ) : (
                 (projectData.episodes ?? []).map((ep) => {
@@ -445,15 +445,15 @@ export function OverviewCanvas({ projectName, projectData }: OverviewCanvasProps
                       {epCost && (
                         <span className="ml-auto flex min-w-0 flex-shrink flex-wrap gap-4 text-xs text-gray-400">
                           <span>
-                            <span className="text-gray-500">Estimasi </span>
-                            <span className="text-gray-500">Papan Cerita </span><span className="text-gray-300">{formatCost(epCost.totals.estimate.image)}</span>
+                            <span className="text-gray-500">Estimate </span>
+                            <span className="text-gray-500">Storyboard </span><span className="text-gray-300">{formatCost(epCost.totals.estimate.image)}</span>
                             <span className="ml-2 text-gray-500">Video </span><span className="text-gray-300">{formatCost(epCost.totals.estimate.video)}</span>
                             <span className="ml-2 text-gray-500">Total </span><span className="font-medium text-amber-400">{formatCost(totalBreakdown(epCost.totals.estimate))}</span>
                           </span>
                           <span className="text-gray-700">|</span>
                           <span>
-                            <span className="text-gray-600">Aktual </span>
-                            <span className="text-gray-500">Papan Cerita </span><span className="text-gray-300">{formatCost(epCost.totals.actual.image)}</span>
+                            <span className="text-gray-600">Actual </span>
+                            <span className="text-gray-500">Storyboard </span><span className="text-gray-300">{formatCost(epCost.totals.actual.image)}</span>
                             <span className="ml-2 text-gray-500">Video </span><span className="text-gray-300">{formatCost(epCost.totals.actual.video)}</span>
                             <span className="ml-2 text-gray-500">Total </span><span className="font-medium text-emerald-400">{formatCost(totalBreakdown(epCost.totals.actual))}</span>
                           </span>

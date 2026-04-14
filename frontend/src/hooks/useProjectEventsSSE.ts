@@ -165,7 +165,7 @@ export function useProjectEventsSSE(projectName?: string | null): void {
       const res = await API.getProject(projectName);
       setCurrentProject(projectName, res.project, res.scripts ?? {}, res.asset_fingerprints);
     } catch (err) {
-      pushToast(`Gagal menyinkronkan perubahan proyek: ${(err as Error).message}`, "warning");
+      pushToast(`Failed to sync project changes: ${(err as Error).message}`, "warning");
     } finally {
       refreshingRef.current = false;
       if (needsRefreshRef.current) {
@@ -216,7 +216,7 @@ export function useProjectEventsSSE(projectName?: string | null): void {
           lastFingerprintRef.current = payload.fingerprint;
           setAssistantToolActivitySuppressed(true);
 
-          // 提取并Perbarui asset fingerprints（零延迟，立即写入 store）
+          // Extract and update asset fingerprints (zero latency, immediately written to store)
           const mergedFingerprints: Record<string, number> = {};
           for (const change of payload.changes) {
             if (change.asset_fingerprints) {
@@ -246,7 +246,7 @@ export function useProjectEventsSSE(projectName?: string | null): void {
           }
 
           if (payload.source !== "webui") {
-            // Draft 事件 — OtomatisNavigasi到EpisodePra-pemrosesan Tab
+            // Draft event — automatically navigate to episode pre-processing tab
             let draftHandled = false;
             for (const change of payload.changes) {
               if (

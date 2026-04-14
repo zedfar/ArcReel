@@ -1,4 +1,4 @@
-"""ArkVideoBackend — 火山方舟 Ark 视频生成后端。"""
+"""ArkVideoBackend — Volcano Ark video generation backend."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 class ArkVideoBackend:
-    """Ark (火山方舟) 视频生成后端。"""
+    """Ark (Volcano Ark) video generation backend."""
 
     DEFAULT_MODEL = "doubao-seedance-1-5-pro-251215"
 
@@ -72,13 +72,13 @@ class ArkVideoBackend:
         return self._capabilities
 
     async def generate(self, request: VideoGenerationRequest) -> VideoGenerationResult:
-        """生成视频。任务创建和轮询阶段分离重试，避免瞬态错误导致重建任务。"""
+        """Generate video. Task creation and polling phases have separate retry, avoiding transient errors that cause task recreation."""
         task_id = await self._create_task(request)
         return await self._poll_until_done(task_id, request)
 
     @with_retry_async()
     async def _create_task(self, request: VideoGenerationRequest) -> str:
-        """创建 Ark 视频生成任务（带重试保护）。"""
+        """Create an Ark video generation task (with retry protection)."""
         # 1. Build content list
         content = [{"type": "text", "text": request.prompt}]
 
@@ -112,7 +112,7 @@ class ArkVideoBackend:
             self._client.content_generation.tasks.create,
             **create_params,
         )
-        logger.info("Ark 任务已创建: %s", create_result.id)
+        logger.info("Ark task created: %s", create_result.id)
         return create_result.id
 
     @staticmethod
@@ -126,15 +126,15 @@ class ArkVideoBackend:
         ),
     )
     async def _download_video_with_retry(video_url: str, output_path) -> None:
-        """单独重试视频下载，避免下载失败导致重新生成视频而浪费额度。
+        """Separately retry video download to avoid quota waste from regenerating video on download failure.
 
-        Ark 的视频 URL 在任务 succeeded 后可能仍未就绪（返回 400 video_not_ready），
-        仅针对该瞬态状态重试；其余 HTTP 错误及网络瞬态错误由内层 download_video 处理。
+        Ark video URL may not be ready even after task succeeds (returns 400 video_not_ready).
+        Retry only for this transient state; other HTTP errors and network transients are handled by inner download_video.
         """
         await download_video(video_url, output_path)
 
     async def _poll_until_done(self, task_id: str, request: VideoGenerationRequest) -> VideoGenerationResult:
-        """轮询任务状态直到完成，瞬态错误仅重试当次轮询请求。"""
+        """Poll task status until completion. Retry transient errors only for the current poll request."""
         poll_interval = 10 if request.service_tier == "default" else 60
         max_wait_time = 600 if request.service_tier == "default" else 3600
 
@@ -142,7 +142,7 @@ class ArkVideoBackend:
             poll_fn=lambda: asyncio.to_thread(self._client.content_generation.tasks.get, task_id=task_id),
             is_done=lambda r: r.status == "succeeded",
             is_failed=lambda r: (
-                f"Ark 视频生成失败: {getattr(r, 'error', None) or 'Unknown error'}"
+                f"Ark video generation failed: {getattr(r, 'error', None) or 'Unknown error'}"
                 if r.status in ("failed", "expired")
                 else None
             ),
@@ -150,7 +150,7 @@ class ArkVideoBackend:
             max_wait=max_wait_time,
             label="Ark",
             on_progress=lambda r, elapsed: logger.info(
-                "Ark 视频生成中... 状态: %s, 已等待 %d 秒", r.status, int(elapsed)
+                "Ark video generating... Status: %s, waited %d seconds", r.status, int(elapsed)
             ),
         )
 

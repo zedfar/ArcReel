@@ -26,7 +26,7 @@ function CluePopover({
 }) {
 
   const firstLine = clue.description?.split("\n")[0] ?? "";
-  const typeLabel = clue.type === "location" ? "Adegan" : "Properti";
+  const typeLabel = clue.type === "location" ? "Scene" : "Prop";
   const typeBadgeClass =
     clue.type === "location"
       ? "bg-amber-800/60 text-amber-300"

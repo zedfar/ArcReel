@@ -25,7 +25,7 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5MB
 const MAX_TEXTAREA_HEIGHT_VH = 50;
 
 // ---------------------------------------------------------------------------
-// SessionSelector — Pemilih Dropdown Sesi
+// SessionSelector — Session dropdown selector
 // ---------------------------------------------------------------------------
 
 function SessionSelector({
@@ -40,7 +40,7 @@ function SessionSelector({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const currentSession = sessions.find((s) => s.id === currentSessionId);
-  const displayTitle = isDraftSession ? "Sesi Baru" : (currentSession?.title || formatTime(currentSession?.created_at));
+  const displayTitle = isDraftSession ? "New Session" : (currentSession?.title || formatTime(currentSession?.created_at));
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -48,10 +48,10 @@ function SessionSelector({
         type="button"
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 rounded px-1.5 py-0.5 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
-        title="Ganti Sesi"
+        title="Switch Session"
       >
         <MessageSquare className="h-3 w-3" />
-        <span className="max-w-24 truncate">{displayTitle || "Tidak ada sesi"}</span>
+        <span className="max-w-24 truncate">{displayTitle || "No sessions"}</span>
         <ChevronDown className={`h-3 w-3 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
@@ -88,9 +88,9 @@ function SessionSelector({
                   </button>
                   <button
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); if (confirm("Yakin ingin menghapus sesi ini? Tindakan ini tidak dapat dibatalkan.")) onDelete(session.id); }}
+                    onClick={(e) => { e.stopPropagation(); if (confirm("Are you sure you want to delete this session? This action cannot be undone.")) onDelete(session.id); }}
                     className="shrink-0 rounded p-0.5 text-gray-600 opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
-                    title="Hapus Sesi"
+                    title="Delete Session"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
@@ -118,12 +118,12 @@ function StatusDot({ status }: { status: string }) {
 }
 
 function formatTime(isoStr: string | undefined): string {
-  if (!isoStr) return "Sesi Baru";
+  if (!isoStr) return "New Session";
   try {
     const d = new Date(isoStr);
     return `${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getDate().toString().padStart(2, "0")} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
   } catch {
-    return "Sesi Baru";
+    return "New Session";
   }
 }
 
@@ -158,10 +158,10 @@ export function AgentCopilot() {
   const inputDisabled = Boolean(pendingQuestion) || answeringQuestion || isRunning || sending;
   const attachDisabled = inputDisabled || attachedImages.length >= MAX_IMAGES;
   const inputPlaceholder = pendingQuestion
-    ? "Harap jawab pertanyaan di atas terlebih dahulu"
+    ? "Please answer the question above first"
     : isRunning
-      ? "Asisten sedang menghasilkan, klik Berhenti untuk menghentikan"
-      : "Ketik pesan, masukkan / untuk melihat skill yang tersedia";
+      ? "Assistant is generating, click Stop to interrupt"
+      : "Type message, enter / to see available skills";
 
   const addImages = useCallback((files: File[]) => {
     setAttachError(null);
@@ -169,7 +169,7 @@ export function AgentCopilot() {
     for (const file of files) {
       if (!file.type.startsWith("image/")) continue;
       if (file.size > MAX_IMAGE_BYTES) {
-        setAttachError(`Gambar "${file.name}" melebihi 5MB, dilewati`);
+        setAttachError(`Image "${file.name}" exceeds 5MB, skipped`);
         continue;
       }
       const reader = new FileReader();
@@ -327,18 +327,18 @@ export function AgentCopilot() {
             type="button"
             onClick={toggleAssistantPanel}
             className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
-            title="Tutup Panel Asisten"
+            title="Close Assistant Panel"
           >
             <PanelRightClose className="h-4 w-4" />
           </button>
           <Bot className="h-4 w-4 text-indigo-400" />
-          <span className="text-sm font-medium text-gray-300">ArcReel Agen AI</span>
+          <span className="text-sm font-medium text-gray-300">ArcReel AI Agent</span>
         </div>
         <div className="flex items-center gap-1">
           {isRunning && (
             <span className="flex items-center gap-1.5 text-xs text-indigo-400 mr-1">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400" />
-              Sedang berpikir
+              Thinking
             </span>
           )}
           <SessionSelector onSwitch={switchSession} onDelete={deleteSession} />
@@ -346,7 +346,7 @@ export function AgentCopilot() {
             type="button"
             onClick={createNewSession}
             className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
-            title="Sesi Baru"
+            title="New Session"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -361,9 +361,9 @@ export function AgentCopilot() {
         {allTurns.length === 0 && !messagesLoading && (
           <div className="flex h-full flex-col items-center justify-center text-center text-gray-500">
             <Bot className="mb-3 h-8 w-8 text-gray-600" />
-            <p className="text-sm">Ketik pesan di bawah untuk memulai percakapan</p>
+            <p className="text-sm">Type a message below to start the conversation</p>
             <p className="mt-1 text-xs text-gray-600">
-              Masukkan / untuk memanggil skill dengan cepat
+              Enter / to quickly invoke skills
             </p>
           </div>
         )}
@@ -400,11 +400,11 @@ export function AgentCopilot() {
                   type="button"
                   className="h-16 w-16 cursor-pointer border-0 bg-transparent p-0"
                   onClick={() => setLightboxSrc(img.dataUrl)}
-                  aria-label="Klik untuk memperbesar gambar"
+                  aria-label="Click to enlarge image"
                 >
                   <img
                     src={img.dataUrl}
-                    alt="Pratinjau Lampiran"
+                    alt="Attachment preview"
                     className="h-16 w-16 rounded-md object-cover border border-gray-600"
                   />
                 </button>
@@ -412,7 +412,7 @@ export function AgentCopilot() {
                   type="button"
                   onClick={() => removeImage(img.id)}
                   className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-gray-900 text-gray-300 hover:bg-red-500 hover:text-white"
-                  aria-label="Hapus Gambar"
+                  aria-label="Remove Image"
                 >
                   <X className="h-2.5 w-2.5" />
                 </button>
@@ -445,7 +445,7 @@ export function AgentCopilot() {
             onPaste={handlePaste}
             placeholder={inputPlaceholder}
             rows={1}
-            aria-label="Input Asisten"
+            aria-label="Assistant input"
             aria-expanded={showSlashMenu}
             aria-controls={showSlashMenu ? "slash-command-menu" : undefined}
             aria-activedescendant={slashMenuRef.current?.activeDescendantId}
@@ -460,8 +460,8 @@ export function AgentCopilot() {
             onClick={() => fileInputRef.current?.click()}
             disabled={attachDisabled}
             className="shrink-0 rounded p-1.5 text-gray-400 hover:bg-gray-700 hover:text-gray-200 disabled:opacity-30"
-            title={attachedImages.length >= MAX_IMAGES ? `Maksimal lampirkan ${MAX_IMAGES} gambar` : "Lampirkan Gambar"}
-            aria-label="Lampirkan Gambar"
+            title={attachedImages.length >= MAX_IMAGES ? `Maximum ${MAX_IMAGES} images can be attached` : "Attach Image"}
+            aria-label="Attach Image"
           >
             <Paperclip className="h-4 w-4" />
           </button>
@@ -470,8 +470,8 @@ export function AgentCopilot() {
             <button
               onClick={interrupt}
               className="shrink-0 rounded p-1.5 text-red-400 hover:bg-gray-700"
-              title="Hentikan Sesi"
-              aria-label="Hentikan Sesi"
+              title="Stop Session"
+              aria-label="Stop Session"
             >
               <Square className="h-4 w-4" />
             </button>
@@ -480,8 +480,8 @@ export function AgentCopilot() {
               onClick={handleSend}
               disabled={(!localInput.trim() && attachedImages.length === 0) || inputDisabled}
               className="shrink-0 rounded p-1.5 text-indigo-400 hover:bg-gray-700 disabled:opacity-30"
-              title="Kirim Pesan"
-              aria-label="Kirim Pesan"
+              title="Send Message"
+              aria-label="Send Message"
             >
               <Send className="h-4 w-4" />
             </button>
@@ -502,7 +502,7 @@ export function AgentCopilot() {
       {lightboxSrc && (
         <ImageLightbox
           src={lightboxSrc}
-          alt="Pratinjau Lampiran"
+          alt="Attachment preview"
           onClose={() => setLightboxSrc(null)}
         />
       )}

@@ -10,8 +10,8 @@ function makeChange(overrides: Partial<ProjectChange> = {}): ProjectChange {
   return {
     entity_type: "character",
     action: "created",
-    entity_id: "张三",
-    label: "Karakter \"Zhang San\"",
+    entity_id: "zhang-san",
+    label: "Character \"Zhang San\"",
     important: true,
     focus: null,
     ...overrides,
@@ -21,25 +21,25 @@ function makeChange(overrides: Partial<ProjectChange> = {}): ProjectChange {
 describe("project-changes utils", () => {
   it("groups changes by entity_type and action", () => {
     const groups = groupChangesByType([
-      makeChange({ entity_id: "张三", label: "Karakter \"Zhang San\"" }),
-      makeChange({ entity_id: "李四", label: "Karakter \"Li Si\"" }),
+      makeChange({ entity_id: "zhang-san", label: "Character \"Zhang San\"" }),
+      makeChange({ entity_id: "li-si", label: "Character \"Li Si\"" }),
       makeChange({
         entity_type: "clue",
-        entity_id: "玉佩",
-        label: "Petunjuk \"Jade Pendant\"",
+        entity_id: "jade-pendant",
+        label: "Clue \"Jade Pendant\"",
       }),
       makeChange({
         entity_type: "character",
         action: "updated",
-        entity_id: "王五",
-        label: "Karakter \"Wang Wu\"",
+        entity_id: "wang-wu",
+        label: "Character \"Wang Wu\"",
       }),
     ]);
 
     expect(groups).toHaveLength(3);
     expect(groups[0]).toMatchObject({
       key: "character:created",
-      changes: [expect.objectContaining({ entity_id: "张三" }), expect.objectContaining({ entity_id: "李四" })],
+      changes: [expect.objectContaining({ entity_id: "zhang-san" }), expect.objectContaining({ entity_id: "li-si" })],
     });
     expect(groups[1].key).toBe("clue:created");
     expect(groups[2].key).toBe("character:updated");
@@ -47,24 +47,24 @@ describe("project-changes utils", () => {
 
   it("formats grouped notification text and truncates long lists", () => {
     const [singleGroup] = groupChangesByType([
-      makeChange({ entity_id: "张三", label: "Karakter \"Zhang San\"" }),
+      makeChange({ entity_id: "zhang-san", label: "Character \"Zhang San\"" }),
     ]);
-    expect(formatGroupedNotificationText(singleGroup)).toBe("Karakter \"Zhang San\"Telah dibuat");
+    expect(formatGroupedNotificationText(singleGroup)).toBe("Character \"Zhang San\" has been created");
 
     const [grouped] = groupChangesByType([
-      makeChange({ entity_id: "张三", label: "Karakter \"Zhang San\"" }),
-      makeChange({ entity_id: "李四", label: "Karakter \"Li Si\"" }),
-      makeChange({ entity_id: "王五", label: "Karakter \"Wang Wu\"" }),
-      makeChange({ entity_id: "赵六", label: "Karakter \"Zhao Liu\"" }),
-      makeChange({ entity_id: "钱七", label: "Karakter \"Qian Qi\"" }),
-      makeChange({ entity_id: "孙八", label: "Karakter \"Sun Ba\"" }),
+      makeChange({ entity_id: "zhang-san", label: "Character \"Zhang San\"" }),
+      makeChange({ entity_id: "li-si", label: "Character \"Li Si\"" }),
+      makeChange({ entity_id: "wang-wu", label: "Character \"Wang Wu\"" }),
+      makeChange({ entity_id: "zhao-liu", label: "Character \"Zhao Liu\"" }),
+      makeChange({ entity_id: "qian-qi", label: "Character \"Qian Qi\"" }),
+      makeChange({ entity_id: "sun-ba", label: "Character \"Sun Ba\"" }),
     ]);
 
     expect(formatGroupedNotificationText(grouped)).toBe(
-      "Tambah了 6  karakter：张三、李四、王五、赵六、钱七…等",
+      "Added 6 characters: zhang-san, li-si, wang-wu, zhao-liu, qian-qi...etc",
     );
     expect(formatGroupedDeferredText(grouped)).toBe(
-      "AI baru saja menambahkan 6  karakter：张三、李四、王五、赵六、钱七…等，Klik untuk melihat",
+      "AI just added 6 characters: zhang-san, li-si, wang-wu, zhao-liu, qian-qi...etc. Click to view",
     );
   });
 });

@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ---------------------------------------------------------------------------
-// ImageFlipReveal — GambarGanti时的 3D 翻转Animasi
+// ImageFlipReveal — 3D flip animation when image changes
 // ---------------------------------------------------------------------------
 
 interface ImageFlipRevealProps {

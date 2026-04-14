@@ -74,17 +74,17 @@ describe("VersionTimeMachine", () => {
     expect(API.getVersions).not.toHaveBeenCalled();
 
     // Open the panel
-    fireEvent.click(screen.getByRole("button", { name: /Manajemen Versi/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Version Management/i }));
 
     // Click v1 pill to preview
     expect(await screen.findByRole("button", { name: "v1" })).toBeInTheDocument();
     expect(API.getVersions).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: "v1" }));
-    expect(await screen.findByAltText("Versi v1 Pratinjau")).toBeInTheDocument();
+    expect(await screen.findByAltText("Version v1 Preview")).toBeInTheDocument();
     expect(screen.getByText("old prompt")).toBeInTheDocument();
 
     // Click restore button in header
-    fireEvent.click(screen.getByRole("button", { name: /Ganti到此Versi/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Restore to this Version/ }));
 
     await waitFor(() => {
       expect(API.restoreVersion).toHaveBeenCalledWith(
@@ -95,7 +95,7 @@ describe("VersionTimeMachine", () => {
       );
       expect(onRestore).toHaveBeenCalledWith(1);
       expect(API.getVersions).toHaveBeenCalledTimes(2);
-      expect(useAppStore.getState().toast?.text).toBe("已Ganti到 v1");
+      expect(useAppStore.getState().toast?.text).toBe("Restored to v1");
     });
   });
 
@@ -133,13 +133,13 @@ describe("VersionTimeMachine", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: /Manajemen Versi/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Version Management/i }));
     expect(await screen.findByRole("button", { name: "v1" })).toBeInTheDocument();
 
     // Click v1 pill to preview
     fireEvent.click(screen.getByRole("button", { name: "v1" }));
 
-    const previewImage = await screen.findByAltText("Versi v1 Pratinjau");
+    const previewImage = await screen.findByAltText("Version v1 Preview");
     expect(previewImage).toHaveClass("object-contain");
     expect(previewImage.parentElement).toHaveClass("h-80");
   });

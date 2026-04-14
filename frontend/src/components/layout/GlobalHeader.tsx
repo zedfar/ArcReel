@@ -15,7 +15,7 @@ import { API } from "@/api";
 import { ArchiveDiagnosticsDialog } from "@/components/shared/ArchiveDiagnosticsDialog";
 import type { ExportDiagnostics, WorkspaceNotification } from "@/types";
 
-/** Melalui penyembunyian <a> memicu unduhan browser, menghindari window.open menghasilkan tab kosong */
+/** Trigger a browser download via a hidden <a> element, avoiding window.open creating a blank tab */
 function triggerBrowserDownload(url: string) {
   const a = document.createElement("a");
   a.href = url;
@@ -30,11 +30,11 @@ function triggerBrowserDownload(url: string) {
 // ---------------------------------------------------------------------------
 
 const PHASES = [
-  { key: "setup", label: "Persiapan" },
-  { key: "worldbuilding", label: "Dunia" },
-  { key: "scripting", label: "Skenario" },
-  { key: "production", label: "Produksi" },
-  { key: "completed", label: "Selesai" },
+  { key: "setup", label: "Setup" },
+  { key: "worldbuilding", label: "World" },
+  { key: "scripting", label: "Script" },
+  { key: "production", label: "Production" },
+  { key: "completed", label: "Completed" },
 ] as const;
 
 type PhaseKey = (typeof PHASES)[number]["key"];
@@ -51,7 +51,7 @@ function PhaseStepper({
   const currentIdx = PHASES.findIndex((p) => p.key === currentPhase);
 
   return (
-    <nav className="flex items-center gap-1" aria-label="Tahapan Alur Kerja">
+    <nav className="flex items-center gap-1" aria-label="Workflow Phases">
       {PHASES.map((phase, idx) => {
         const isCompleted = currentIdx > idx;
         const isCurrent = currentIdx === idx;
@@ -128,10 +128,10 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
   const contentMode = currentProjectData?.content_mode;
   const runningCount = stats.running + stats.queued;
   const displayProjectTitle =
-    currentProjectData?.title?.trim() || currentProjectName || "Proyek belum dipilih";
+    currentProjectData?.title?.trim() || currentProjectName || "No project selected";
   const unreadNotificationCount = workspaceNotifications.filter((item) => !item.read).length;
 
-  // Memuat data statistik penggunaan (refresh otomatis saat tugas selesai)
+  // Load usage statistics (auto-refresh when tasks complete)
   const completedTaskCount = stats.succeeded + stats.failed;
   useEffect(() => {
     API.getUsageStats(currentProjectName ? { projectName: currentProjectName } : {})
@@ -148,7 +148,7 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
 
   // Format content mode badge text
   const modeBadgeText =
-    contentMode === "drama" ? "Animasi Drama 16:9" : "Mode Narasi 9:16";
+    contentMode === "drama" ? "Drama Animation 16:9" : "Narration Mode 9:16";
 
   // Format cost display – show multi-currency summary
   const costByCurrency = usageStats?.cost_by_currency ?? {};
@@ -186,9 +186,9 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
       );
       triggerBrowserDownload(url);
       setExportDialogOpen(false);
-      useAppStore.getState().pushToast("Ekspor draf Jianying telah dimulai, silakan ekstrak ZIP yang diunduh ke direktori draf Jianying", "success");
+      useAppStore.getState().pushToast("Jianying draft export started, please extract the downloaded ZIP to the Jianying drafts directory", "success");
     } catch (err) {
-      useAppStore.getState().pushToast(`Ekspor draf Jianying gagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Jianying draft export failed: ${(err as Error).message}`, "error");
     } finally {
       setJianyingExporting(false);
     }
@@ -208,16 +208,16 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
       if (diagnosticCount > 0) {
         setExportDiagnostics(diagnostics);
         useAppStore.getState().pushToast(
-          `ZIP proyek mulai diunduh, paket ekspor berisi ${diagnosticCount} diagnosa`,
+          `Project ZIP download started. Export package contains ${diagnosticCount} diagnostic(s)`,
           "warning",
         );
       } else {
-        useAppStore.getState().pushToast("ZIP proyek mulai diunduh", "success");
+        useAppStore.getState().pushToast("Project ZIP download started", "success");
       }
     } catch (err) {
       useAppStore
         .getState()
-        .pushToast(`Ekspor gagal: ${(err as Error).message}`, "error");
+        .pushToast(`Export failed: ${(err as Error).message}`, "error");
     } finally {
       setExportingProject(false);
     }
@@ -235,10 +235,10 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
           type="button"
           onClick={onNavigateBack}
           className="flex items-center gap-1 text-sm text-gray-400 transition-colors hover:text-gray-200"
-          aria-label="Kembali ke daftar proyek"
+          aria-label="Back to project list"
         >
           <ChevronLeft className="h-4 w-4" />
-          <span className="hidden sm:inline">Daftar Proyek</span>
+          <span className="hidden sm:inline">Projects</span>
         </button>
 
         {/* Divider */}
@@ -273,8 +273,8 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
                 ? "bg-amber-500/20 text-amber-200"
                 : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
             }`}
-            title={`Notifikasi sesi: ${workspaceNotifications.length} pesan`}
-            aria-label="Buka pusat notifikasi"
+            title={`Session notifications: ${workspaceNotifications.length} message(s)`}
+            aria-label="Open notification center"
           >
             <Bell className="h-3.5 w-3.5" />
             {unreadNotificationCount > 0 && (
@@ -301,7 +301,7 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
                 ? "bg-indigo-500/20 text-indigo-400"
                 : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
             }`}
-            title={`Total biaya proyek: ${costText}`}
+            title={`Project total cost: ${costText}`}
           >
             <span className="font-mono">{costText}</span>
           </button>
@@ -323,8 +323,8 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
                 ? "bg-indigo-500/20 text-indigo-400"
                 : "text-gray-400 hover:bg-gray-800 hover:text-gray-200"
             }`}
-            title={`Status tugas: ${stats.running} berjalan, ${stats.queued} dalam antrean`}
-            aria-label="Alihkan panel tugas"
+            title={`Task status: ${stats.running} running, ${stats.queued} queued`}
+            aria-label="Toggle task panel"
           >
             <Activity
               className={`h-4 w-4 ${runningCount > 0 ? "animate-pulse" : ""}`}
@@ -346,8 +346,8 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
             onClick={() => setExportDialogOpen(!exportDialogOpen)}
             disabled={!currentProjectName || exportingProject}
             className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-1 text-xs text-gray-300 transition-colors hover:border-gray-500 hover:bg-gray-800 hover:text-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-            title="Ekspor ZIP proyek saat ini"
-            aria-label="Ekspor ZIP proyek saat ini"
+            title="Export current project ZIP"
+            aria-label="Export current project ZIP"
           >
             {exportingProject ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -355,7 +355,7 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
               <Download className="h-3.5 w-3.5" />
             )}
             <span className="hidden lg:inline">
-              {exportingProject ? "Mengekspor..." : "Ekspor ZIP"}
+              {exportingProject ? "Exporting..." : "Export ZIP"}
             </span>
           </button>
           <ExportScopeDialog
@@ -378,12 +378,12 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
               : "~/app/settings"
           )}
           className="relative rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
-          title="Pengaturan"
-          aria-label="Pengaturan"
+          title="Settings"
+          aria-label="Settings"
         >
           <Settings className="h-4 w-4" />
           {!isConfigComplete && !currentProjectName && (
-            <span className="absolute right-0.5 top-0.5 h-2 w-2 rounded-full bg-rose-500" aria-label="Konfigurasi belum lengkap" />
+            <span className="absolute right-0.5 top-0.5 h-2 w-2 rounded-full bg-rose-500" aria-label="Configuration incomplete" />
           )}
         </button>
 
@@ -391,12 +391,12 @@ export function GlobalHeader({ onNavigateBack }: GlobalHeaderProps) {
 
       {exportDiagnostics !== null && (
         <ArchiveDiagnosticsDialog
-          title="Diagnosa Ekspor"
-          description="Ekspor telah menyelesaikan pemeriksaan awal dan menghasilkan ZIP. Masalah berikut terdeteksi dalam paket ekspor."
+          title="Export Diagnostics"
+          description="Export completed the pre-check and generated the ZIP. The following issues were detected in the export package."
           sections={[
-            { key: "blocking", title: "Masalah Pemblokiran", tone: "border-red-400/25 bg-red-500/10 text-red-100", items: exportDiagnostics.blocking },
-            { key: "auto_fixed", title: "Telah Diperbaiki Otomatis", tone: "border-indigo-400/25 bg-indigo-500/10 text-indigo-100", items: exportDiagnostics.auto_fixed },
-            { key: "warnings", title: "Peringatan", tone: "border-amber-400/25 bg-amber-500/10 text-amber-100", items: exportDiagnostics.warnings },
+            { key: "blocking", title: "Blocking Issues", tone: "border-red-400/25 bg-red-500/10 text-red-100", items: exportDiagnostics.blocking },
+            { key: "auto_fixed", title: "Auto-fixed", tone: "border-indigo-400/25 bg-indigo-500/10 text-indigo-100", items: exportDiagnostics.auto_fixed },
+            { key: "warnings", title: "Warnings", tone: "border-amber-400/25 bg-amber-500/10 text-amber-100", items: exportDiagnostics.warnings },
           ]}
           onClose={() => setExportDiagnostics(null)}
         />

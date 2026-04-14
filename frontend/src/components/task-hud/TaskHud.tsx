@@ -30,7 +30,7 @@ function TaskStatusIcon({ status }: { status: TaskItem["status"] }) {
 }
 
 // ---------------------------------------------------------------------------
-// RunningProgressBar — BerjalanTugas的动态Progres条
+// RunningProgressBar — running task dynamic progress bar
 // ---------------------------------------------------------------------------
 
 function RunningProgressBar() {
@@ -54,11 +54,11 @@ function RunningProgressBar() {
 // ---------------------------------------------------------------------------
 
 const statusLabel: Record<TaskItem["status"], string> = {
-  running: "Menghasilkan...",
-  queued: "Dalam antrean",
-  succeeded: "Selesai",
-  failed: "Gagal",
-  cancelled: "Dibatalkan",
+  running: "Generating...",
+  queued: "Queued",
+  succeeded: "Completed",
+  failed: "Failed",
+  cancelled: "Cancelled",
 };
 
 const statusColor: Record<TaskItem["status"], string> = {
@@ -70,7 +70,7 @@ const statusColor: Record<TaskItem["status"], string> = {
 };
 
 // ---------------------------------------------------------------------------
-// TaskRow — 单 tugas条目（含Selesai高亮、GagalBuka、BerjalanProgres条）
+// TaskRow — single task item (includes completed highlight, failure expand, running progress bar)
 // ---------------------------------------------------------------------------
 
 function TaskRow({
@@ -87,7 +87,7 @@ function TaskRow({
   onCancel?: (taskId: string) => void;
 }) {
 
-  // 根据StatusOK行Latar belakangGaya
+  // Set row background style based on status
   const rowBg =
     task.status === "failed"
       ? "bg-red-500/10"
@@ -110,7 +110,7 @@ function TaskRow({
       transition={{ duration: isFading ? 0.4 : 0.2 }}
       className="overflow-hidden"
     >
-      {/* 主行Konten */}
+      {/* Main row content */}
       <div
         className={`flex items-center gap-2 px-3 py-1.5 text-sm ${rowBg} ${
           hasError ? "cursor-pointer hover:bg-red-500/15" : ""
@@ -132,14 +132,14 @@ function TaskRow({
               onCancel(task.task_id);
             }}
             className="ml-1 rounded px-1 py-0.5 text-xs text-gray-500 hover:bg-gray-700 hover:text-gray-300"
-            title="BatalTugas"
-            aria-label="Batal此Tugas"
+            title="Cancel task"
+            aria-label="Cancel this task"
           >
-            Batal
+            Cancel
           </button>
         )}
         {task.status === "cancelled" && task.cancelled_by === "cascade" && (
-          <span className="ml-1 text-xs text-gray-500">级联</span>
+          <span className="ml-1 text-xs text-gray-500">Cascaded</span>
         )}
         {hasError && (
           <ChevronDown
@@ -150,14 +150,14 @@ function TaskRow({
         )}
       </div>
 
-      {/* BerjalanTugas的Progres条 */}
+      {/* Running task progress bar */}
       {task.status === "running" && (
         <div className="px-3 pb-1">
           <RunningProgressBar />
         </div>
       )}
 
-      {/* GagalTugas的KesalahanDetailBukaArea */}
+      {/* Failed task error detail expand area */}
       <AnimatePresence>
         {hasError && isErrorExpanded && (
           <motion.div
@@ -178,7 +178,7 @@ function TaskRow({
 }
 
 // ---------------------------------------------------------------------------
-// ChannelSection — 按Gambar/VideoSaluran分组，含Otomatis淡出逻辑
+// ChannelSection — group by image/video channel, includes auto-fade logic
 // ---------------------------------------------------------------------------
 
 function ChannelSection({
@@ -192,21 +192,21 @@ function ChannelSection({
   tasks: TaskItem[];
   onCancel?: (taskId: string) => void;
 }) {
-  // 跟踪正在淡出的Tugas ID
+  // Track task IDs currently fading out
   const [fadingIds, setFadingIds] = useState<Set<string>>(new Set());
-  // 跟踪已完全淡出（应Sembunyikan）的Tugas ID
+  // Track task IDs that have completely faded out (should be hidden)
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(new Set());
-  // Simpan定时器引用以便清理
+  // Save timer references for cleanup
   const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
-  // GagalTugasKesalahanDetailBukaStatus
+  // Failed task error detail expand state
   const [expandedErrorId, setExpandedErrorId] = useState<string | null>(null);
 
   const toggleError = useCallback((taskId: string) => {
     setExpandedErrorId((prev) => (prev === taskId ? null : taskId));
   }, []);
 
-  // 监听TugasStatus变化，为 succeeded/cancelled TugasPengaturanOtomatis淡出
+  // Listen to task status changes, set auto-fade for succeeded/cancelled tasks
   useEffect(() => {
     const autoFadeTasks = tasks.filter(
       (t) =>
@@ -218,11 +218,11 @@ function ChannelSection({
     for (const task of autoFadeTasks) {
       if (timersRef.current.has(task.task_id)) continue;
 
-      // 3 detik后Mulai淡出Animasi
+      // Start fade animation after 3 seconds
       const fadeTimer = setTimeout(() => {
         setFadingIds((prev) => new Set(prev).add(task.task_id));
 
-        // 淡出AnimasiSelesai后（400ms）Tandai为Sembunyikan
+        // After fade animation completes (400ms), mark as hidden
         const hideTimer = setTimeout(() => {
           setHiddenIds((prev) => new Set(prev).add(task.task_id));
           timersRef.current.delete(task.task_id);
@@ -235,7 +235,7 @@ function ChannelSection({
     }
 
     return () => {
-      // 组件卸载时清理所有定时器
+      // Clean up all timers on component unmount
       for (const timer of timersRef.current.values()) {
         clearTimeout(timer);
       }
@@ -275,14 +275,14 @@ function ChannelSection({
         ))}
       </AnimatePresence>
       {visible.length === 0 && (
-        <div className="px-3 py-2 text-xs text-gray-600">Belum ada Tugas</div>
+        <div className="px-3 py-2 text-xs text-gray-600">No tasks</div>
       )}
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// TaskHud — 弹出Panel，Real-time展示Antrean TugasStatus
+// TaskHud — popup panel displaying real-time task queue status
 // ---------------------------------------------------------------------------
 
 export function TaskHud({ anchorRef }: { anchorRef: RefObject<HTMLElement | null> }) {
@@ -340,7 +340,7 @@ export function TaskHud({ anchorRef }: { anchorRef: RefObject<HTMLElement | null
     }
   }, [cancelConfirm]);
 
-  // Escape 键TutupKonfirmasiPanel
+  // Close confirmation panel on Escape key
   useEffect(() => {
     if (!cancelConfirm) return;
     const handler = (e: KeyboardEvent) => {
@@ -372,27 +372,27 @@ export function TaskHud({ anchorRef }: { anchorRef: RefObject<HTMLElement | null
             backgroundColor: POPOVER_BG,
           }}
         >
-          {/* Statistik栏 */}
+          {/* Stats bar */}
           <div className="flex gap-3 border-b border-gray-800 px-3 py-2 text-xs text-gray-400">
             <span>
-              Antre{" "}
+              Queue{" "}
               <strong className="text-gray-200">{stats.queued}</strong>
             </span>
             <span>
-              Berjalan{" "}
+              Running{" "}
               <strong className="text-indigo-400">{stats.running}</strong>
             </span>
             <span>
-              Selesai{" "}
+              Completed{" "}
               <strong className="text-emerald-400">{stats.succeeded}</strong>
             </span>
             <span>
-              Gagal{" "}
+              Failed{" "}
               <strong className="text-red-400">{stats.failed}</strong>
             </span>
             {stats.cancelled > 0 && (
               <span>
-                Batal{" "}
+                Cancelled{" "}
                 <strong className="text-gray-400">{stats.cancelled}</strong>
               </span>
             )}
@@ -400,28 +400,28 @@ export function TaskHud({ anchorRef }: { anchorRef: RefObject<HTMLElement | null
               <button
                 onClick={handleCancelAll}
                 className="ml-auto text-xs text-gray-500 hover:text-red-400"
-                aria-label="Batal所有Dalam antrean的Tugas"
+                aria-label="Cancel all queued tasks"
               >
-                SemuaBatal
+                Cancel All
               </button>
             )}
           </div>
 
           {/* Dual channel */}
           <div className="max-h-80 divide-y divide-gray-800/50 overflow-y-auto">
-            <ChannelSection title="GambarSaluran" icon={Image} tasks={imageTasks} onCancel={handleCancelSingle} />
-            <ChannelSection title="VideoSaluran" icon={Video} tasks={videoTasks} onCancel={handleCancelSingle} />
+            <ChannelSection title="Image Channel" icon={Image} tasks={imageTasks} onCancel={handleCancelSingle} />
+            <ChannelSection title="Video Channel" icon={Video} tasks={videoTasks} onCancel={handleCancelSingle} />
           </div>
 
-          {/* BatalKonfirmasiPanel */}
+          {/* Cancel confirmation panel */}
           {cancelConfirm && (
-            <div className="border-t border-gray-800 px-3 py-2" role="alertdialog" aria-label="BatalKonfirmasi">
+            <div className="border-t border-gray-800 px-3 py-2" role="alertdialog" aria-label="Cancel confirmation">
               <p className="text-xs text-gray-300">
                 {cancelConfirm.preview
                   ? cancelConfirm.preview.cascaded.length > 0
-                    ? `Batal此Tugas将同时Batal ${cancelConfirm.preview.cascaded.length} 个依赖Tugas`
-                    : "OKBatal此Tugas？"
-                  : `OKBatal所有 ${cancelConfirm.allCount} 个Dalam antrean的Tugas？`}
+                    ? `Cancelling this task will also cancel ${cancelConfirm.preview.cascaded.length} dependent tasks`
+                    : "Confirm cancel this task?"
+                  : `Confirm cancel all ${cancelConfirm.allCount} queued tasks?`}
               </p>
               {cancelConfirm.preview && cancelConfirm.preview.cascaded.length > 0 && (
                 <ul className="mt-1 max-h-20 overflow-y-auto text-xs text-gray-500">
@@ -438,13 +438,13 @@ export function TaskHud({ anchorRef }: { anchorRef: RefObject<HTMLElement | null
                   disabled={cancelling}
                   className="rounded bg-red-600/80 px-2 py-0.5 text-xs text-white hover:bg-red-600 disabled:opacity-50"
                 >
-                  {cancelling ? "Batal中..." : "Konfirmasi Batal"}
+                  {cancelling ? "Cancelling..." : "Confirm Cancel"}
                 </button>
                 <button
                   onClick={() => setCancelConfirm(null)}
                   className="rounded px-2 py-0.5 text-xs text-gray-400 hover:bg-gray-700"
                 >
-                  Kembali
+                  Back
                 </button>
               </div>
             </div>

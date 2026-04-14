@@ -1,141 +1,141 @@
 # AGENTS.md
 
-File ini memberikan panduan bagi Codex (Codex.ai/code) saat bekerja dengan kode di repositori ini.
+This file provides guidance for agents (agent-platforms like OpenClaw) when working with code in this repository.
 
-## Standar Bahasa
-- **Jawaban kepada pengguna WAJIB menggunakan Bahasa Indonesia**: Semua balasan, daftar tugas, dan file rencana harus menggunakan Bahasa Indonesia.
+## Language Standards
+- **All responses to users MUST be in English**: All responses, task lists, and plan files should be in English.
 
-## Ikhtisar Proyek
+## Project Overview
 
-ArcReel adalah platform pembuatan video AI yang mengubah novel menjadi video pendek. Arsitektur tiga lapis:
+ArcReel is an AI video creation platform that transforms novels into short videos. Three-tier architecture:
 
 ```
-frontend/ (React SPA)  →  server/ (FastAPI)  →  lib/ (Pustaka Inti)
-  React 19 + Tailwind       Distribusi Rute + SSE  API Gemini
-  Rute wouter               agent_runtime/         GenerationQueue
-  Manajemen State zustand   (Claude Agent SDK)     ProjectManager
+frontend/ (React SPA)  →  server/ (FastAPI)  →  lib/ (Core Library)
+  React 19 + Tailwind       Route Distribution + SSE  Gemini API
+  wouter Routes             agent_runtime/         GenerationQueue
+  zustand State Management  (Claude Agent SDK)     ProjectManager
 ```
 
-## Perintah Pengembangan
+## Development Commands
 
 ```bash
 # Backend
-uv run python -m pytest                              # Pengujian (-v file tunggal / -k kata kunci / --cov cakupan)
+uv run python -m pytest                              # Testing (-v single file / -k keyword / --cov coverage)
 uv run ruff check . && uv run ruff format .          # lint + format
-uv sync                                              # Instal dependensi
-uv run alembic upgrade head                          # Migrasi database
-uv run alembic revision --autogenerate -m "desc"     # Buat migrasi baru
+uv sync                                              # Install dependencies
+uv run alembic upgrade head                          # Database migration
+uv run alembic revision --autogenerate -m "desc"     # Create new migration
 
-# Frontend (di dalam direktori frontend/)
-pnpm build       # Build produksi (termasuk typecheck)
-pnpm check       # typecheck + pengujian
+# Frontend (in frontend/ directory)
+pnpm build       # Production build (includes typecheck)
+pnpm check       # typecheck + testing
 ```
 
-## Poin Penting Arsitektur
+## Architecture Key Points
 
-### Rute API Backend
+### Backend API Routes
 
-Semua API berada di bawah `/api/v1`, definisi rute ada di `server/routers/`:
-- `projects.py` — CRUD Proyek, pembuatan ringkasan.
-- `generate.py` — Pembuatan storyboard/video/karakter/petunjuk (masuk ke antrean tugas).
-- `assistant.py` — Manajemen sesi Claude Agent SDK (streaming SSE).
-- `agent_chat.py` — Interaksi dialog agen cerdas.
-- `tasks.py` — Status antrean tugas (streaming SSE).
-- `project_events.py` — Push event proyek melalui SSE.
-- `files.py` — Unggah file dan aset statis.
-- `versions.py` — Riwayat versi aset dan rollback.
-- `characters.py` / `clues.py` — Manajemen karakter/petunjuk.
-- `usage.py` — Statistik penggunaan API.
-- `cost_estimation.py` — Estimasi biaya (proyek/episode/shot).
-- `auth.py` / `api_keys.py` — Autentikasi dan manajemen API Key.
-- `system_config.py` — Konfigurasi sistem.
-- `providers.py` — Manajemen konfigurasi penyedia bawaan (daftar, baca/tulis, tes koneksi).
-- `custom_providers.py` — CRUD penyedia kustom, manajemen & deteksi model, tes koneksi.
+All APIs are under `/api/v1`, route definitions in `server/routers/`:
+- `projects.py` — Project CRUD, summary generation.
+- `generate.py` — Storyboard/video/character/cue generation (enqueued in task queue).
+- `assistant.py` — Claude Agent SDK session management (SSE streaming).
+- `agent_chat.py` — Smart agent dialogue interaction.
+- `tasks.py` — Task queue status (SSE streaming).
+- `project_events.py` — Project event push via SSE.
+- `files.py` — File upload and static asset.
+- `versions.py` — Asset version history and rollback.
+- `characters.py` / `clues.py` — Character/cue management.
+- `usage.py` — API usage statistics.
+- `cost_estimation.py` — Cost estimation (project/episode/shot).
+- `auth.py` / `api_keys.py` — Authentication and API Key management.
+- `system_config.py` — System configuration.
+- `providers.py` — Built-in provider config management (list, read/write, connection test).
+- `custom_providers.py` — Custom provider CRUD, model management & detection, connection test.
 
-### server/services/ — Lapisan Layanan Bisnis
+### server/services/ — Business Service Layer
 
-- `generation_tasks.py` — Orkestrasi tugas pembuatan storyboard/video/karakter/petunjuk.
-- `project_archive.py` — Ekspor proyek (paket ZIP).
-- `project_events.py` — Publikasi event perubahan proyek.
-- `jianying_draft_service.py` — Ekspor draf Jianying/CapCut.
-- `cost_estimation.py` — Perhitungan estimasi biaya dan ringkasan biaya aktual.
+- `generation_tasks.py` — Orchestration of storyboard/video/character/cue generation tasks.
+- `project_archive.py` — Project export (ZIP package).
+- `project_events.py` — Project change event publication.
+- `jianying_draft_service.py` — Jianying/CapCut draft export.
+- `cost_estimation.py` — Cost estimation calculation and actual cost summary.
 
-### lib/ — Modul Inti
+### lib/ — Core Modules
 
-- **{gemini,ark,grok,openai}_shared** — Factory SDK penyedia dan utilitas bersama.
-- **image_backends/** / **video_backends/** / **text_backends/** — Backend pembuatan media multi-provider, pola Registry + Factory (gemini/ark/grok/openai).
-- **custom_provider/** — Dukungan penyedia kustom: wrapper backend, deteksi model, pembuatan factory (kompatibel OpenAI/Google).
-- **MediaGenerator** (`media_generator.py`) — Kombinasi backend + VersionManager + UsageTracker.
-- **GenerationQueue** (`generation_queue.py`) — Antrean tugas asinkron, backend SQLAlchemy ORM, kontrol konkurensi berbasis sewa (lease-based).
-- **GenerationWorker** (`generation_worker.py`) — Worker latar belakang, dibagi menjadi dua saluran konkurensi: gambar/video.
-- **ProjectManager** (`project_manager.py`) — Operasi sistem file proyek dan manajemen data.
-- **StatusCalculator** (`status_calculator.py`) — Menghitung field status saat dibaca, tidak menyimpan status redundan.
-- **UsageTracker** (`usage_tracker.py`) — Pelacakan penggunaan API.
-- **CostCalculator** (`cost_calculator.py`) — Perhitungan biaya.
-- **TextGenerator** (`text_generator.py`) — Tugas pembuatan teks.
-- **retry** (`retry.py`) — Dekorator percobaan ulang exponential backoff umum, digunakan kembali oleh backend penyedia.
+- **{gemini,ark,grok,openai}_shared** — Provider SDK factory and shared utilities.
+- **image_backends/** / **video_backends/** / **text_backends/** — Multi-provider media generation backends, Registry + Factory pattern (gemini/ark/grok/openai).
+- **custom_provider/** — Custom provider support: backend wrapper, model detection, factory creation (OpenAI/Google compatible).
+- **MediaGenerator** (`media_generator.py`) — Backend + VersionManager + UsageTracker combination.
+- **GenerationQueue** (`generation_queue.py`) — Asynchronous task queue, SQLAlchemy ORM backend, lease-based concurrency control.
+- **GenerationWorker** (`generation_worker.py`) — Background worker, divided into two concurrency channels: image/video.
+- **ProjectManager** (`project_manager.py`) — Project file system operations and data management.
+- **StatusCalculator** (`status_calculator.py`) — Compute status fields on read, no redundant status storage.
+- **UsageTracker** (`usage_tracker.py`) — API usage tracking.
+- **CostCalculator** (`cost_calculator.py`) — Cost calculation.
+- **TextGenerator** (`text_generator.py`) — Text generation tasks.
+- **retry** (`retry.py`) — Generic exponential backoff retry decorator, reused by provider backends.
 
-### lib/config/ — Sistem Konfigurasi Penyedia
+### lib/config/ — Provider Configuration System
 
-ConfigService (`service.py`) → Repository (persistensi + desensitisasi kunci) → Resolver (resolusi). `registry.py` memelihara registri penyedia bawaan (PROVIDER_REGISTRY).
+ConfigService (`service.py`) → Repository (persistence + key desensitization) → Resolver (resolution). `registry.py` maintains built-in provider registry (PROVIDER_REGISTRY).
 
-### lib/db/ — Lapisan SQLAlchemy Async ORM
+### lib/db/ — SQLAlchemy Async ORM Layer
 
-- `engine.py` — Mesin asinkron + session factory (`DATABASE_URL` default `sqlite+aiosqlite`).
-- `models/` — Model ORM: Task / ApiCall / ApiKey / AgentSession / Config / Credential / User / CustomProvider / CustomProviderModel.
-- `repositories/` — Repository asinkron: Task / Usage / Session / ApiKey / Credential / CustomProvider.
+- `engine.py` — Async engine + session factory (`DATABASE_URL` default `sqlite+aiosqlite`).
+- `models/` — ORM Models: Task / ApiCall / ApiKey / AgentSession / Config / Credential / User / CustomProvider / CustomProviderModel.
+- `repositories/` — Async Repositories: Task / Usage / Session / ApiKey / Credential / CustomProvider.
 
-File database: `projects/.arcreel.db` (SQLite pengembangan).
+Database file: `projects/.arcreel.db` (SQLite development).
 
-### Agent Runtime (Integrasi Claude Agent SDK)
+### Agent Runtime (Claude Agent SDK Integration)
 
-`server/agent_runtime/` membungkus Claude Agent SDK:
-- `AssistantService` (`service.py`) — Orkestrasi sesi Claude SDK.
-- `SessionManager` — Siklus hidup sesi + pola subscriber SSE.
-- `StreamProjector` — Membangun balasan asisten real-time dari event streaming.
+`server/agent_runtime/` wraps Claude Agent SDK:
+- `AssistantService` (`service.py`) — Claude SDK session orchestration.
+- `SessionManager` — Session lifecycle + SSE subscriber pattern.
+- `StreamProjector` — Build real-time assistant response from streaming events.
 
 ### Frontend
 
 - React 19 + TypeScript + Tailwind CSS 4.
-- Rute: `wouter` (bukan React Router).
-- Manajemen State: `zustand` (store di `frontend/src/stores/`).
-- Alias Path: `@/` → `frontend/src/`.
-- Proksi Vite: `/api` → `http://127.0.0.1:1241`.
+- Routing: `wouter` (not React Router).
+- State Management: `zustand` (stores in `frontend/src/stores/`).
+- Path Alias: `@/` → `frontend/src/`.
+- Vite Proxy: `/api` → `http://127.0.0.1:1241`.
 
-## Pola Desain Utama
+## Main Design Patterns
 
-### Pelapisan Data
+### Data Layering
 
-| Tipe Data | Lokasi Penyimpanan | Strategi |
+| Data Type | Storage Location | Strategy |
 |-----------|--------------------|----------|
-| Definisi Karakter/Petunjuk | `project.json` | Single source of truth, hanya referensi nama di skenario |
-| Metadata Episode (episode/title/script_file) | `project.json` | Sinkronisasi saat simpan skenario |
-| Field Statistik (scenes_count / status / progress) | Tidak disimpan | Injeksi perhitungan saat baca oleh `StatusCalculator` |
+| Character/Cue Definitions | `project.json` | Single source of truth, only reference names in scenarios |
+| Episode Metadata (episode/title/script_file) | `project.json` | Sync when saving scenarios |
+| Stat Fields (scenes_count / status / progress) | Not stored | Injected on read by `StatusCalculator` |
 
-### Komunikasi Real-time
+### Real-time Communication
 
-- Asisten: `/api/v1/assistant/sessions/{id}/stream` — Balasan streaming SSE.
-- Event Proyek: `/api/v1/projects/{name}/events/stream` — Push perubahan proyek melalui SSE.
-- Antrean Tugas: Frontend melakukan polling ke `/api/v1/tasks` untuk mendapatkan status.
+- Assistant: `/api/v1/assistant/sessions/{id}/stream` — SSE response streaming.
+- Project Events: `/api/v1/projects/{name}/events/stream` — Project changes pushed via SSE.
+- Task Queue: Frontend polls `/api/v1/tasks` for status.
 
-### Antrean Tugas
+### Task Queue
 
-Semua tugas pembuatan (storyboard/video/karakter/petunjuk) dimasukkan ke antrean melalui GenerationQueue secara terpadu, diproses secara asinkron oleh GenerationWorker.
-`enqueue_and_wait()` di `generation_queue_client.py` membungkus proses masuk antrean + tunggu selesai.
+All generation tasks (storyboard/video/character/cue) are enqueued through GenerationQueue unitedly, processed asynchronously by GenerationWorker.
+`enqueue_and_wait()` in `generation_queue_client.py` wraps enqueue process + wait completion.
 
-### Model Data Pydantic
+### Pydantic Data Models
 
-`lib/script_models.py` mendefinisikan `NarrationSegment` dan `DramaScene`, digunakan untuk validasi skenario.
-`lib/data_validator.py` memvalidasi struktur dan integritas referensi `project.json` dan JSON episode.
+`lib/script_models.py` defines `NarrationSegment` and `DramaScene`, used for scenario validation.
+`lib/data_validator.py` validates structure and reference integrity of `project.json` and episode JSON.
 
-## Lingkungan Berjalan Agen
+## Agent Runtime Environment
 
-Konfigurasi khusus agen (skills, agents, prompt sistem) berada di direktori `agent_runtime_profile/`, terpisah secara fisik dari `.claude/` saat pengembangan.
+Agent-specific configuration (skills, agents, system prompts) is in `agent_runtime_profile/` directory, physically separate from `.claude/` during development.
 
-### Pemeliharaan Skill
+### Skill Maintenance
 
 ```bash
-# Evaluasi tingkat pemicuan (butuh anthropic SDK: uv pip install anthropic)
+# Evaluate trigger rate (requires anthropic SDK: uv pip install anthropic)
 PYTHONPATH=~/.claude/plugins/cache/claude-plugins-official/skill-creator/*/skills/skill-creator:$PYTHONPATH \
   uv run python -m scripts.run_eval \
   --eval-set <eval-set.json> \
@@ -143,26 +143,26 @@ PYTHONPATH=~/.claude/plugins/cache/claude-plugins-official/skill-creator/*/skill
   --model sonnet --runs-per-query 2 --verbose
 ```
 
-#### Catatan Penting
+#### Important Notes
 
-- **Sinkronisasi SKILL.md dan Skrip**: Saat memodifikasi skrip skill, SKILL.md harus diperbarui secara bersamaan, dan sebaliknya. Keduanya harus tetap konsisten.
+- **SKILL.md and Script Synchronization**: When modifying skill scripts, SKILL.md must be updated simultaneously, and vice versa. Both must remain consistent.
 
-## Konfigurasi Lingkungan
+## Environment Configuration
 
-Salin `.env.example` ke `.env`, atur parameter autentikasi (`AUTH_USERNAME`/`AUTH_PASSWORD`/`AUTH_TOKEN_SECRET`).
-API Key, pemilihan backend, konfigurasi model, dll. dikelola melalui halaman konfigurasi WebUI (`/settings`).
-Dependensi alat eksternal: `ffmpeg` (penggabungan video dan pascaproduksi).
+Copy `.env.example` to `.env`, set authentication parameters (`AUTH_USERNAME`/`AUTH_PASSWORD`/`AUTH_TOKEN_SECRET`).
+API Keys, backend selection, model configuration, etc. are managed through WebUI settings page (`/settings`).
+External tool dependencies: `ffmpeg` (video merging and post-processing).
 
-### Kualitas Kode
+### Code Quality
 
 **ruff** (lint + format):
-- Aturan: `E`/`F`/`I`/`UP`, abaikan `E402` (pola yang sudah ada) dan `E501` (dikelola oleh formatter).
-- Panjang baris: 120.
-- Kecualikan direktori `.worktrees`, `.claude/worktrees`.
-- Pemeriksaan wajib di CI: `ruff check . && ruff format --check .`.
+- Rules: `E`/`F`/`I`/`UP`, ignore `E402` (existing pattern) and `E501` (managed by formatter).
+- Line length: 120.
+- Exclude directories: `.worktrees`, `.claude/worktrees`.
+- Mandatory CI checks: `ruff check . && ruff format --check .`.
 
 **pytest**:
-- `asyncio_mode = "auto"` (tidak perlu menandai tes async secara manual).
-- Cakupan pengujian: `lib/` dan `server/`, persyaratan CI ≥ 80%.
-- Fixture bersama di `tests/conftest.py`, factory di `tests/factories.py`, fakes di `tests/fakes.py`.
-- Dependensi tes ada di `[dependency-groups] dev`, diinstal default oleh `uv sync`. Image produksi mengecualikannya melalui `--no-dev`.
+- `asyncio_mode = "auto"` (no need to manually mark async tests).
+- Test coverage: `lib/` and `server/`, CI requirement ≥ 80%.
+- Shared fixtures in `tests/conftest.py`, factories in `tests/factories.py`, fakes in `tests/fakes.py`.
+- Test dependencies in `[dependency-groups] dev`, installed by default with `uv sync`. Production image excludes them via `--no-dev`.

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 /**
- * 当有未SimpanPerubahan时，阻止用户Tutup/SegarkanTab。
+ * Warn user when they try to close or refresh the tab with unsaved changes.
  */
 export function useWarnUnsaved(isDirty: boolean) {
   useEffect(() => {

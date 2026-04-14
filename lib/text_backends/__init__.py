@@ -1,4 +1,4 @@
-"""文本生成服务层公共 API。"""
+"""Public API for text generation service layer."""
 
 from lib.text_backends.base import (
     ImageInput,
@@ -22,7 +22,7 @@ __all__ = [
     "register_backend",
 ]
 
-# Backend auto-registration
+# Backend auto-registration enabled
 from lib.providers import PROVIDER_GEMINI
 from lib.text_backends.gemini import GeminiTextBackend
 

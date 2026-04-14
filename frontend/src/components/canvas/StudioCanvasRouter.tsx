@@ -49,7 +49,7 @@ export function StudioCanvasRouter() {
     return lookupSupportedDurations(providers, backend, customProviders);
   }, [providers, customProviders, globalVideoBackend, currentProjectData?.video_backend]);
 
-  // 从Antrean Tugas派生 loading Status（替代Lokal state）
+  // Derive loading Status from Task Queue (replacing Local state)
   const tasks = useTasksStore((s) => s.tasks);
   const generatingCharacterNames = useMemo(() => {
     const names = new Set<string>();
@@ -78,7 +78,7 @@ export function StudioCanvasRouter() {
     return names;
   }, [tasks, currentProjectName]);
 
-  // SegarkanProyekData
+  // Refresh Project Data
   const refreshProject = useCallback(async (invalidateKeys: string[] = []) => {
     if (!currentProjectName) return;
     try {
@@ -93,7 +93,7 @@ export function StudioCanvasRouter() {
         useAppStore.getState().invalidateEntities(invalidateKeys);
       }
     } catch {
-      // 静默Gagal
+      // Silent failure
     }
   }, [currentProjectName]);
 
@@ -110,7 +110,7 @@ export function StudioCanvasRouter() {
       }
       await refreshProject();
     } catch (err) {
-      useAppStore.getState().pushToast(`Perbarui Prompt Gagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Update Prompt Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, currentProjectData, refreshProject]);
 
@@ -129,9 +129,9 @@ export function StudioCanvasRouter() {
     const prompt = seg?.image_prompt ?? "";
     try {
       await API.generateStoryboard(currentProjectName, segmentId, prompt as string | Record<string, unknown>, resolvedFile);
-      useAppStore.getState().pushToast(`已SubmitStoryboard "${segmentId}" GenerateTugas`, "success");
+      useAppStore.getState().pushToast(`Submitted Storyboard "${segmentId}" generation task`, "success");
     } catch (err) {
-      useAppStore.getState().pushToast(`GenerateStoryboardGagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Generate Storyboard Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, currentScripts]);
 
@@ -151,9 +151,9 @@ export function StudioCanvasRouter() {
     const duration = seg?.duration_seconds ?? 4;
     try {
       await API.generateVideo(currentProjectName, segmentId, prompt as string | Record<string, unknown>, resolvedFile, duration);
-      useAppStore.getState().pushToast(`已SubmitVideo "${segmentId}" GenerateTugas`, "success");
+      useAppStore.getState().pushToast(`Submitted Video "${segmentId}" generation task`, "success");
     } catch (err) {
-      useAppStore.getState().pushToast(`GenerateVideoGagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Generate Video Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, currentScripts]);
 
@@ -187,9 +187,9 @@ export function StudioCanvasRouter() {
           ? [buildEntityRevisionKey("character", name)]
           : [],
       );
-      useAppStore.getState().pushToast(`Karakter "${name}" Telah diperbarui`, "success");
+      useAppStore.getState().pushToast(`Character "${name}" has been updated`, "success");
     } catch (err) {
-      useAppStore.getState().pushToast(`PerbaruiKarakterGagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Update Character Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, refreshProject]);
 
@@ -203,9 +203,9 @@ export function StudioCanvasRouter() {
       );
       useAppStore
         .getState()
-        .pushToast(`Karakter "${name}" GenerateTugas已Submit`, "success");
+        .pushToast(`Character "${name}" generation task submitted`, "success");
     } catch (err) {
-      useAppStore.getState().pushToast(`SubmitGagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Submit Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, currentProjectData]);
 
@@ -229,9 +229,9 @@ export function StudioCanvasRouter() {
           : [],
       );
       setAddingCharacter(false);
-      useAppStore.getState().pushToast(`Karakter "${name}" 已Tambah`, "success");
+      useAppStore.getState().pushToast(`Character "${name}" added`, "success");
     } catch (err) {
-      useAppStore.getState().pushToast(`TambahGagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Add Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, refreshProject]);
 
@@ -242,7 +242,7 @@ export function StudioCanvasRouter() {
       await API.updateClue(currentProjectName, name, updates);
       await refreshProject();
     } catch (err) {
-      useAppStore.getState().pushToast(`PerbaruiPetunjukGagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Update Clue Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, refreshProject]);
 
@@ -256,9 +256,9 @@ export function StudioCanvasRouter() {
       );
       useAppStore
         .getState()
-        .pushToast(`Petunjuk "${name}" GenerateTugas已Submit`, "success");
+        .pushToast(`Clue "${name}" generation task submitted`, "success");
     } catch (err) {
-      useAppStore.getState().pushToast(`SubmitGagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Submit Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, currentProjectData]);
 
@@ -268,9 +268,9 @@ export function StudioCanvasRouter() {
       await API.addClue(currentProjectName, name, clueType, description, importance);
       await refreshProject();
       setAddingClue(false);
-      useAppStore.getState().pushToast(`Petunjuk "${name}" 已Tambah`, "success");
+      useAppStore.getState().pushToast(`Clue "${name}" added`, "success");
     } catch (err) {
-      useAppStore.getState().pushToast(`TambahGagal: ${(err as Error).message}`, "error");
+      useAppStore.getState().pushToast(`Add Failed: ${(err as Error).message}`, "error");
     }
   }, [currentProjectName, refreshProject]);
 
@@ -283,7 +283,7 @@ export function StudioCanvasRouter() {
   if (!currentProjectName) {
     return (
       <div className="flex h-full items-center justify-center text-gray-500">
-        Memuat...
+        Loading...
       </div>
     );
   }

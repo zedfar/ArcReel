@@ -1,19 +1,19 @@
 """
-Grok (xAI) 共享工具模块
+Grok (xAI) shared utility module.
 
-供 text_backends / image_backends / video_backends 复用。
+Shared by text_backends / image_backends / video_backends.
 
-包含：
-- create_grok_client — xAI AsyncClient 客户端工厂
+Contains:
+- create_grok_client — xAI AsyncClient client factory
 """
 
 from __future__ import annotations
 
 
 def create_grok_client(*, api_key: str | None = None):
-    """创建 xAI AsyncClient，统一校验和构造。"""
+    """Create xAI AsyncClient, validate and construct it."""
     import xai_sdk
 
     if not api_key:
-        raise ValueError("XAI_API_KEY 未设置\n请在系统配置页中配置 xAI API Key")
+        raise ValueError("XAI_API_KEY not set\nConfigure xAI API Key on the system configuration page")
     return xai_sdk.AsyncClient(api_key=api_key)

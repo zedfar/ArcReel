@@ -25,7 +25,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-gray-950 text-gray-500">
-        Memuat...
+        Loading...
       </div>
     );
   }
@@ -50,7 +50,7 @@ function StudioWorkspace() {
     if (!projectName) return;
     let cancelled = false;
 
-    // Bersihkan上一 proyek的 assistant Status，确保Sesi隔离
+    // Clear previous project's assistant state to ensure session isolation
     const assistantState = useAssistantStore.getState();
     assistantState.setSessions([]);
     assistantState.setCurrentSessionId(null);

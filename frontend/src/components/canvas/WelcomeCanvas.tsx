@@ -17,11 +17,11 @@ interface WelcomeCanvasProps {
 }
 
 // ---------------------------------------------------------------------------
-// WelcomeCanvas — ditunjukkan saat sebuah proyek belum memiliki ringkasan (overview).
-// Dua status awal:
-//   - idle: tidak ada file sumber → tampilkan zona seret-lepas unggahan
-//   - has_sources: file sumber ada → tampilkan daftar file + tombol "Mulai Analisis"
-// Kemudian: uploading → analyzing → done
+// WelcomeCanvas — shown when a project does not yet have an overview summary.
+// Two initial states:
+//   - idle: no source files → show drag-drop upload zone
+//   - has_sources: source files exist → show file list + "Start Analysis" button
+// Then: uploading → analyzing → done
 // ---------------------------------------------------------------------------
 
 export function WelcomeCanvas({
@@ -76,7 +76,7 @@ export function WelcomeCanvas({
       try {
         await onUpload(file);
       } catch (err) {
-        setError(`Unggah gagal: ${(err as Error).message}`);
+        setError(`Upload failed: ${(err as Error).message}`);
         setPhase(sourceFiles.length > 0 ? "has_sources" : "idle");
         return;
       }
@@ -104,7 +104,7 @@ export function WelcomeCanvas({
       await onAnalyze();
       setPhase("done");
     } catch (err) {
-      setError(`Analisis gagal: ${(err as Error).message}`);
+      setError(`Analysis failed: ${(err as Error).message}`);
       setPhase("has_sources");
     }
   }, [onAnalyze]);
@@ -145,14 +145,14 @@ export function WelcomeCanvas({
         <div>
           <Sparkles className="mx-auto mb-3 h-10 w-10 text-indigo-400" />
           <h1 className="text-2xl font-bold text-gray-100">
-            Selamat datang di {displayProjectTitle}!
+            Welcome to {displayProjectTitle}!
           </h1>
           <p className="mt-2 text-sm text-gray-400">
-            {phase === "idle" && "Silakan seret atau unggah file sumber novel Anda (txt/md), AI akan membantu Anda menganalisis pengaturan."}
-            {phase === "has_sources" && "File sumber sudah siap. Anda dapat terus menambahkan file, atau klik tombol di bawah untuk mulai analisis AI."}
-            {phase === "uploading" && `Sedang mengunggah "${fileName}"...`}
-            {phase === "analyzing" && "AI sedang menganalisis konten novel, mengekstrak karakter, petunjuk, dan pandangan dunia..."}
-            {phase === "done" && "Analisis selesai! Sedang memuat ringkasan proyek..."}
+            {phase === "idle" && "Please drag or upload your novel source file (txt/md), AI will help you analyze the settings."}
+            {phase === "has_sources" && "Source file is ready. You can continue adding files, or click the button below to start AI analysis."}
+            {phase === "uploading" && `Uploading "${fileName}"...`}
+            {phase === "analyzing" && "AI is analyzing the novel content, extracting characters, clues, and worldview..."}
+            {phase === "done" && "Analysis complete! Loading project summary..."}
           </p>
         </div>
 
@@ -173,9 +173,9 @@ export function WelcomeCanvas({
             <Upload
               className={`mx-auto h-8 w-8 ${isDragging ? "text-indigo-400" : "text-gray-500"}`}
             />
-            <p className="mt-3 text-sm text-gray-300">Seret file ke sini</p>
+            <p className="mt-3 text-sm text-gray-300">Drag file here</p>
             <p className="mt-1 text-xs text-gray-500">
-              atau klik untuk memilih file (mendukung .txt / .md)
+              or click to select file (supports .txt / .md)
             </p>
             <input
               ref={fileInputRef}
@@ -193,7 +193,7 @@ export function WelcomeCanvas({
             {/* Source file list */}
             <div className="rounded-xl border border-gray-800 bg-gray-900 p-4 text-left">
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                File sumber yang telah diunggah
+                Uploaded source files
               </p>
               <div className="space-y-1.5">
                 {sourceFiles.map((f) => (
@@ -210,7 +210,7 @@ export function WelcomeCanvas({
                 className="mt-3 flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-300 transition-colors"
               >
                 <Plus className="h-3.5 w-3.5" />
-                Tambah file lainnya
+                Add another file
               </button>
               <input
                 ref={fileInputRef}
@@ -233,7 +233,7 @@ export function WelcomeCanvas({
                   : "border-gray-700 text-gray-500 hover:border-gray-600"
               }`}
             >
-              Atau seret lebih banyak file ke sini
+              Or drag more files here
             </button>
 
             {/* Analyze button */}
@@ -243,7 +243,7 @@ export function WelcomeCanvas({
               className="w-full rounded-xl bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-indigo-500 transition-colors"
             >
               <Sparkles className="inline-block h-4 w-4 mr-2 -mt-0.5" />
-              Mulai Analisis AI
+              Start AI Analysis
             </button>
           </div>
         )}
@@ -252,7 +252,7 @@ export function WelcomeCanvas({
         {phase === "uploading" && (
           <div className="rounded-xl border border-gray-700 bg-gray-900/50 p-12">
             <Loader2 className="mx-auto h-8 w-8 text-indigo-400 animate-spin" />
-            <p className="mt-3 text-sm text-gray-300">Mengunggah...</p>
+            <p className="mt-3 text-sm text-gray-300">Uploading...</p>
             <p className="mt-1 text-xs text-gray-500">{fileName}</p>
           </div>
         )}
@@ -261,8 +261,8 @@ export function WelcomeCanvas({
         {phase === "analyzing" && (
           <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/5 p-12">
             <Sparkles className="mx-auto h-10 w-10 text-indigo-400 animate-pulse" />
-            <p className="mt-3 text-sm text-indigo-300 font-medium">Analisis AI sedang berlangsung...</p>
-            <p className="mt-1 text-xs text-gray-400">Sedang mengekstrak sinopsis cerita, genre, tema, dan pengaturan pandangan dunia</p>
+            <p className="mt-3 text-sm text-indigo-300 font-medium">AI analysis in progress...</p>
+            <p className="mt-1 text-xs text-gray-400">Extracting story synopsis, genre, themes, and worldview settings</p>
             <div className="mt-4 mx-auto w-48 h-1 rounded-full bg-gray-800 overflow-hidden">
               <div className="h-full rounded-full bg-indigo-600 animate-progress" />
             </div>
@@ -273,7 +273,7 @@ export function WelcomeCanvas({
         {phase === "done" && (
           <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-12">
             <CheckCircle2 className="mx-auto h-8 w-8 text-green-400" />
-            <p className="mt-3 text-sm text-green-300">Analisis selesai</p>
+            <p className="mt-3 text-sm text-green-300">Analysis complete</p>
           </div>
         )}
 
@@ -286,16 +286,16 @@ export function WelcomeCanvas({
         {phase === "idle" && (
           <div className="text-left space-y-2">
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Apa yang akan terjadi selanjutnya?
+              What happens next?
             </p>
             <div className="space-y-1.5 text-xs text-gray-400">
               <div className="flex items-start gap-2">
                 <FileText className="mt-0.5 h-3.5 w-3.5 text-gray-500 shrink-0" />
-                <span>AI akan menganalisis novel Anda, mengekstrak karakter, petunjuk, dan pengaturan pandangan dunia</span>
+                <span>AI will analyze your novel, extracting characters, clues, and worldview settings</span>
               </div>
               <div className="flex items-start gap-2">
                 <Sparkles className="mt-0.5 h-3.5 w-3.5 text-gray-500 shrink-0" />
-                <span>Secara otomatis menghasilkan ringkasan proyek, lalu Anda dapat mulai membuat skrip dan papan cerita</span>
+                <span>Automatically generate project summary, then you can start creating scripts and storyboards</span>
               </div>
             </div>
           </div>

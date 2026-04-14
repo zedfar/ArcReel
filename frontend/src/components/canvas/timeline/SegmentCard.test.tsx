@@ -34,11 +34,11 @@ function makeSegment(overrides: Partial<NarrationSegment> = {}): NarrationSegmen
     episode: 1,
     duration_seconds: 4,
     segment_break: false,
-    novel_text: "在雨夜里抬头。",
+    novel_text: "Look up on a rainy night.",
     characters_in_segment: ["Hero"],
     clues_in_segment: [],
-    image_prompt: "一张电影感Storyboard",
-    video_prompt: "Kamera缓慢推进",
+    image_prompt: "A cinematic storyboard image",
+    video_prompt: "Camera slowly pushing in",
     transition_to_next: "cut",
     generated_assets: {
       storyboard_image: "storyboards/SEG-1.png",
@@ -70,7 +70,7 @@ describe("SegmentCard", () => {
     );
 
     expect(
-      screen.getByRole("button", { name: "SEG-1 Storyboard Pratinjau layar penuh" }),
+      screen.getByRole("button", { name: "SEG-1 Storyboard Fullscreen preview" }),
     ).toBeInTheDocument();
 
     const video = container.querySelector("video");

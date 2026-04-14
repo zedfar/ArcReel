@@ -36,22 +36,22 @@ export function VideoPromptEditor({
         <ChevronDown
           className={`h-3 w-3 transition-transform ${collapsed ? "-rotate-90" : ""}`}
         />
-        Gerakan kamera / Efek Suara / Dialog
+        Camera Motion / Ambiance / Dialogue
       </button>
 
       {!collapsed && (
         <div className="flex flex-col gap-2 pl-1">
           <DropdownPill
-            label="Gerakan Kamera"
+            label="Camera Motion"
             value={prompt.camera_motion}
             options={CAMERA_MOTIONS}
             onChange={(v: CameraMotion) => onUpdate({ camera_motion: v })}
           />
           <CompactInput
-            label="Efek Suara Lingkungan"
+            label="Ambiance Audio"
             value={prompt.ambiance_audio}
             onChange={(v) => onUpdate({ ambiance_audio: v })}
-            placeholder="Efek Suara LingkunganDeskripsi..."
+            placeholder="Ambient audio description..."
           />
           <DialogueListEditor
             dialogue={prompt.dialogue ?? []}

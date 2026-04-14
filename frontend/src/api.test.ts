@@ -142,7 +142,7 @@ describe("API", () => {
       const location = { href: "/app" };
       vi.stubGlobal("location", location);
 
-      await expect(API.request("/projects")).rejects.toThrow("Sesi berakhir, silakan login kembali");
+      await expect(API.request("/projects")).rejects.toThrow("Session expired, please log in again");
 
       expect(clearTokenMock).toHaveBeenCalledTimes(1);
       expect(location.href).toBe("/login");
@@ -266,7 +266,7 @@ describe("API", () => {
 
       await expect(
         API.updateProject("demo", { content_mode: "drama" } as never),
-      ).rejects.toThrow("Mode konten tidak dapat diubah setelah proyek dibuat");
+      ).rejects.toThrow("Content mode cannot be changed after project creation");
       expect(requestSpy).not.toHaveBeenCalled();
     });
 
@@ -391,13 +391,13 @@ describe("API", () => {
         mockResponse({
           ok: false,
           statusText: "Bad Request",
-          jsonData: { detail: "Gagal mengunggah" },
+          jsonData: { detail: "Upload failed" },
         }),
       );
       vi.stubGlobal("fetch", fetchMock);
       const file = new File(["hello"], "demo.txt", { type: "text/plain" });
 
-      await expect(API.uploadFile("demo", "source", file)).rejects.toThrow("Gagal mengunggah");
+      await expect(API.uploadFile("demo", "source", file)).rejects.toThrow("Upload failed");
     });
 
     it("handles source and draft text APIs", async () => {
@@ -511,19 +511,19 @@ describe("API", () => {
             ok: false,
             statusText: "Bad Request",
             jsonData: {
-              detail: "Validasi paket impor gagal",
-              errors: ["Kehilangan project.json", "缺少 scripts/episode_1.json"],
-              warnings: ["File/direktori tambahan tidak dikenal terdeteksi: extra"],
+              detail: "Import package validation failed",
+              errors: ["Missing project.json", "Missing scripts/episode_1.json"],
+              warnings: ["Unknown additional files/directories detected: extra"],
               diagnostics: {
                 blocking: [
-                  { code: "validation_error", message: "Kehilangan project.json" },
-                  { code: "validation_error", message: "缺少 scripts/episode_1.json" },
+                  { code: "validation_error", message: "Missing project.json" },
+                  { code: "validation_error", message: "Missing scripts/episode_1.json" },
                 ],
                 auto_fixable: [
-                  { code: "missing_clues_field", message: "segments[0]: Lengkapi field yang hilang clues_in_segment" },
+                  { code: "missing_clues_field", message: "segments[0]: Fill in missing field clues_in_segment" },
                 ],
                 warnings: [
-                  { code: "validation_warning", message: "File/direktori tambahan tidak dikenal terdeteksi: extra" },
+                  { code: "validation_warning", message: "Unknown additional files/directories detected: extra" },
                 ],
               },
             },
@@ -536,20 +536,20 @@ describe("API", () => {
       expect(result.project_name).toBe("demo");
 
       await expect(API.importProject(file)).rejects.toMatchObject({
-        message: "Validasi paket impor gagal",
-        detail: "Validasi paket impor gagal",
-        errors: ["Kehilangan project.json", "缺少 scripts/episode_1.json"],
-        warnings: ["File/direktori tambahan tidak dikenal terdeteksi: extra"],
+        message: "Import package validation failed",
+        detail: "Import package validation failed",
+        errors: ["Missing project.json", "Missing scripts/episode_1.json"],
+        warnings: ["Unknown additional files/directories detected: extra"],
         diagnostics: {
           blocking: [
-            { code: "validation_error", message: "Kehilangan project.json" },
-            { code: "validation_error", message: "缺少 scripts/episode_1.json" },
+            { code: "validation_error", message: "Missing project.json" },
+            { code: "validation_error", message: "Missing scripts/episode_1.json" },
           ],
           auto_fixable: [
-            { code: "missing_clues_field", message: "segments[0]: Lengkapi field yang hilang clues_in_segment" },
+            { code: "missing_clues_field", message: "segments[0]: Fill in missing field clues_in_segment" },
           ],
           warnings: [
-            { code: "validation_warning", message: "File/direktori tambahan tidak dikenal terdeteksi: extra" },
+            { code: "validation_warning", message: "Unknown additional files/directories detected: extra" },
           ],
         },
       });
@@ -566,8 +566,8 @@ describe("API", () => {
           status: 409,
           statusText: "Conflict",
           jsonData: {
-            detail: "检测到Proyek编号Konflik",
-            errors: ["Proyek编号 'demo' 已存在"],
+            detail: "Project ID conflict detected",
+            errors: ["Project ID 'demo' already exists"],
             warnings: [],
             conflict_project_name: "demo",
             diagnostics: {
@@ -583,7 +583,7 @@ describe("API", () => {
       await expect(
         API.importProject(new File(["zip"], "demo.zip", { type: "application/zip" }))
       ).rejects.toMatchObject({
-        message: "检测到Proyek编号Konflik",
+        message: "Project ID conflict detected",
         status: 409,
         conflict_project_name: "demo",
       });
@@ -604,7 +604,7 @@ describe("API", () => {
 
       await expect(
         API.importProject(new File(["zip"], "demo.zip", { type: "application/zip" }))
-      ).rejects.toThrow("Sesi berakhir, silakan login kembali");
+      ).rejects.toThrow("Session expired, please log in again");
 
       expect(clearTokenMock).toHaveBeenCalledTimes(1);
       expect(location.href).toBe("/login");

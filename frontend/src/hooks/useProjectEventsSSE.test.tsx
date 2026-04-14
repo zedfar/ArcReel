@@ -34,7 +34,7 @@ describe("useProjectEventsSSE", () => {
         content_mode: "narration",
         style: "Anime",
         episodes: [{ episode: 1, title: "Episode 1", script_file: "scripts/episode_1.json" }],
-        characters: { hero: { description: "Pahlawan" } },
+        characters: { hero: { description: "Hero" } },
         clues: {},
       },
       scripts: {
@@ -75,7 +75,7 @@ describe("useProjectEventsSSE", () => {
               entity_type: "character",
               action: "created",
               entity_id: "hero",
-              label: "Karakter \"hero\"",
+              label: "Character \"hero\"",
               focus: {
                 pane: "characters",
                 anchor_type: "character",
@@ -102,7 +102,7 @@ describe("useProjectEventsSSE", () => {
     );
     expect(useAppStore.getState().workspaceNotifications[0]).toEqual(
       expect.objectContaining({
-        text: "AI baru saja menambahkan Karakter \"hero\"，Klik untuk melihat",
+        text: "AI just added Character \"hero\". Click to view",
         target: expect.objectContaining({
           type: "character",
           id: "hero",
@@ -137,12 +137,12 @@ describe("useProjectEventsSSE", () => {
             {
               entity_type: "clue",
               action: "updated",
-              entity_id: "玉佩",
-              label: "Petunjuk \"Jade Pendant\"",
+              entity_id: "jade-pendant",
+              label: "Clue \"Jade Pendant\"",
               focus: {
                 pane: "clues",
                 anchor_type: "clue",
-                anchor_id: "玉佩",
+                anchor_id: "jade-pendant",
               },
               important: true,
             },
@@ -154,7 +154,7 @@ describe("useProjectEventsSSE", () => {
 
     await waitFor(() => {
       expect(API.getProject).toHaveBeenCalledWith("demo");
-      expect(useAppStore.getState().workspaceNotifications[0]?.target?.id).toBe("玉佩");
+      expect(useAppStore.getState().workspaceNotifications[0]?.target?.id).toBe("jade-pendant");
     });
     expect(screen.getByTestId("location")).toHaveTextContent("/");
     expect(useAppStore.getState().scrollTarget).toBeNull();
@@ -195,12 +195,12 @@ describe("useProjectEventsSSE", () => {
 
     await waitFor(() => {
       expect(API.getProject).toHaveBeenCalledWith("demo");
-      expect(useAppStore.getState().toast?.text).toBe("Storyboard \"E1S01\" storyboard telah dihasilkan");
+      expect(useAppStore.getState().toast?.text).toBe("Storyboard \"E1S01\" storyboard has been generated");
     });
     expect(useAppStore.getState().toast?.tone).toBe("success");
     expect(useAppStore.getState().workspaceNotifications[0]).toEqual(
       expect.objectContaining({
-        text: "Storyboard \"E1S01\" storyboard telah dihasilkan",
+        text: "Storyboard \"E1S01\" storyboard has been generated",
         tone: "success",
         target: null,
       }),
@@ -231,7 +231,7 @@ describe("useProjectEventsSSE", () => {
               entity_type: "character",
               action: "created",
               entity_id: "hero",
-              label: "Karakter \"hero\"",
+              label: "Character \"hero\"",
               focus: {
                 pane: "characters",
                 anchor_type: "character",
@@ -243,7 +243,7 @@ describe("useProjectEventsSSE", () => {
               entity_type: "character",
               action: "created",
               entity_id: "mage",
-              label: "Karakter \"mage\"",
+              label: "Character \"mage\"",
               focus: {
                 pane: "characters",
                 anchor_type: "character",
@@ -254,12 +254,12 @@ describe("useProjectEventsSSE", () => {
             {
               entity_type: "clue",
               action: "updated",
-              entity_id: "玉佩",
-              label: "Petunjuk \"Jade Pendant\"",
+              entity_id: "jade-pendant",
+              label: "Clue \"Jade Pendant\"",
               focus: {
                 pane: "clues",
                 anchor_type: "clue",
-                anchor_id: "玉佩",
+                anchor_id: "jade-pendant",
               },
               important: true,
             },
@@ -271,17 +271,17 @@ describe("useProjectEventsSSE", () => {
 
     await waitFor(() => {
       expect(API.getProject).toHaveBeenCalledWith("demo");
-      expect(useAppStore.getState().toast?.text).toBe("Petunjuk \"Jade Pendant\"Telah diperbarui");
+      expect(useAppStore.getState().toast?.text).toBe("Clue \"Jade Pendant\" has been updated");
     });
 
     expect(useAppStore.getState().getEntityRevision("character:hero")).toBe(1);
     expect(useAppStore.getState().getEntityRevision("character:mage")).toBe(1);
-    expect(useAppStore.getState().getEntityRevision("clue:玉佩")).toBe(1);
+    expect(useAppStore.getState().getEntityRevision("clue:jade-pendant")).toBe(1);
     expect(useAppStore.getState().getEntityRevision("segment:SEG-404")).toBe(0);
     expect(useAppStore.getState().workspaceNotifications).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          text: "AI baru saja menambahkan 2  karakter：hero、mage，Klik untuk melihat",
+          text: "AI just added 2 characters: hero, mage. Click to view",
           target: expect.objectContaining({
             type: "character",
             id: "hero",
@@ -289,10 +289,10 @@ describe("useProjectEventsSSE", () => {
           }),
         }),
         expect.objectContaining({
-          text: "AI baru saja memperbarui Petunjuk \"Jade Pendant\"，Klik untuk melihat",
+          text: "AI just updated Clue \"Jade Pendant\". Click to view",
           target: expect.objectContaining({
             type: "clue",
-            id: "玉佩",
+            id: "jade-pendant",
             route: "/clues",
           }),
         }),
@@ -321,12 +321,12 @@ describe("useProjectEventsSSE", () => {
             {
               entity_type: "clue",
               action: "updated",
-              entity_id: "玉佩",
-              label: "Petunjuk \"Jade Pendant\"",
+              entity_id: "jade-pendant",
+              label: "Clue \"Jade Pendant\"",
               focus: {
                 pane: "clues",
                 anchor_type: "clue",
-                anchor_id: "玉佩",
+                anchor_id: "jade-pendant",
               },
               important: true,
             },
@@ -368,12 +368,12 @@ describe("useProjectEventsSSE", () => {
             {
               entity_type: "clue",
               action: "updated",
-              entity_id: "玉佩",
-              label: "Petunjuk \"Jade Pendant\"",
+              entity_id: "jade-pendant",
+              label: "Clue \"Jade Pendant\"",
               focus: {
                 pane: "clues",
                 anchor_type: "clue",
-                anchor_id: "玉佩",
+                anchor_id: "jade-pendant",
               },
               important: true,
             },
@@ -384,7 +384,7 @@ describe("useProjectEventsSSE", () => {
     });
 
     await waitFor(() => {
-      expect(useAppStore.getState().workspaceNotifications[0]?.target?.id).toBe("玉佩");
+      expect(useAppStore.getState().workspaceNotifications[0]?.target?.id).toBe("jade-pendant");
     });
     expect(screen.getByTestId("location")).toHaveTextContent("/characters");
     expect(useAppStore.getState().scrollTarget).toBeNull();
@@ -423,7 +423,7 @@ describe("useProjectEventsSSE", () => {
       );
     });
 
-    // fingerprints 应立即（Sinkron）写入 store，无需Tunggu getProject
+    // Fingerprints should be written to store immediately (sync), no need to wait for getProject
     expect(useProjectsStore.getState().getAssetFingerprint("storyboards/scene_E1S01.png")).toBe(1710288000);
   });
 });

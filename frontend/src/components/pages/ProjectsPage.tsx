@@ -36,13 +36,13 @@ function ImportConflictDialog({
             <AlertTriangle className="h-5 w-5" />
           </div>
           <div className="space-y-2">
-            <h2 className="text-lg font-semibold text-gray-100">Terdeteksi ID Proyek Duplikat</h2>
+            <h2 className="text-lg font-semibold text-gray-100">Duplicate Project ID Detected</h2>
             <p className="text-sm leading-6 text-gray-400">
-              ID Proyek yang akan digunakan oleh paket impor
+              The project ID to be used by the import package
               <span className="mx-1 rounded bg-gray-800 px-1.5 py-0.5 font-mono text-gray-200">
                 {projectName}
               </span>
-              sudah ada. Anda dapat menimpa proyek yang ada, atau mengganti namanya secara otomatis sebelum melanjutkan impor.
+              already exists. You can overwrite the existing project, or automatically rename it before continuing the import.
             </p>
           </div>
         </div>
@@ -52,13 +52,13 @@ function ImportConflictDialog({
             type="button"
             onClick={() => onConfirm("overwrite")}
             disabled={importing}
-            aria-label="Timpa proyek yang ada"
+            aria-label="Overwrite existing project"
             className="flex w-full items-center justify-between rounded-xl border border-red-400/25 bg-red-500/10 px-4 py-3 text-left text-sm text-red-100 transition-colors hover:border-red-300/40 hover:bg-red-500/15 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <span>
-              <span className="block font-medium">Timpa proyek yang ada</span>
+              <span className="block font-medium">Overwrite existing project</span>
               <span className="mt-1 block text-xs text-red-200/80">
-                Gunakan konten paket impor untuk mengganti data proyek yang ada dengan ID yang sama
+                Use the import package contents to replace the existing project data with the same ID
               </span>
             </span>
             {importing && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -68,13 +68,13 @@ function ImportConflictDialog({
             type="button"
             onClick={() => onConfirm("rename")}
             disabled={importing}
-            aria-label="Ganti nama otomatis dan impor"
+            aria-label="Auto-rename and Import"
             className="flex w-full items-center justify-between rounded-xl border border-indigo-400/25 bg-indigo-500/10 px-4 py-3 text-left text-sm text-indigo-100 transition-colors hover:border-indigo-300/40 hover:bg-indigo-500/15 disabled:cursor-not-allowed disabled:opacity-60"
           >
             <span>
-              <span className="block font-medium">Ganti nama otomatis dan impor</span>
+              <span className="block font-medium">Auto-rename and Import</span>
               <span className="mt-1 block text-xs text-indigo-200/80">
-                Simpan proyek yang ada, proyek yang baru diimpor akan mendapatkan ID internal baru secara otomatis
+                Keep the existing project; the newly imported project will automatically receive a new internal ID
               </span>
             </span>
             {importing && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -88,7 +88,7 @@ function ImportConflictDialog({
             disabled={importing}
             className="rounded-lg border border-gray-700 px-4 py-2 text-sm text-gray-300 transition-colors hover:border-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Batal
+            Cancel
           </button>
         </div>
       </div>
@@ -126,12 +126,12 @@ function ImportDiagnosticsDialogWrapper({
 }) {
   return (
     <ArchiveDiagnosticsDialog
-      title="Diagnosa Impor"
-      description="Pemeriksaan awal impor selesai. Masalah berikut dikelompokkan berdasarkan tingkat keparahan, impor tidak akan berlanjut sampai masalah pemblokiran selesai."
+      title="Import Diagnostics"
+      description="Pre-import check complete. The following issues are grouped by severity. The import will not proceed until all blocking issues are resolved."
       sections={[
-        { key: "blocking", title: "Masalah Pemblokiran", tone: "border-red-400/25 bg-red-500/10 text-red-100", items: diagnostics.blocking },
-        { key: "auto_fixable", title: "Dapat Diperbaiki Otomatis", tone: "border-indigo-400/25 bg-indigo-500/10 text-indigo-100", items: diagnostics.auto_fixable },
-        { key: "warnings", title: "Peringatan", tone: "border-amber-400/25 bg-amber-500/10 text-amber-100", items: diagnostics.warnings },
+        { key: "blocking", title: "Blocking Issues", tone: "border-red-400/25 bg-red-500/10 text-red-100", items: diagnostics.blocking },
+        { key: "auto_fixable", title: "Auto-fixable", tone: "border-indigo-400/25 bg-indigo-500/10 text-indigo-100", items: diagnostics.auto_fixable },
+        { key: "warnings", title: "Warnings", tone: "border-amber-400/25 bg-amber-500/10 text-amber-100", items: diagnostics.warnings },
       ]}
       onClose={onClose}
     />
@@ -143,11 +143,11 @@ function ImportDiagnosticsDialogWrapper({
 // ---------------------------------------------------------------------------
 
 const PHASE_LABELS: Record<string, string> = {
-  setup: "Persiapan",
-  worldbuilding: "Dunia",
-  scripting: "Skenario",
-  production: "Produksi",
-  completed: "Selesai",
+  setup: "Setup",
+  worldbuilding: "World",
+  scripting: "Script",
+  production: "Production",
+  completed: "Completed",
 };
 
 // ---------------------------------------------------------------------------
@@ -191,7 +191,7 @@ function ProjectCard({ project }: { project: ProjectSummary }) {
       <div>
         <h3 className="font-semibold text-gray-100 truncate">{project.title}</h3>
         <p className="text-xs text-gray-500 mt-0.5">
-          {project.style || "Gaya belum diatur"}
+          {project.style || "Style not set"}
           {phaseLabel ? ` · ${phaseLabel}` : ""}
         </p>
       </div>
@@ -199,7 +199,7 @@ function ProjectCard({ project }: { project: ProjectSummary }) {
       {/* Progress bar */}
       <div>
         <div className="flex justify-between text-xs text-gray-500 mb-1">
-          <span>{phaseLabel || "Progres"}</span>
+          <span>{phaseLabel || "Progress"}</span>
           <span>{pct}%</span>
         </div>
         <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden">
@@ -214,10 +214,10 @@ function ProjectCard({ project }: { project: ProjectSummary }) {
       {(characters || clues) && (
         <div className="flex gap-3 text-xs text-gray-500">
           {characters && (
-            <span>Karakter {characters.completed}/{characters.total}</span>
+            <span>Characters {characters.completed}/{characters.total}</span>
           )}
           {clues && (
-            <span>Petunjuk {clues.completed}/{clues.total}</span>
+            <span>Clues {clues.completed}/{clues.total}</span>
           )}
         </div>
       )}
@@ -225,10 +225,10 @@ function ProjectCard({ project }: { project: ProjectSummary }) {
       {/* Episodes summary */}
       {summary && summary.total > 0 && (
         <div className="text-xs text-gray-500">
-          {summary.total} Episode
-          {summary.scripted > 0 && ` · ${summary.scripted} episode skenario selesai`}
-          {summary.in_production > 0 && ` · ${summary.in_production} episode dalam produksi`}
-          {summary.completed > 0 && ` · ${summary.completed} episode selesai`}
+          {summary.total} Episode{summary.total !== 1 ? "s" : ""}
+          {summary.scripted > 0 && ` · ${summary.scripted} scripted`}
+          {summary.in_production > 0 && ` · ${summary.in_production} in production`}
+          {summary.completed > 0 && ` · ${summary.completed} completed`}
         </div>
       )}
     </button>
@@ -297,14 +297,14 @@ export function ProjectsPage() {
         const warningCount = result.diagnostics.warnings.length;
         useAppStore.getState().pushToast(
           autoFixedCount > 0
-            ? `Proyek "${result.project.title || result.project_name}" telah diimpor, ${autoFixedCount} item diperbaiki otomatis`
-            : `Proyek "${result.project.title || result.project_name}" telah diimpor`,
+            ? `Project "${result.project.title || result.project_name}" imported, ${autoFixedCount} item(s) auto-fixed`
+            : `Project "${result.project.title || result.project_name}" imported successfully`,
           "success"
         );
         if (warningCount > 0) {
-          const warningMessages = result.diagnostics.warnings.map((w) => w.message).join("；");
+          const warningMessages = result.diagnostics.warnings.map((w) => w.message).join("; ");
           useAppStore.getState().pushToast(
-            `Peringatan impor: ${warningMessages}`,
+            `Import warnings: ${warningMessages}`,
             "warning"
           );
         }
@@ -343,9 +343,9 @@ export function ProjectsPage() {
         useAppStore
           .getState()
           .pushToast(
-            `Impor gagal: ${error.detail || error.message || "Impor gagal"}`
-            + (blockingCount > 0 ? `（${blockingCount} masalah pemblokiran` : "（0 masalah pemblokiran")
-            + (autoFixableCount > 0 ? `，${autoFixableCount} dapat diperbaiki otomatis）` : "）"),
+            `Import failed: ${error.detail || error.message || "Import failed"}`
+            + (blockingCount > 0 ? ` (${blockingCount} blocking issue(s)` : ` (0 blocking issues`)
+            + (autoFixableCount > 0 ? `, ${autoFixableCount} auto-fixable)` : ")"),
             "error"
           );
       } finally {
@@ -391,7 +391,7 @@ export function ProjectsPage() {
             <span className="text-indigo-400">
               ArcReel
             </span>
-            <span className="ml-1 text-gray-400 font-normal text-base">Proyek</span>
+            <span className="ml-1 text-gray-400 font-normal text-base">Projects</span>
           </h1>
           <div className="flex items-center gap-3">
             <button
@@ -405,7 +405,7 @@ export function ProjectsPage() {
               ) : (
                 <Upload className="h-4 w-4" />
               )}
-              {importingProject ? "Mengimpor..." : "Impor ZIP"}
+              {importingProject ? "Importing..." : "Import ZIP"}
             </button>
             <button
               type="button"
@@ -413,15 +413,15 @@ export function ProjectsPage() {
               className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 transition-colors cursor-pointer"
             >
               <Plus className="h-4 w-4" />
-              Proyek Baru
+              New Project
             </button>
             <div className="ml-1 flex items-center gap-1 border-l border-gray-800 pl-3">
               <button
                 type="button"
                 onClick={() => setShowOpenClaw(true)}
                 className="rounded-md px-2.5 py-1.5 text-sm text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
-                title="Integrasi OpenClaw"
-                aria-label="Integrasi OpenClaw"
+                title="OpenClaw Integration"
+                aria-label="OpenClaw Integration"
               >
                 🦞
               </button>
@@ -429,12 +429,12 @@ export function ProjectsPage() {
                 type="button"
                 onClick={() => navigate("/app/settings")}
                 className="relative rounded-md p-1.5 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
-                title="Konfigurasi Sistem"
-                aria-label="Konfigurasi Sistem"
+                title="System Configuration"
+                aria-label="System Configuration"
               >
                 <Settings className="h-4 w-4" />
                 {!isConfigComplete && (
-                  <span className="absolute right-0.5 top-0.5 h-2 w-2 rounded-full bg-rose-500" aria-label="Konfigurasi belum lengkap" />
+                  <span className="absolute right-0.5 top-0.5 h-2 w-2 rounded-full bg-rose-500" aria-label="Configuration incomplete" />
                 )}
               </button>
             </div>
@@ -454,13 +454,13 @@ export function ProjectsPage() {
         {projectsLoading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-6 w-6 animate-spin text-indigo-400" />
-            <span className="ml-2 text-gray-400">Memuat daftar proyek...</span>
+            <span className="ml-2 text-gray-400">Loading projects...</span>
           </div>
         ) : projects.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-gray-500">
             <FolderOpen className="h-16 w-16 mb-4" />
-            <p className="text-lg">Belum ada proyek</p>
-            <p className="text-sm mt-1">Klik "Proyek Baru" atau "Impor ZIP" di sudut kanan atas untuk mulai berkarya</p>
+            <p className="text-lg">No projects yet</p>
+            <p className="text-sm mt-1">Click "New Project" or "Import ZIP" in the top-right corner to get started</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -153,7 +153,7 @@ export function PendingQuestionWizard({
     >
       <div className="flex max-h-[min(34rem,52vh)] min-h-0 flex-col gap-3 rounded-xl border border-amber-300/20 bg-gray-950/60 p-3 shadow-[0_0_0_1px_rgba(251,191,36,0.04)]">
         <div className="shrink-0 text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-300">
-          需要milik AndaPilih
+          Action Required
         </div>
 
         <div className="shrink-0 flex items-center gap-2 overflow-x-auto pb-1">
@@ -176,14 +176,14 @@ export function PendingQuestionWizard({
                       : "cursor-not-allowed border-white/10 bg-white/5 text-slate-500",
                 )}
               >
-                {`${questionIndex + 1}. ${question.header || `Pertanyaan ${questionIndex + 1}`}`}
+                {`${questionIndex + 1}. ${question.header || `Question ${questionIndex + 1}`}`}
               </button>
             );
           })}
         </div>
 
         <p className="text-xs text-slate-400">
-          {`Pertanyaan ${normalizedQuestionIndex + 1}/${totalQuestions}`}
+          {`Question ${normalizedQuestionIndex + 1}/${totalQuestions}`}
         </p>
 
         {currentQuestion && (
@@ -198,12 +198,12 @@ export function PendingQuestionWizard({
                 </span>
               )}
               <span className="text-xs text-slate-400">
-                {currentQuestion.multiSelect ? "可多选" : "单选"}
+                {currentQuestion.multiSelect ? "Multiple select" : "Single select"}
               </span>
             </div>
 
             <p className="mb-3 text-sm leading-6 text-slate-100">
-              {currentQuestion.question || "Silakan pilih一个Opsi"}
+              {currentQuestion.question || "Please select an option"}
             </p>
 
             <div className="space-y-2">
@@ -253,7 +253,7 @@ export function PendingQuestionWizard({
                   type="text"
                   value={currentQuestionCustomAnswer}
                   onChange={(event) => setCustomQuestionAnswer(currentQuestionKey, event.target.value)}
-                  placeholder="Silakan masukkan其他Konten"
+                  placeholder="Please enter other content"
                   disabled={answeringQuestion}
                   className="w-full rounded-lg border border-amber-300/30 bg-white/5 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-colors focus:border-amber-300/60"
                 />
@@ -276,7 +276,7 @@ export function PendingQuestionWizard({
               disabled={answeringQuestion || isFirstQuestion}
               className="rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              上一步
+              Previous
             </button>
 
             {isLastQuestion ? (
@@ -285,7 +285,7 @@ export function PendingQuestionWizard({
                 disabled={answeringQuestion || !allQuestionsReady}
                 className="rounded-lg bg-amber-300 px-3 py-2 text-sm font-medium text-gray-950 transition-colors hover:bg-amber-200 disabled:cursor-not-allowed disabled:bg-amber-300/40 disabled:text-gray-300"
               >
-                {answeringQuestion ? "Submit中..." : "Selesai并Submit"}
+                {answeringQuestion ? "Submitting..." : "Complete and Submit"}
               </button>
             ) : (
               <button
@@ -294,7 +294,7 @@ export function PendingQuestionWizard({
                 disabled={answeringQuestion || !currentQuestionReady}
                 className="rounded-lg bg-white/10 px-3 py-2 text-sm font-medium text-slate-100 transition-colors hover:bg-white/15 disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-slate-500"
               >
-                下一题
+                Next
               </button>
             )}
           </div>

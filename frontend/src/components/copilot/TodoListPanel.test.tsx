@@ -9,7 +9,7 @@ function makeTodo(
 ): TodoItem {
   return {
     content,
-    activeForm: `正在处理${content}`,
+    activeForm: `Processing ${content}`,
     status,
   };
 }
@@ -34,8 +34,8 @@ function makeTodoTurn(
 
 describe("TodoListPanel", () => {
   it("ignores failed TodoWrite updates when deriving the latest visible todos", () => {
-    const previousTodos = [makeTodo("保留旧Tugas", "in_progress")];
-    const failedTodos = [makeTodo("Gagal的BaruTugas")];
+    const previousTodos = [makeTodo("Keep old task", "in_progress")];
+    const failedTodos = [makeTodo("Failed new task")];
     const turns = [
       makeTodoTurn(previousTodos),
       makeTodoTurn(failedTodos, { is_error: true, result: "write failed" }),
@@ -45,13 +45,13 @@ describe("TodoListPanel", () => {
 
     render(<TodoListPanel turns={turns} draftTurn={null} />);
 
-    expect(screen.getByText("保留旧Tugas")).toBeInTheDocument();
-    expect(screen.queryByText("Gagal的BaruTugas")).not.toBeInTheDocument();
+    expect(screen.getByText("Keep old task")).toBeInTheDocument();
+    expect(screen.queryByText("Failed new task")).not.toBeInTheDocument();
   });
 
   it("treats an empty TodoWrite payload as the latest state and hides the panel", () => {
     const turns = [
-      makeTodoTurn([makeTodo("旧Tugas")]),
+      makeTodoTurn([makeTodo("Old task")]),
       makeTodoTurn([]),
     ];
 
@@ -59,7 +59,7 @@ describe("TodoListPanel", () => {
 
     const { container } = render(<TodoListPanel turns={turns} draftTurn={null} />);
 
-    expect(screen.queryByText("旧Tugas")).not.toBeInTheDocument();
+    expect(screen.queryByText("Old task")).not.toBeInTheDocument();
     expect(container.firstChild).toBeNull();
   });
 });

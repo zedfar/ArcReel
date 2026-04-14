@@ -8,9 +8,9 @@ import { useAppStore } from "@/stores/app-store";
 import { useConfigStatusStore } from "@/stores/config-status-store";
 
 const TEXT_MODEL_FIELDS = [
-  ["text_backend_script", "Generasi Skenario"],
-  ["text_backend_overview", "IkhtisarGenerate"],
-  ["text_backend_style", "Gaya分析"],
+  ["text_backend_script", "Script Generation"],
+  ["text_backend_overview", "Overview Generation"],
+  ["text_backend_style", "Style Analysis"],
 ] as const;
 
 // ---------------------------------------------------------------------------
@@ -49,7 +49,7 @@ export function MediaModelSection() {
       await API.updateSystemConfig(draft);
       await fetchConfig();
       void useConfigStatusStore.getState().refresh();
-      useAppStore.getState().pushToast("媒体ModelKonfigurasi已Simpan", "success");
+      useAppStore.getState().pushToast("Media model configuration saved successfully", "success");
     } catch (err) {
       useAppStore.getState().pushToast(`Gagal menyimpan: ${(err as Error).message}`, "error");
     } finally {
@@ -58,7 +58,7 @@ export function MediaModelSection() {
   }, [draft, fetchConfig]);
 
   if (!settings || !options) {
-    return <div className="p-6 text-sm text-gray-500">Memuat...</div>;
+    return <div className="p-6 text-sm text-gray-500">Loading...</div>;
   }
 
   const videoBackends: string[] = options.video_backends ?? [];
@@ -73,13 +73,13 @@ export function MediaModelSection() {
     <div className="space-y-6 p-6">
       {/* Section heading */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-100">ModelPilih</h3>
-        <p className="mt-1 text-sm text-gray-500">Pengaturan全局Default的GenerateModel，Proyek内可单独覆盖</p>
+        <h3 className="text-lg font-semibold text-gray-100">Model Selection</h3>
+        <p className="mt-1 text-sm text-gray-500">Configure the global default generative models. Individual projects can override these settings</p>
       </div>
 
       {/* Video backend selector */}
       <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
-        <div className="mb-3 text-sm font-medium text-gray-100">DefaultVideoModel</div>
+        <div className="mb-3 text-sm font-medium text-gray-100">Default Video Model</div>
         {videoBackends.length > 0 ? (
           <ProviderModelSelect
             value={currentVideo}
@@ -87,12 +87,12 @@ export function MediaModelSection() {
             providerNames={allProviderNames}
             onChange={(v) => setDraft((prev) => ({ ...prev, default_video_backend: v }))}
             allowDefault
-            defaultLabel="OtomatisPilih"
-            defaultHint="Otomatis"
+            defaultLabel="Auto Select"
+            defaultHint="Auto"
           />
         ) : (
           <div className="rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2 text-sm text-gray-500">
-            Belum ada 可用VideoProvider，请先在「Provider」HalamanKonfigurasi API Key
+            No available video providers. Please configure API keys on the Providers page first.
           </div>
         )}
 
@@ -106,14 +106,14 @@ export function MediaModelSection() {
             }
             className="rounded border-gray-600 bg-gray-800"
           />
-          GenerateAudio
-          <span className="text-xs text-gray-500">（仅部分Provider支持）</span>
+          Generate Audio
+          <span className="text-xs text-gray-500">(Only supported by some providers)</span>
         </label>
       </div>
 
       {/* Image backend selector */}
       <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
-        <div className="mb-3 text-sm font-medium text-gray-100">DefaultGambarModel</div>
+        <div className="mb-3 text-sm font-medium text-gray-100">Default Image Model</div>
         {imageBackends.length > 0 ? (
           <ProviderModelSelect
             value={currentImage}
@@ -121,20 +121,20 @@ export function MediaModelSection() {
             providerNames={allProviderNames}
             onChange={(v) => setDraft((prev) => ({ ...prev, default_image_backend: v }))}
             allowDefault
-            defaultLabel="OtomatisPilih"
-            defaultHint="Otomatis"
+            defaultLabel="Auto Select"
+            defaultHint="Auto"
           />
         ) : (
           <div className="rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2 text-sm text-gray-500">
-            Belum ada 可用GambarProvider，请先在「Provider」HalamanKonfigurasi API Key
+            No available image providers. Please configure API keys on the Providers page first.
           </div>
         )}
       </div>
 
       {/* Text backend selectors */}
       <div className="rounded-xl border border-gray-800 bg-gray-950/40 p-4">
-        <div className="mb-3 text-sm font-medium text-gray-100">TeksModel</div>
-        <p className="mb-3 text-xs text-gray-500">按TugasTipeKonfigurasiTeksModel，留空表示OtomatisPilih</p>
+        <div className="mb-3 text-sm font-medium text-gray-100">Text Models</div>
+        <p className="mb-3 text-xs text-gray-500">Configure text models by task type. Leave empty for auto selection.</p>
 
         {textBackends.length > 0 ? (
           <div className="space-y-3">
@@ -147,7 +147,7 @@ export function MediaModelSection() {
                   providerNames={allProviderNames}
                   onChange={(v) => setDraft((prev) => ({ ...prev, [key]: v }))}
                   allowDefault
-                  defaultHint="Otomatis"
+                  defaultHint="Auto"
                   aria-label={label}
                 />
               </div>
@@ -155,7 +155,7 @@ export function MediaModelSection() {
           </div>
         ) : (
           <div className="rounded-lg border border-gray-800 bg-gray-900/60 px-3 py-2 text-sm text-gray-500">
-            Belum ada 可用TeksProvider，请先在「Provider」HalamanKonfigurasi API Key
+            No available text providers. Please configure API keys on the Providers page first.
           </div>
         )}
       </div>
@@ -169,7 +169,7 @@ export function MediaModelSection() {
             disabled={saving}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:outline-none"
           >
-            {saving ? "Menyimpan..." : "Simpan"}
+            {saving ? "Saving..." : "Save"}
           </button>
           <button
             type="button"

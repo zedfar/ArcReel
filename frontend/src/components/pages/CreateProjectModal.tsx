@@ -7,9 +7,9 @@ import { useAppStore } from "@/stores/app-store";
 import { DEFAULT_DURATIONS } from "@/utils/provider-models";
 
 const STYLE_OPTIONS = [
-  { value: "Photographic", label: "Fotorealistik" },
-  { value: "Anime", label: "Gaya Anime" },
-  { value: "3D Animation", label: "Animasi 3D" },
+  { value: "Photographic", label: "Photorealistic" },
+  { value: "Anime", label: "Anime Style" },
+  { value: "3D Animation", label: "3D Animation" },
 ] as const;
 
 export function CreateProjectModal() {
@@ -31,7 +31,7 @@ export function CreateProjectModal() {
     const file = e.target.files?.[0];
     if (!file) return;
     setStyleImageFile(file);
-    // Membuat URL pratinjau
+    // Create preview URL
     const url = URL.createObjectURL(file);
     setStyleImagePreview(url);
   };
@@ -49,7 +49,7 @@ export function CreateProjectModal() {
     e.preventDefault();
 
     if (!title.trim()) {
-      setTitleError("Judul proyek tidak boleh kosong");
+      setTitleError("Project title cannot be empty");
       return;
     }
 
@@ -58,14 +58,14 @@ export function CreateProjectModal() {
       const response = await API.createProject(title.trim(), style, contentMode, aspectRatio, defaultDuration);
       const projectName = response.name;
 
-      // Jika pengguna memilih gambar referensi gaya, unggah setelah proyek dibuat
+      // If the user selected a style reference image, upload it after the project is created
       if (styleImageFile) {
         try {
           await API.uploadStyleImage(projectName, styleImageFile);
         } catch {
-          // Kegagalan unggah gambar gaya tidak memblokir pembuatan proyek
+          // Style image upload failure does not block project creation
           useAppStore.getState().pushToast(
-            "Gagal mengunggah gambar referensi gaya, Anda dapat mengunggahnya kembali nanti di pengaturan proyek",
+            "Failed to upload style reference image; you can upload it again later in project settings",
             "warning"
           );
         }
@@ -75,7 +75,7 @@ export function CreateProjectModal() {
       navigate(`/app/projects/${projectName}`);
     } catch (err) {
       useAppStore.getState().pushToast(
-        `Gagal membuat proyek: ${(err as Error).message}`,
+        `Failed to create project: ${(err as Error).message}`,
         "error"
       );
     } finally {
@@ -88,7 +88,7 @@ export function CreateProjectModal() {
       <div className="w-full max-w-md rounded-xl border border-gray-700 bg-gray-900 p-6 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold text-gray-100">Proyek Baru</h2>
+          <h2 className="text-lg font-semibold text-gray-100">New Project</h2>
           <button
             type="button"
             onClick={() => setShowCreateModal(false)}
@@ -102,7 +102,7 @@ export function CreateProjectModal() {
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">
-              Judul Proyek <span className="text-red-400">*</span>
+              Project Title <span className="text-red-400">*</span>
             </label>
             <input
               type="text"
@@ -111,21 +111,21 @@ export function CreateProjectModal() {
                 setTitle(e.target.value);
                 setTitleError("");
               }}
-              placeholder="Contoh: Petualangan di Dunia Isekai"
+              placeholder="e.g., Adventure in Another World"
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200 placeholder-gray-500 outline-none focus:border-indigo-500"
             />
             {titleError && (
               <p className="mt-1 text-xs text-red-400">{titleError}</p>
             )}
             <p className="mt-1 text-xs text-gray-600">
-              Sistem akan otomatis menghasilkan identitas internal proyek untuk URL dan penyimpanan file
+              The system will automatically generate an internal project ID for URLs and file storage
             </p>
           </div>
 
           {/* Content Mode */}
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">
-              Mode Konten
+              Content Mode
             </label>
             <div className="flex gap-3">
               <label className={`flex-1 cursor-pointer rounded-lg border px-3 py-2 text-center text-sm transition-colors ${
@@ -141,7 +141,7 @@ export function CreateProjectModal() {
                   onChange={() => setContentMode("narration")}
                   className="sr-only"
                 />
-                Narasi + Gambar
+                Narration + Images
               </label>
               <label className={`flex-1 cursor-pointer rounded-lg border px-3 py-2 text-center text-sm transition-colors ${
                 contentMode === "drama"
@@ -156,7 +156,7 @@ export function CreateProjectModal() {
                   onChange={() => setContentMode("drama")}
                   className="sr-only"
                 />
-                Animasi Drama
+                Drama Animation
               </label>
             </div>
           </div>
@@ -164,7 +164,7 @@ export function CreateProjectModal() {
           {/* Aspect Ratio */}
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">
-              Rasio Aspek
+              Aspect Ratio
             </label>
             <div className="flex gap-3">
               <label className={`flex-1 cursor-pointer rounded-lg border px-3 py-2 text-center text-sm transition-colors ${
@@ -180,7 +180,7 @@ export function CreateProjectModal() {
                   onChange={() => setAspectRatio("9:16")}
                   className="sr-only"
                 />
-                Vertikal 9:16
+                Vertical 9:16
               </label>
               <label className={`flex-1 cursor-pointer rounded-lg border px-3 py-2 text-center text-sm transition-colors ${
                 aspectRatio === "16:9"
@@ -203,12 +203,12 @@ export function CreateProjectModal() {
           {/* Default Duration */}
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-0.5">
-              Durasi Default
+              Default Duration
             </label>
             <p className="text-xs text-gray-600 mb-1.5">
-              Durasi ditentukan otomatis oleh AI berdasarkan konten, atau tentukan durasi tetap
+              Duration is automatically determined by AI based on content, or set a fixed duration
             </p>
-            <div className="flex gap-2" role="radiogroup" aria-label="Durasi default">
+            <div className="flex gap-2" role="radiogroup" aria-label="Default duration">
               <button
                 type="button"
                 role="radio"
@@ -220,7 +220,7 @@ export function CreateProjectModal() {
                     : "border-gray-700 bg-gray-800 text-gray-400 hover:border-gray-600"
                 }`}
               >
-                Otomatis
+                Auto
               </button>
               {DEFAULT_DURATIONS.map((d) => (
                 <button
@@ -244,7 +244,7 @@ export function CreateProjectModal() {
           {/* Style — fixed radio options */}
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">
-              Gaya Visual
+              Visual Style
             </label>
             <div className="flex gap-2">
               {STYLE_OPTIONS.map((opt) => (
@@ -273,13 +273,13 @@ export function CreateProjectModal() {
           {/* Style reference image */}
           <div>
             <label className="block text-sm font-medium text-gray-400 mb-1">
-              Gambar Referensi Gaya <span className="text-xs text-gray-600 font-normal">(Opsional)</span>
+              Style Reference Image <span className="text-xs text-gray-600 font-normal">(Optional)</span>
             </label>
             {styleImagePreview ? (
               <div className="relative rounded-lg border border-gray-700 overflow-hidden">
                 <img
                   src={styleImagePreview}
-                  alt="Pratinjau gambar gaya"
+                  alt="Style image preview"
                   className="w-full h-32 object-cover"
                 />
                 <button
@@ -297,7 +297,7 @@ export function CreateProjectModal() {
                 className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-gray-700 bg-gray-800/50 px-3 py-4 text-sm text-gray-500 transition-colors hover:border-gray-500 hover:text-gray-300"
               >
                 <Upload className="h-4 w-4" />
-                Unggah Gambar Referensi
+                Upload Reference Image
               </button>
             )}
             <input
@@ -308,7 +308,7 @@ export function CreateProjectModal() {
               className="hidden"
             />
             <p className="mt-1 text-xs text-gray-600">
-              Karakteristik gaya akan otomatis dianalisis setelah diunggah untuk menghasilkan gambar yang konsisten
+              Style characteristics will be automatically analyzed after upload to generate consistent images
             </p>
           </div>
 
@@ -321,10 +321,10 @@ export function CreateProjectModal() {
             {creatingProject ? (
               <span className="inline-flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Membuat...
+                Creating...
               </span>
             ) : (
-              "Buat Proyek"
+              "Create Project"
             )}
           </button>
         </form>

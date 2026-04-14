@@ -13,8 +13,8 @@ function getDefaultDraftPath(): string {
     typeof navigator !== "undefined" &&
     navigator.userAgent.includes("Windows");
   return isWindows
-    ? String.raw`C:\Users\NamaPengguna\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft`
-    : "/Users/NamaPengguna/Movies/JianyingPro/User Data/Projects/com.lveditor.draft";
+    ? String.raw`C:\Users\YourUsername\AppData\Local\JianyingPro\User Data\Projects\com.lveditor.draft`
+    : "/Users/YourUsername/Movies/JianyingPro/User Data/Projects/com.lveditor.draft";
 }
 
 interface ExportScopeDialogProps {
@@ -45,14 +45,14 @@ export function ExportScopeDialog({
   );
   const [jianyingVersion, setJianyingVersion] = useState("6");
 
-  // Reset mode ketika popover ditutup
+  // Reset mode when popover closes
   useEffect(() => {
     if (!open) {
       setMode("select");
     }
   }, [open]);
 
-  // Sinkronisasi episode terpilih saat episode berubah
+  // Sync selected episode when episodes change
   useEffect(() => {
     if (episodes.length > 0) {
       setSelectedEpisode(episodes[0].episode);
@@ -75,7 +75,7 @@ export function ExportScopeDialog({
     >
       {mode === "select" ? (
         <>
-          <p className="mb-3 text-xs font-medium text-gray-300">Pilih Cakupan Ekspor</p>
+          <p className="mb-3 text-xs font-medium text-gray-300">Select Export Scope</p>
           <div className="flex flex-col gap-2">
             <button
               type="button"
@@ -85,13 +85,13 @@ export function ExportScopeDialog({
               <Package className="mt-0.5 h-4 w-4 shrink-0 text-indigo-400" />
               <div>
                 <div className="text-sm font-medium text-gray-200">
-                  Hanya Versi Saat Ini
+                  Current Version Only
                   <span className="ml-1.5 rounded bg-indigo-500/20 px-1.5 py-0.5 text-[10px] text-indigo-300">
-                    Disarankan
+                    Recommended
                   </span>
                 </div>
                 <p className="mt-0.5 text-xs text-gray-500">
-                  Tanpa riwayat versi, ukuran lebih kecil
+                  Without version history, smaller size
                 </p>
               </div>
             </button>
@@ -102,9 +102,9 @@ export function ExportScopeDialog({
             >
               <History className="mt-0.5 h-4 w-4 shrink-0 text-gray-400" />
               <div>
-                <div className="text-sm font-medium text-gray-200">Semua Data</div>
+                <div className="text-sm font-medium text-gray-200">All Data</div>
                 <p className="mt-0.5 text-xs text-gray-500">
-                  Termasuk riwayat versi lengkap
+                  Includes complete version history
                 </p>
               </div>
             </button>
@@ -116,10 +116,10 @@ export function ExportScopeDialog({
               <Clapperboard className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
               <div>
                 <div className="text-sm font-medium text-gray-200">
-                  Ekspor sebagai Draf Jianying
+                  Export as Jianying Draft
                 </div>
                 <p className="mt-0.5 text-xs text-gray-500">
-                  Hasilkan ZIP draf yang dapat diimpor ke Jianying
+                  Generate draft ZIP importable into Jianying
                 </p>
               </div>
             </button>
@@ -132,18 +132,18 @@ export function ExportScopeDialog({
               type="button"
               onClick={() => setMode("select")}
               className="rounded p-0.5 text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
-              aria-label="Kembali"
+              aria-label="Back"
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
-            <p className="text-xs font-medium text-gray-300">Ekspor sebagai Draf Jianying</p>
+            <p className="text-xs font-medium text-gray-300">Export as Jianying Draft</p>
           </div>
           <div className="flex flex-col gap-3">
-            {/* Pemilih episode — tersembunyi jika hanya satu episode */}
+            {/* Episode selector — hidden if only one episode */}
             {episodes.length > 1 && (
               <div>
                 <label htmlFor="jianying-episode-select" className="mb-1 block text-xs text-gray-400">
-                  Pilih Episode
+                  Select Episode
                 </label>
                 <select
                   id="jianying-episode-select"
@@ -160,10 +160,10 @@ export function ExportScopeDialog({
               </div>
             )}
 
-            {/* Pemilih versi JianYing */}
+            {/* Jianying version selector */}
             <div>
               <label htmlFor="jianying-version-select" className="mb-1 block text-xs text-gray-400">
-                Versi Jianying
+                Jianying Version
               </label>
               <select
                 id="jianying-version-select"
@@ -171,30 +171,30 @@ export function ExportScopeDialog({
                 onChange={(e) => setJianyingVersion(e.target.value)}
                 className="w-full rounded-md border border-gray-700 bg-gray-800 px-2.5 py-1.5 text-sm text-gray-200 outline-none focus:border-indigo-500"
               >
-                <option value="6">Jianying 6.0 ke atas (disarankan)</option>
+                <option value="6">Jianying 6.0+ (recommended)</option>
                 <option value="5">Jianying 5.x</option>
               </select>
             </div>
 
-            {/* Input path draf */}
+            {/* Draft path input */}
             <div>
               <label htmlFor="jianying-draft-path" className="mb-1 block text-xs text-gray-400">
-                Path Direktori Draf
+                Draft Directory Path
               </label>
               <input
                 id="jianying-draft-path"
                 type="text"
                 value={draftPath}
                 onChange={(e) => setDraftPath(e.target.value)}
-                placeholder="Path Direktori Draf Jianying"
+                placeholder="Jianying draft directory path"
                 className="w-full rounded-md border border-gray-700 bg-gray-800 px-2.5 py-1.5 text-sm text-gray-200 placeholder:text-gray-600 outline-none focus:border-indigo-500"
               />
               <p className="mt-1.5 text-[11px] leading-relaxed text-gray-500">
-                Harap masukkan path lengkap direktori draf Jianying. Buka Jianying → Pengaturan → Lokasi Draf untuk melihatnya.
+                Please enter the full path to the Jianying draft directory. Open Jianying → Settings → Draft Location to view it.
               </p>
             </div>
 
-            {/* Kirim */}
+            {/* Submit */}
             <button
               type="button"
               onClick={handleJianyingSubmit}
@@ -204,10 +204,10 @@ export function ExportScopeDialog({
               {jianyingExporting ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  Mengekspor...
+                  Exporting...
                 </>
               ) : (
-                "Ekspor Draf"
+                "Export Draft"
               )}
             </button>
           </div>

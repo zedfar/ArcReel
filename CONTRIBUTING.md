@@ -1,39 +1,39 @@
-# Panduan Kontribusi
+# Contributing Guide
 
-Terima kasih telah tertarik untuk berkontribusi! Kami menerima kontribusi kode, laporan bug, atau saran fitur baru.
+Thank you for your interest in contributing! We welcome code contributions, bug reports, or new feature suggestions.
 
-## Lingkungan Pengembangan Lokal
+## Local Development Environment
 
 ```bash
-# Persyaratan: Python 3.12+, Node.js 20+, uv, pnpm, ffmpeg
+# Requirements: Python 3.12+, Node.js 20+, uv, pnpm, ffmpeg
 
-# Instal dependensi
+# Install dependencies
 uv sync
 cd frontend && pnpm install && cd ..
 
-# Inisialisasi database
+# Initialize database
 uv run alembic upgrade head
 
-# Jalankan backend (Terminal 1)
+# Run backend (Terminal 1)
 uv run uvicorn server.app:app --reload --port 1241
 
-# Jalankan frontend (Terminal 2)
+# Run frontend (Terminal 2)
 cd frontend && pnpm dev
 
-# Akses http://localhost:5173
+# Access http://localhost:5173
 ```
 
-## Menjalankan Pengujian
+## Running Tests
 
 ```bash
-# Pengujian Backend
+# Backend Testing
 python -m pytest
 
-# Pemeriksaan Tipe Frontend + Pengujian
+# Frontend Type Checking + Testing
 cd frontend && pnpm check
 ```
 
-## Kualitas Kode
+## Code Quality
 
 **Lint & Format (ruff):**
 
@@ -41,23 +41,27 @@ cd frontend && pnpm check
 uv run ruff check . && uv run ruff format .
 ```
 
-- Aturan: `E`/`F`/`I`/`UP`, abaikan `E402` dan `E501`.
-- Panjang baris (line-length): 120.
-- Pemeriksaan wajib di CI: `ruff check . && ruff format --check .`.
+- Rules: `E`/`F`/`I`/`UP`, ignore `E402` and `E501`.
+- Line length: 120.
+- Mandatory CI checks: `ruff check . && ruff format --check .`.
 
-**Cakupan Pengujian (Test Coverage):**
+**Test Coverage:**
 
-- Persyaratan CI ≥ 80%.
-- `asyncio_mode = "auto"` (tidak perlu menandai tes async secara manual).
+- CI requirement ≥ 80%.
+- `asyncio_mode = "auto"` (no need to manually mark async tests).
 
-## Standar Pesan Komit (Commit)
+## Commit Message Standards
 
-Pesan komit menggunakan format [Conventional Commits](https://www.conventionalcommits.org/):
+Commit messages use [Conventional Commits](https://www.conventionalcommits.org/) format:
 
 ```
-feat: Deskripsi fitur baru
-fix: Deskripsi perbaikan masalah
-refactor: Deskripsi refaktorisasi kode
-docs: Perubahan dokumentasi
-chore: Perubahan build/alat bantu
+feat: Description of new feature
+fix: Description of bug fix
+refactor: Description of code refactoring
+docs: Documentation changes
+chore: Build/tool changes
 ```
+
+Co-authored use:
+- Co-authored-by: Yin <ulfar.far@gmail.com>
+- Co-authored-by: Varnimyr AI <varnimyr.ai@gmail.com>

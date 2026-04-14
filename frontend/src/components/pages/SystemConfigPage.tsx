@@ -19,11 +19,11 @@ type SettingsSection = "agent" | "providers" | "media" | "usage" | "api-keys";
 // ---------------------------------------------------------------------------
 
 const SECTION_LIST: { id: SettingsSection; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: "agent", label: "Agen AI", Icon: Bot },
-  { id: "providers", label: "Penyedia", Icon: Plug },
-  { id: "media", label: "Pilihan Model", Icon: Film },
-  { id: "usage", label: "Statistik Penggunaan", Icon: BarChart3 },
-  { id: "api-keys", label: "Manajemen API", Icon: KeyRound },
+  { id: "agent", label: "AI Agent", Icon: Bot },
+  { id: "providers", label: "Providers", Icon: Plug },
+  { id: "media", label: "Model Selection", Icon: Film },
+  { id: "usage", label: "Usage Statistics", Icon: BarChart3 },
+  { id: "api-keys", label: "API Management", Icon: KeyRound },
 ];
 
 // ---------------------------------------------------------------------------
@@ -68,14 +68,14 @@ export function SystemConfigPage() {
           <Link
             href="/app/projects"
             className="inline-flex items-center gap-2 rounded-lg border border-gray-800 bg-gray-900 px-3 py-2 text-sm text-gray-200 hover:border-gray-700 hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-indigo-500/60 focus-visible:outline-none"
-            aria-label="Kembali ke daftar proyek"
+            aria-label="Back to project list"
           >
             <ChevronLeft className="h-4 w-4" />
-            Kembali
+            Back
           </Link>
           <div>
-            <h1 className="text-lg font-semibold text-gray-100">Pengaturan</h1>
-            <p className="text-xs text-gray-500">Konfigurasi Sistem & Manajemen Akses API</p>
+            <h1 className="text-lg font-semibold text-gray-100">Settings</h1>
+            <p className="text-xs text-gray-500">System Configuration & API Access Management</p>
           </div>
         </div>
       </header>
@@ -112,7 +112,7 @@ export function SystemConfigPage() {
               <div className="flex items-start gap-3">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
                 <div className="text-sm text-amber-200">
-                  <span className="font-medium">Konfigurasi wajib berikut belum lengkap:</span>
+                  <span className="font-medium">The following required configurations are incomplete:</span>
                   <ul className="mt-1 space-y-0.5">
                     {configIssues.map((issue) => (
                       <li key={issue.key}>

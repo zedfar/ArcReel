@@ -14,9 +14,9 @@ import { CustomProviderForm } from "./settings/CustomProviderForm";
 // ---------------------------------------------------------------------------
 
 const STATUS_MAP: Record<string, { color: string; label: string }> = {
-  ready: { color: "bg-green-400", label: "Siap" },
-  error: { color: "bg-yellow-400", label: "Bermasalah" },
-  unconfigured: { color: "bg-gray-500", label: "Belum Diatur" },
+  ready: { color: "bg-green-400", label: "Ready" },
+  error: { color: "bg-yellow-400", label: "Issues" },
+  unconfigured: { color: "bg-gray-500", label: "Not Configured" },
 };
 
 function StatusDot({ status }: { status: string }) {
@@ -104,7 +104,7 @@ export function ProviderSection() {
     return (
       <div className="flex items-center gap-2 px-6 py-8 text-sm text-gray-500">
         <Loader2 className="h-4 w-4 animate-spin text-indigo-400" />
-        Memuat daftar penyedia…
+        Loading Providers...
       </div>
     );
   }
@@ -112,10 +112,10 @@ export function ProviderSection() {
   return (
     <div className="flex h-full">
       {/* Provider list sidebar */}
-      <nav aria-label="Daftar Penyedia" className="w-52 shrink-0 overflow-y-auto border-r border-gray-800 py-3">
+      <nav aria-label="Provider List" className="w-52 shrink-0 overflow-y-auto border-r border-gray-800 py-3">
         {/* Preset providers */}
         <div className="px-4 pb-2 text-xs uppercase tracking-wide text-gray-500">
-          Penyedia Bawaan
+          Built-in Providers
         </div>
         {providers.map((p) => (
           <button
@@ -190,7 +190,7 @@ export function ProviderSection() {
         )}
         {!selection && (
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="text-sm text-gray-500">Silakan pilih penyedia</div>
+            <div className="text-sm text-gray-500">Select a provider to configure</div>
           </div>
         )}
       </div>

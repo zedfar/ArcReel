@@ -3,13 +3,13 @@ import type { ProjectChange } from "@/types";
 const GROUP_NAME_LIMIT = 5;
 
 const ENTITY_LABELS: Record<ProjectChange["entity_type"], string> = {
-  project: "Proyek",
-  character: "Karakter",
-  clue: "Petunjuk",
+  project: "Project",
+  character: "Character",
+  clue: "Clue",
   segment: "Storyboard",
   episode: "Episode",
-  overview: "Ikhtisar Proyek",
-  draft: "Pra-pemrosesan",
+  overview: "Project Overview",
+  draft: "Pre-processing",
 };
 
 export interface GroupedProjectChange {
@@ -69,7 +69,7 @@ function getEntityLabel(group: GroupedProjectChange): string {
   if (group.action === "video_ready") {
     return "Video";
   }
-  return ENTITY_LABELS[group.entityType] ?? "Konten";
+  return ENTITY_LABELS[group.entityType] ?? "Content";
 }
 
 function getChangeListLabel(change: ProjectChange): string {
@@ -85,40 +85,40 @@ function getChangeListLabel(change: ProjectChange): string {
 
 function summarizeGroupNames(group: GroupedProjectChange): string {
   const names = group.changes.slice(0, GROUP_NAME_LIMIT).map(getChangeListLabel);
-  const suffix = group.changes.length > GROUP_NAME_LIMIT ? "…等" : "";
-  return `${names.join("、")}${suffix}`;
+  const suffix = group.changes.length > GROUP_NAME_LIMIT ? ", etc." : "";
+  return `${names.join(", ")}${suffix}`;
 }
 
 function formatSingleNotificationText(change: ProjectChange): string {
   if (change.action === "storyboard_ready") {
-    return `${change.label} storyboard telah dihasilkan`;
+    return `${change.label} storyboard has been generated`;
   }
   if (change.action === "video_ready") {
-    return `${change.label} video telah dihasilkan`;
+    return `${change.label} video has been generated`;
   }
   if (change.action === "created") {
-    return `${change.label}Telah dibuat`;
+    return `${change.label} has been created`;
   }
   if (change.action === "deleted") {
-    return `${change.label}Telah dihapus`;
+    return `${change.label} has been deleted`;
   }
-  return `${change.label}Telah diperbarui`;
+  return `${change.label} has been updated`;
 }
 
 function formatSingleDeferredText(change: ProjectChange): string {
   if (change.action === "storyboard_ready") {
-    return `AI baru saja menghasilkan ${change.label}  storyboard，Klik untuk melihat`;
+    return `AI just generated ${change.label} storyboard. Click to view`;
   }
   if (change.action === "video_ready") {
-    return `AI baru saja menghasilkan ${change.label}  video，Klik untuk melihat`;
+    return `AI just generated ${change.label} video. Click to view`;
   }
   if (change.action === "created") {
-    return `AI baru saja menambahkan ${change.label}，Klik untuk melihat`;
+    return `AI just added ${change.label}. Click to view`;
   }
   if (change.action === "deleted") {
-    return `AI baru saja menghapus ${change.label}，Klik untuk melihat`;
+    return `AI just deleted ${change.label}. Click to view`;
   }
-  return `AI baru saja memperbarui ${change.label}，Klik untuk melihat`;
+  return `AI just updated ${change.label}. Click to view`;
 }
 
 export function formatGroupedNotificationText(
@@ -133,15 +133,15 @@ export function formatGroupedNotificationText(
   const summary = summarizeGroupNames(group);
 
   if (group.action === "storyboard_ready" || group.action === "video_ready") {
-    return `Telah dihasilkan ${count} ${entityLabel}：${summary}`;
+    return `Generated ${count} ${entityLabel}: ${summary}`;
   }
   if (group.action === "created") {
-    return `Ditambahkan ${count} ${entityLabel}：${summary}`;
+    return `Added ${count} ${entityLabel}: ${summary}`;
   }
   if (group.action === "deleted") {
-    return `Dihapus ${count} ${entityLabel}：${summary}`;
+    return `Deleted ${count} ${entityLabel}: ${summary}`;
   }
-  return `Diperbarui ${count} ${entityLabel}：${summary}`;
+  return `Updated ${count} ${entityLabel}: ${summary}`;
 }
 
 export function formatGroupedDeferredText(
@@ -156,13 +156,13 @@ export function formatGroupedDeferredText(
   const summary = summarizeGroupNames(group);
 
   if (group.action === "storyboard_ready" || group.action === "video_ready") {
-    return `AI baru saja menghasilkan ${count} 个${entityLabel}：${summary}，Klik untuk melihat`;
+    return `AI just generated ${count} ${entityLabel}: ${summary}. Click to view`;
   }
   if (group.action === "created") {
-    return `AI 刚Ditambahkan ${count} ${entityLabel}：${summary}，Klik untuk melihat`;
+    return `AI just added ${count} ${entityLabel}: ${summary}. Click to view`;
   }
   if (group.action === "deleted") {
-    return `AI 刚Dihapus ${count} ${entityLabel}：${summary}，Klik untuk melihat`;
+    return `AI just deleted ${count} ${entityLabel}: ${summary}. Click to view`;
   }
-  return `AI 刚Diperbarui ${count} ${entityLabel}：${summary}，Klik untuk melihat`;
+  return `AI just updated ${count} ${entityLabel}: ${summary}. Click to view`;
 }

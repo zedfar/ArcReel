@@ -54,21 +54,21 @@ export function PreprocessingView({
       await API.saveDraft(projectName, episode, 1, editContent);
       setContent(editContent);
       setEditing(false);
-      pushToast("Pra-pemrosesanKonten已Simpan", "success");
+      pushToast("Preprocessing content saved", "success");
     } catch {
-      pushToast("Gagal menyimpan", "error");
+      pushToast("Failed to save", "error");
     } finally {
       setSaving(false);
     }
   }, [projectName, episode, editContent, pushToast]);
 
   const statusLabel =
-    contentMode === "narration" ? "Segmen拆分Selesai" : "规范化SkenarioSelesai";
+    contentMode === "narration" ? "Segment splitting complete" : "Scenario normalization complete";
 
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center text-gray-500">
-        MuatPra-pemrosesanKonten...
+        Loading preprocessing content...
       </div>
     );
   }
@@ -99,7 +99,7 @@ export function PreprocessingView({
                 className="flex items-center gap-1 rounded px-2 py-1 text-xs text-green-400 transition-colors hover:bg-gray-800 disabled:opacity-50"
               >
                 <Save className="h-3.5 w-3.5" />
-                {saving ? "Menyimpan..." : "Simpan"}
+                {saving ? "Saving..." : "Save"}
               </button>
               <button
                 type="button"
@@ -110,7 +110,7 @@ export function PreprocessingView({
                 className="flex items-center gap-1 rounded px-2 py-1 text-xs text-gray-400 transition-colors hover:bg-gray-800"
               >
                 <X className="h-3.5 w-3.5" />
-                Batal
+                Cancel
               </button>
             </>
           ) : (

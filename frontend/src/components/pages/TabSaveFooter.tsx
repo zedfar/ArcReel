@@ -10,9 +10,9 @@ interface TabSaveFooterProps {
 }
 
 /**
- * Konfigurasi Tab 底部SimpanFooter。
- * - isDirty=false: 正常嵌入，SimpanTombolNonaktifkan
- * - isDirty=true:  sticky 固定在视口底部，SimpanTombol高亮
+ * Configuration Tab Save Footer at the bottom.
+ * - isDirty=false: Normal embedding, Save Button disabled
+ * - isDirty=true:  Sticky fixed at viewport bottom, Save Button highlighted
  */
 export function TabSaveFooter({
   isDirty,
@@ -32,7 +32,7 @@ export function TabSaveFooter({
     >
       <div className="flex items-center gap-3 min-w-0">
         {isDirty && !error && (
-          <span className="text-sm text-gray-400">Ada perubahan yang belum disimpan</span>
+          <span className="text-sm text-gray-400">There are unsaved changes</span>
         )}
         {error && (
           <span className="text-sm text-rose-400 truncate">{error}</span>
@@ -46,7 +46,7 @@ export function TabSaveFooter({
             disabled={controlsDisabled}
             className="inline-flex items-center gap-2 rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-200 transition-colors hover:border-gray-600 hover:bg-gray-800/80 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Urungkan
+            Reset
           </button>
         )}
         <button
@@ -64,7 +64,7 @@ export function TabSaveFooter({
           ) : (
             <Save className="h-4 w-4" />
           )}
-          {saving ? "Menyimpan..." : "Simpan"}
+          {saving ? "Saving..." : "Save"}
         </button>
       </div>
     </div>

@@ -105,13 +105,13 @@ export function LorebookGallery({
           active={activeTab === "characters"}
           onClick={() => setActiveTab("characters")}
         >
-          Karakter ({charCount})
+          Characters ({charCount})
         </TabButton>
         <TabButton
           active={activeTab === "clues"}
           onClick={() => setActiveTab("clues")}
         >
-          Petunjuk ({clueCount})
+          Clues ({clueCount})
         </TabButton>
       </div>
       )}
@@ -122,7 +122,7 @@ export function LorebookGallery({
           {charCount === 0 ? (
             <EmptyState
               icon={<User className="h-12 w-12 text-gray-600" />}
-              message="Belum ada karakter，Klik下方TombolTambah"
+              message="No characters yet, click the Add button below"
             />
           ) : (
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -143,7 +143,7 @@ export function LorebookGallery({
           )}
 
           {onAddCharacter && (
-            <AddButton onClick={onAddCharacter}>TambahKarakter</AddButton>
+            <AddButton onClick={onAddCharacter}>Add Character</AddButton>
           )}
         </>
       )}
@@ -154,7 +154,7 @@ export function LorebookGallery({
           {clueCount === 0 ? (
             <EmptyState
               icon={<Puzzle className="h-12 w-12 text-gray-600" />}
-              message="Belum ada petunjuk，Klik下方TombolTambah"
+              message="No clues yet, click the Add button below"
             />
           ) : (
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -174,7 +174,7 @@ export function LorebookGallery({
             </div>
           )}
 
-          {onAddClue && <AddButton onClick={onAddClue}>TambahPetunjuk</AddButton>}
+          {onAddClue && <AddButton onClick={onAddClue}>Add Clue</AddButton>}
         </>
       )}
     </div>

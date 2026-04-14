@@ -49,7 +49,7 @@ export const useCostStore = create<CostState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const data = await API.getCostEstimate(projectName);
-      // 如果在请求期间又触发了Baru请求，丢弃旧Respons
+      // If a new request was triggered during the request, discard old response
       if (currentId !== _fetchId) return;
       set({ costData: data, loading: false, ...buildIndexes(data) });
     } catch (err) {

@@ -22,7 +22,7 @@ export function TaskProgressBlock({ block }: TaskProgressBlockProps) {
       return (
         <div className="my-1 flex items-center gap-1.5 text-xs text-slate-500">
           <span>{"\u2013"}</span>
-          <span>{description} (Dibatalkan)</span>
+          <span>{description} (Cancelled)</span>
         </div>
       );
     }
@@ -32,7 +32,7 @@ export function TaskProgressBlock({ block }: TaskProgressBlockProps) {
       <div className="my-1 flex items-center gap-1.5 text-xs text-slate-400">
         <span className="inline-block h-3 w-3 animate-spin rounded-full border border-slate-500 border-t-transparent" />
         <span>
-          {status === "task_started" ? `子TugasMulai: ${description}` : description}
+          {status === "task_started" ? `Subtask started: ${description}` : description}
           {tokens != null && ` (tokens: ${tokens})`}
         </span>
       </div>
@@ -50,7 +50,7 @@ export function TaskProgressBlock({ block }: TaskProgressBlockProps) {
       >
         <span>{isCompleted ? "\u2713" : isFailed ? "\u2717" : "\u2013"}</span>
         <span>
-          子Tugas{isCompleted ? "Selesai" : isFailed ? "Gagal" : "结束"}: {summary || description}
+          Subtask {isCompleted ? "completed" : isFailed ? "failed" : "finished"}: {summary || description}
         </span>
       </div>
     );

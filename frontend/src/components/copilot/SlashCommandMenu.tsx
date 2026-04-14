@@ -25,13 +25,13 @@ const ICON_MAP: Record<string, LucideIcon> = {
 
 /** Fallback metadata when API doesn't provide label/icon. */
 const SKILL_META_FALLBACK: Record<string, { label: string; icon: LucideIcon }> = {
-  "manga-workflow":      { label: "VideoKerja流",   icon: Clapperboard },
-  "generate-script":     { label: "GenerateSkenario",     icon: ScrollText },
-  "generate-storyboard": { label: "GenerateStoryboard",   icon: LayoutGrid },
-  "generate-video":      { label: "GenerateVideo",     icon: Film },
-  "generate-characters": { label: "GenerateKarakter图",   icon: Users },
-  "generate-clues":      { label: "GeneratePetunjuk图",   icon: Search },
-  "compose-video":       { label: "KomposisiVideo",     icon: Scissors },
+  "manga-workflow":      { label: "Video Workflow",   icon: Clapperboard },
+  "generate-script":     { label: "Generate Script",     icon: ScrollText },
+  "generate-storyboard": { label: "Generate Storyboard",   icon: LayoutGrid },
+  "generate-video":      { label: "Generate Video",     icon: Film },
+  "generate-characters": { label: "Generate Characters",   icon: Users },
+  "generate-clues":      { label: "Generate Clues",   icon: Search },
+  "compose-video":       { label: "Compose Video",     icon: Scissors },
 };
 
 export interface SlashCommandMenuHandle {
@@ -110,7 +110,7 @@ export const SlashCommandMenu = forwardRef<SlashCommandMenuHandle, SlashCommandM
       <div
         id={MENU_ID}
         role="listbox"
-        aria-label="Skill命令Menu"
+        aria-label="Skill command menu"
         className="absolute bottom-full left-0 right-0 mb-1 max-h-52 overflow-y-auto rounded-lg border border-gray-700 bg-gray-900 py-1 shadow-xl"
       >
         {filtered.map((skill, i) => {

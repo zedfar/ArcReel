@@ -215,26 +215,26 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
       loadSourceFiles();
       useAppStore.getState().invalidateSourceFiles();
     } catch {
-      // Gagal secara senyap
+      // Fail silently
     }
-    // Atur ulang input agar memungkinkan memilih file yang sama lagi
+    // Reset input to allow selecting the same file again
     e.target.value = "";
   }, [projectName, loadSourceFiles]);
 
   // Hapus File Sumber
   const handleDeleteFile = useCallback(async (filename: string) => {
     if (!projectName) return;
-    if (!confirm(`Yakin ingin menghapus "${filename}"?`)) return;
+    if (!confirm(`Are you sure you want to delete "${filename}"?`)) return;
     try {
       await API.deleteSourceFile(projectName, filename);
       loadSourceFiles();
       useAppStore.getState().invalidateSourceFiles();
-      // Jika file ini sedang dilihat, kembali ke ikhtisar
+      // If this file is being viewed, return to overview
       if (location === `/source/${encodeURIComponent(filename)}`) {
         setLocation("/");
       }
     } catch {
-      // Gagal secara senyap
+      // Fail silently
     }
   }, [projectName, loadSourceFiles, location, setLocation]);
 
@@ -259,7 +259,7 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
         }`}
       >
         <LayoutDashboard className="h-4 w-4 shrink-0 text-indigo-400" />
-        <span className="font-medium">Ikhtisar Proyek</span>
+        <span className="font-medium">Project Overview</span>
       </button>
 
       {/* ---- Divider ---- */}
@@ -267,7 +267,7 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
 
       {/* ---- Section 1: Source Files ---- */}
       <CollapsibleSection
-        title="File Sumber"
+        title="Source Files"
         icon={FileText}
         action={
           <>
@@ -275,7 +275,7 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300 focus-ring"
-              title="Unggah File Sumber"
+              title="Upload Source File"
             >
               <Upload className="h-3.5 w-3.5" />
             </button>
@@ -290,7 +290,7 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
         }
       >
         {sourceFiles.length === 0 ? (
-          <EmptyState text="Belum ada file" />
+          <EmptyState text="No files yet" />
         ) : (
           <ul>
             {sourceFiles.map((name) => {
@@ -317,7 +317,7 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
                       type="button"
                       onClick={(e) => { e.stopPropagation(); handleDeleteFile(name); }}
                       className="shrink-0 rounded p-0.5 text-gray-600 opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100 focus-ring focus-visible:opacity-100"
-                      title="Hapus File"
+                      title="Delete File"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -338,10 +338,10 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
         <div className="mb-1">
           <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-600">
             <Users className="h-3 w-3" />
-            <span>Karakter</span>
+            <span>Characters</span>
           </div>
           {characterEntries.length === 0 ? (
-            <EmptyState text="Belum ada karakter" />
+            <EmptyState text="No characters yet" />
           ) : (
             <ul>
               {characterEntries.map(([name, char]) => (
@@ -372,10 +372,10 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
         <div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-600">
             <Puzzle className="h-3 w-3" />
-            <span>Petunjuk</span>
+            <span>Clues</span>
           </div>
           {clueEntries.length === 0 ? (
-            <EmptyState text="Belum ada petunjuk" />
+            <EmptyState text="No clues yet" />
           ) : (
             <ul>
               {clueEntries.map(([name, clue]) => (
@@ -407,9 +407,9 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
       <div className="mx-3 border-t border-gray-800" />
 
       {/* ---- Section 3: Episodes ---- */}
-      <CollapsibleSection title="Episode" icon={Film}>
+      <CollapsibleSection title="Episodes" icon={Film}>
         {episodes.length === 0 ? (
-          <EmptyState text="Belum ada episode" />
+          <EmptyState text="No episodes yet" />
         ) : (
           <ul>
             {episodes.map((ep) => {
@@ -439,7 +439,7 @@ export function AssetSidebar({ className }: AssetSidebarProps) {
                     </span>
                     {isSegmented && !ep.scenes_count && (
                       <span className="ml-auto shrink-0 rounded bg-indigo-950 px-1.5 py-0.5 text-[10px] text-indigo-400">
-                        Pra-pemrosesan
+                        Pre-processing
                       </span>
                     )}
                   </button>
